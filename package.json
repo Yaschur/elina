@@ -3,9 +3,15 @@
   "version": "0.1.0",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "postinstall": "./node_modules/.bin/electron-rebuild"
   },
   "devDependencies": {
-    "electron": "^1.4.1"
+    "electron": "^1.4.15",
+    "electron-rebuild": "^1.5.7"
+  },
+  "dependencies": {
+    "sequelize": "^3.30.2",
+    "sqlite3": "^3.1.8"
   }
 }
