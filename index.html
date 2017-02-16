@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Elina</title>
-	<link rel="stylesheet" href="photon/css/photon.min.css" </head>
+	<link rel="stylesheet" href="vendors/photon/css/photon.min.css"</link>
+	</head>
 	<body>
 		<div class="window">
 			<header class="toolbar toolbar-header">
@@ -19,16 +20,18 @@
 							persons
 						</span>
 					</div>
-					<div class="pane">content will be here</div>
+					<div class="pane"><p>content will be here</p></div>
 				</div>
 			</div>
-			<footer class="toolbar toolbar-footer"></footer>
+			<footer class="toolbar toolbar-footer">Footer</footer>
 		</div>
 		<!--<h1>Hello World!</h1>    
     We are using Node.js <script>document.write(process.versions.node)</script>,
     Chromium <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.-->
 	</body>
+	<script src="vendors/pouchdb/pouchdb-6.1.2.min.js"></script>
+	<script src="vendors/pouchdb/pouchdb.find.min.js"></script>
 	<script>
 		// You can also require other files to run in this process
 		require('./renderer.js')
