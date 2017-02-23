@@ -1,0 +1,8 @@
+{
+	"name": "elina.server",
+	"version": "0.1.0",
+	"main": "main.js",
+	"scripts": {
+	},
+	"author": "Igor Trishin"
+}
