@@ -1,75 +1,112 @@
-const express = require('express')
-const app = express()
-var bodyParser = require('body-parser');
+'use strict';
+
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
-const PouchDB = require('pouchdb')
-PouchDB.plugin(require('pouchdb-adapter-node-websql'))
-PouchDB.plugin(require('pouchdb-find'))
+const PouchDB = require('pouchdb');
+PouchDB.plugin(require('pouchdb-adapter-node-websql'));
+PouchDB.plugin(require('pouchdb-find'));
+PouchDB.plugin(require('pouchdb-upsert'));
 
-var pouchDb = new PouchDB('mydatabase.db', { adapter: 'websql' })
+const path = require('path');
+const dbPath = path.join(__dirname, 'database.db');
+var pouchDb = new PouchDB(dbPath, { adapter: 'websql' });
 
-app.get('/', function (req, res) {
-	// try {
-	// 	let result = await pouchDb.info()
-	// 	res.send(result)
-	// } catch(e) {
-	// 	res.send(e)
-	// }
-	//res.send('Hello World!')
-	pouchDb.allDocs({include_docs: true})
-		.then(r => res.json(r))
-		.catch(e => res.send(e))
-})
+app.route('/__dump')
+	.get((req, res) => {
+		pouchDb.allDocs({ include_docs: true })
+			.then(r => res.json(r))
+			.catch(e => console.log(e));
+	});
 
-app.get('/:type/:id', function (req, res) {
-	id = req.params.type + '_' + req.params.id
-	pouchDb.get(id)
-		.then(doc => {
-			doc._id = req.params.id
-			res.json(doc)
-		}).catch(() => res.status(404).end())
-})
+app.route('/__index')
 
-app.put('/:type/:id', function (req, res) {
+	.get((req, res) =>
+		pouchDb.getIndexes()
+			.then(inds => res.json(inds))
+			.catch(e => console.log(e))
+	)
 
-	//console.log(req.body)
-	item = req.body
-	id = req.params.type + '_' + req.params.id
-	item._id = id
+	.post((req, res) =>
+		pouchDb.createIndex(req.body)
+			.then(() => res.sendStatus(200))
+			.catch(e => console.log(e))
+	)
 
-	pouchDb.get(id)
-		.then(doc => {
-			item._rev = doc._rev
-			pouchDb.put(item)
-				.then(() => res.status(200).end())
-				.catch((e) => res.status(500).end())
-		}).catch(() => 
-			pouchDb.put(item)
-				.then(() => res.status(200).end())
-				.catch((e) => res.status(500).end())
-		)
-})
+	.delete((req, res) =>
+		pouchDb.deleteIndex(req.body)
+			.then(() => res.sendStatus(200))
+			.catch(e => console.log(e))
+	);
 
-app.delete('/:type/:id', function (req, res) {
-	id = req.params.type + '_' + req.params.id
-	pouchDb.get(id).then(doc => {
-		return pouchDb.remove(doc)
-	}).then(() => res.status(200).end())
-	.catch(e => res.status(500).end())
-})
+app.route('/:type/:id')
 
-// const exItem = await this._db.get(item._id)
-// 	.catch(() => null);
-// if (exItem && exItem.type == item.type) {
-// 	item._rev = exItem._rev;
-// }
-// await this._db.put(item);
-// });
+	.get((req, res) => {
+		const id = req.params.type + '_' + req.params.id;
+		pouchDb.get(id)
+			.then(doc => res.json(toDomain(doc)))
+			.catch((e) => res.status(404).json({ error: e.message }));
+	})
 
-const server = app.listen(3235, function () {
+	.put((req, res) => {
+		let id = req.params.type + '_' + req.params.id;
+		pouchDb.upsert(id, doc => {
+			let item = req.body;
+			item._id = id;
+			item._rev = doc._rev;
+			return item;
+		}).then(() => res.sendStatus(200))
+			.catch((e) => res.status(500).json({ error: e.message }))
+	})
+
+	.delete((req, res) => {
+		let id = req.params.type + '_' + req.params.id;
+		pouchDb.get(id).then(doc => {
+			return pouchDb.remove(doc)
+		}).then(() => res.sendStatus(200))
+			.catch(e => res.status(500).json({ error: e.message }))
+	});
+
+app.route('/:type')
+
+	.post((req, res) => {
+		const extFilter = req.body.filter;
+		const typeFilter = { type: { $eq: req.params.type } };
+		let selector = {};
+		Object.assign(selector, typeFilter, extFilter);
+		let query = { selector: selector };
+		if (req.body.sort) {
+			query.sort = req.body.sort;
+		}
+		if (req.body.skip) {
+			query.skip = req.body.skip;
+		}
+		if (req.body.limit) {
+			query.limit = req.body.limit
+		}
+		pouchDb.find(query)
+			.then(result => {
+				let items = result.docs;
+				items.forEach(item => toDomain(item));
+				res.json(items)
+			}).catch(e => {
+				console.log(e);
+				res.status(500).json({ error: e.message });
+			})
+	});
+
+const server = app.listen(3235, () => {
 	var host = server.address().address
 	var port = server.address().port
 
 	console.log("api is listening at http://%s:%s", host, port)
 })
+
+function toDomain(item) {
+	const idSplit = item._id.split('_');
+	item._id = idSplit[1];
+	delete item._rev;
+	return item;
+}
