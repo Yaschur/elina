@@ -20,7 +20,7 @@ export class CountryRepository {
 		let dbItem = await this._dbService.get(CountryRepository.typeName, id);
 		if (!dbItem)
 			return null;
-		return new Country(dbItem.id, dbItem.name);
+		return new Country(dbItem._id, dbItem.name);
 	}
 
 	public async findAll(): Promise<Country[]> {

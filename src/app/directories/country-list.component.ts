@@ -1,59 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Company } from './models/company.model';
+import { Country } from './models/Country.model';
 
-import { CompanyRepository } from './repositories/company.repository';
+import { CountryRepository } from './repositories/country.repository';
 
 @Component({
 	moduleId: module.id,
-	selector: 'app-company-list',
-	templateUrl: 'companies.component.html',
-	providers: [CompanyRepository]
+	selector: 'app-country-list',
+	templateUrl: 'country-list.component.html',
+	providers: [CountryRepository]
 })
-export class CompaniesComponent implements OnInit {
+export class CountryListComponent implements OnInit {
 	constructor(
-		private _repo: CompanyRepository,
+		private _repo: CountryRepository,
 		private _router: Router
 	) { }
 
-	items: Company[] = [];
+	items: Country[] = [];
 	term: string = '';
 
 	ngOnInit() {
-		this.findCompanies();
+		this.findCountries();
 	}
-
-	generate100Companies() {
-		for (let i = 0; i < 1000; i++) {
-			const newCompany = new Company();
-			newCompany.name = 'Company ' + i;
-			newCompany.country = 'ENG';
-			newCompany.email = '';
-			newCompany.phone = '123 45 6' + (i + 1);
-			//console.log(newCompany);
-			this._repo.store(newCompany)
-				.catch((e) => console.log(e));
-		}
-		this.findCompanies();
-	}
-	findCompanies() {
+	
+	findCountries() {
 		this._repo.findAll()
 			.then(res => this.items = res);
 	}
 
 	gotoEdit(id: string = ''): void {
-		this._router.navigate(['/company/edit', id]);
-	}
-
-	search() {
-		if (this.term) {
-			this._repo.findAll(this.term)
-				.then(res => this.items = res);
-		}
-	}
-	resetSearch() {
-		this.term = '';
-		this.findCompanies();
+		this._router.navigate(['/country/edit', id]);
 	}
 }

@@ -3,21 +3,21 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Company } from './models/company.model';
+import { Country } from './models/country.model';
 
-import { CompanyRepository } from './repositories/company.repository';
+import { CountryRepository } from './repositories/country.repository';
 
 @Component({
 	moduleId: module.id,
-	selector: 'app-company-edit',
-	templateUrl: 'company-edit.component.html',
-	providers: [CompanyRepository]
+	selector: 'app-country-edit',
+	templateUrl: 'country-edit.component.html',
+	providers: [CountryRepository]
 })
-export class CompanyEditComponent implements OnInit {
-	company: Company = new Company();
+export class CountryEditComponent implements OnInit {
+	country = {code: '', name: ''};
 
 	constructor(
-		private _repo: CompanyRepository,
+		private _repo: CountryRepository,
 		private _route: ActivatedRoute,
 		private _location: Location
 	) { }
@@ -25,28 +25,25 @@ export class CompanyEditComponent implements OnInit {
 	ngOnInit() {
 		this._route.params
 			.switchMap((params: Params) => {
-				//console.log(params['id']);
 				let id = params['id'];
 				if (!id) {
 					return null;
 				}
 				let res = this._repo.getById(params['id']);
-				//console.log(res);
 				return res;
 			})
-			.subscribe(company => {
-				console.log(company);
-				if (company != null) {
-					this.company = company;
+			.subscribe(country => {
+				if (country != null) {
+					console.log(country);
+					this.country.code = country._id;
+					this.country.name = country.name;
 				}
 			});
 	}
 
 	save(): void {
-		if (!this.company.name) {
-			this.company.name = '<No name>';
-		}
-		this._repo.store(this.company);
+		const country = new Country(this.country.code, this.country.name);
+		this._repo.store(country);
 		this.gotoBack();
 	}
 

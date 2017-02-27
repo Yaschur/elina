@@ -9,6 +9,6 @@ export class Country extends Entity {
 		if (id.length != 3)
 			throw 'Country code must 3 letters long';
 		super(id.toUpperCase());
-		name = name;
+		this.name = name ? name : '';
 	}
 }

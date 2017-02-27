@@ -20,6 +20,10 @@ export class DbService {
 		// TODO: refactor indexing
 		this._db.createIndex({ index: { fields: ['type'] } })
 			.catch((e) => console.log(e));
+		this._db.createIndex({ index: { fields: ['name'] } })
+			.catch((e) => console.log(e));
+		this._db.createIndex({ index: { fields: ['type', 'name'] } })
+			.catch((e) => console.log(e));
 	}
 
 	public async createIndex(index: any) {
@@ -51,6 +55,7 @@ export class DbService {
 			const dbItem = this.convertToDb(type, item);
 			await this._db.upsert(dbItem._id, doc => {
 				dbItem._rev = doc._rev;
+				console.log(dbItem);
 				return dbItem;
 			});
 		} catch (e) {
@@ -101,7 +106,9 @@ export class DbService {
 			if (limit) {
 				query.limit = limit;
 			}
+			console.log(query);
 			const res = await this._db.find(query);
+			console.log(res);
 			const items: any[] = [];
 			res.docs.forEach(doc => {
 				const item = this.convertToDomain(doc);
@@ -119,8 +126,10 @@ export class DbService {
 	}
 
 	private convertToDb(type: string, item: any): any {
+		console.log(item);
 		item._id = this.convertIdToDb(type, item._id);
 		item.type = type;
+		console.log(item);
 		return item;
 	}
 	private convertIdToDomain(item: any): string {
