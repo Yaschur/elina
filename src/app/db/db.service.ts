@@ -7,7 +7,7 @@ import { Entity } from './entity.model';
 
 PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
-//PouchDB.debug.enable('pouchdb:find');
+// PouchDB.debug.enable('pouchdb:find');
 const MAIN_DB_NAME = 'elina_db';
 
 @Injectable()
@@ -46,51 +46,67 @@ export class DbService {
 		}
 	}
 
-	public async store<T extends Entity>(item: T) {
+	public async store(type: string, item: any) {
 		try {
-			const id = this.convertIdToDb(item);
-			await this._db.upsert(id, doc => {
-				item._id = id;
-				item._rev = doc._rev;
-				return item;
+			const dbItem = this.convertToDb(type, item);
+			await this._db.upsert(dbItem._id, doc => {
+				dbItem._rev = doc._rev;
+				return dbItem;
 			});
 		} catch (e) {
 			console.log(e);
 		}
 	}
 
-	public async remove<T extends Entity>(item: T) {
+	public async remove(type: string, item: any) {
 		try {
-			const id = this.convertIdToDb(item);
-			const exItem = await this._db.get(id);
+			const dbId = this.convertIdToDb(type, item._id);
+			const exItem = await this._db.get(dbId);
 			await this._db.remove(exItem);
-		} catch(e) {
+		} catch (e) {
 			console.log(e);
 		}
 	}
 
 	public async get(type: string, id: string): Promise<any> {
-		const exItem = await this._db.get(id)
-			.catch((e) => { console.log(e); return null; });
-		return exItem != null && exItem.type == type ? exItem : null;
+		try {
+			const dbId = this.convertIdToDb(type, id);
+			const exItem = await this._db.get(dbId);
+			return this.convertToDomain(exItem);
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	public async find(filter: any, sort: any[]): Promise<any[]> {
 		// await this._db.createIndex({ index: { fields: ['phone', 'type'] } })
 		// 	.catch((e) => console.log(e));
-		let res = await this._db.find({
+		const res = await this._db.find({
 			selector: filter,
 			sort: sort,
 			limit: 100
 		}).catch((e) => { console.log(e); return null; });
-		//console.log(res);
+		// console.log(res);
 		return res ? res.docs : [];
 	}
 
-	private convertIdToDb(item: Entity): string {
-		return item.type + '_' + item._id;
+	private convertIdToDb(type: string, id: string) {
+		return type + '_' + id;
+	}
+
+	private convertToDb(type: string, item: any): any {
+		item._id = this.convertIdToDb(type, item._id);
+		item.type = type;
+		return item;
 	}
 	private convertIdToDomain(item: any): string {
 		return item._id.split('_')[1];
 	}
+	private convertToDomain(item: any): any {
+		item._id = this.convertIdToDomain(item);
+		delete item.type;
+		delete item._rev;
+		return item;
+	}
+
 }
