@@ -7,7 +7,7 @@ import { Entity } from './entity.model';
 
 PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
-// PouchDB.debug.enable('pouchdb:find');
+// PouchDB.debug.disable();
 const MAIN_DB_NAME = 'elina_db';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class DbService {
 	private _db: PouchDB.Database<any>;
 
 	constructor() {
-		this._db = new PouchDB(MAIN_DB_NAME);
+		this._db = new PouchDB(MAIN_DB_NAME, {auto_compaction: true});
 		// TODO: refactor indexing
 		this._db.createIndex({ index: { fields: ['type'] } })
 			.catch((e) => console.log(e));
