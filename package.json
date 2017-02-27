@@ -1,0 +1,42 @@
+{
+  "name": "elina",
+  "version": "0.1.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "lint": "ng lint",
+    "build-electron": "ng build --base-href . && cp src/electron/* dist",
+    "electron": "npm run build-electron && electron dist"
+  },
+  "dependencies": {
+    "@angular/common": "^2.4.8",
+    "@angular/compiler": "^2.4.8",
+    "@angular/core": "^2.4.8",
+    "@angular/forms": "^2.4.8",
+    "@angular/http": "^2.4.8",
+    "@angular/platform-browser": "^2.4.8",
+    "@angular/platform-browser-dynamic": "^2.4.8",
+    "@angular/router": "^3.4.8",
+    "core-js": "^2.4.1",
+    "pouchdb": "^6.1.2",
+    "pouchdb-find": "^0.10.5",
+    "pouchdb-upsert": "^2.0.2",
+    "rxjs": "^5.2.0",
+    "zone.js": "^0.7.7"
+  },
+  "devDependencies": {
+    "@angular/cli": "1.0.0-rc.0",
+    "@angular/compiler-cli": "^2.4.8",
+    "@types/electron": "^1.4.32",
+    "@types/node": "~7.0.5",
+    "@types/pouchdb": "^5.4.28",
+    "@types/pouchdb-find": "^0.10.0",
+    "@types/pouchdb-upsert": "^2.0.2",
+    "codelyzer": "~2.0.0",
+    "electron": "^1.4.15",
+    "ts-node": "~2.1.0",
+    "tslint": "~4.4.2",
+    "typescript": "~2.2.1"
+  }
+}
