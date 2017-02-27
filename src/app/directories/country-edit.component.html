@@ -1,0 +1,20 @@
+<form class="padded-less">
+  <div class="form-group">
+    <label>Company name</label>
+    <input type="text" required="required" name="name" [(ngModel)]="company.name" class="form-control" placeholder="type company name here">
+  </div>
+  <div class="form-group">
+    <label>Country</label>
+    <input type="text" name="country" [(ngModel)]="company.country" class="form-control" placeholder="type country code here">
+  </div>
+  <div class="form-group">
+    <label>Phone</label>
+    <input type="tel" name="phone" [(ngModel)]="company.phone" class="form-control" placeholder="type phone number here">
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" name="email" [(ngModel)]="company.email" class="form-control" placeholder="type email adress here">
+  </div>
+  <button class="btn btn-mini btn-primary" (click)="save()">Save</button>
+  <button class="btn btn-mini btn-default" (click)="gotoBack()">Cancel</button>
+</form>

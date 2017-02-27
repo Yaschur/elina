@@ -18,7 +18,7 @@ export class DbService {
 	constructor() {
 		this._db = new PouchDB(MAIN_DB_NAME);
 		// TODO: refactor indexing
-		this._db.createIndex({ index: { fields: ['type', 'name'] } })
+		this._db.createIndex({ index: { fields: ['type'] } })
 			.catch((e) => console.log(e));
 	}
 
@@ -76,6 +76,7 @@ export class DbService {
 		} catch (e) {
 			console.log(e);
 		}
+		return null;
 	}
 
 	public async find(
@@ -110,6 +111,7 @@ export class DbService {
 		} catch (e) {
 			console.log(e);
 		}
+		return [];
 	}
 
 	private convertIdToDb(type: string, id: string) {
