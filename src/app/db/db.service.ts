@@ -78,16 +78,38 @@ export class DbService {
 		}
 	}
 
-	public async find(filter: any, sort: any[]): Promise<any[]> {
-		// await this._db.createIndex({ index: { fields: ['phone', 'type'] } })
-		// 	.catch((e) => console.log(e));
-		const res = await this._db.find({
-			selector: filter,
-			sort: sort,
-			limit: 100
-		}).catch((e) => { console.log(e); return null; });
-		// console.log(res);
-		return res ? res.docs : [];
+	public async find(
+		type: string,
+		filter: any,
+		sort?: any[],
+		skip?: number,
+		limit?: number
+	): Promise<any[]> {
+		try {
+			const typeFilter = { type: { $eq: type } };
+			const selector = {};
+			Object.assign(selector, typeFilter, filter);
+			const query: any = {};
+			query.selector = selector;
+			if (sort) {
+				query.sort = sort;
+			}
+			if (skip) {
+				query.skip = skip;
+			}
+			if (limit) {
+				query.limit = limit;
+			}
+			const res = await this._db.find(query);
+			const items: any[] = [];
+			res.docs.forEach(doc => {
+				const item = this.convertToDomain(doc);
+				items.push(item);
+			});
+			return items;
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	private convertIdToDb(type: string, id: string) {
