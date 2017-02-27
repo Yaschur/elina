@@ -1,5 +1,5 @@
 export abstract class Entity {
-	readonly _id: string;
+	_id: string;
 	_rev: string;
 	readonly type: string;
 

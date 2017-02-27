@@ -25,7 +25,7 @@ export class DbService {
 	public async createIndex(index: any) {
 		try {
 			await this._db.createIndex(index);
-		} catch(e) {
+		} catch (e) {
 			console.log(e);
 		}
 	}
@@ -33,7 +33,7 @@ export class DbService {
 	public async deleteIndex(index: any) {
 		try {
 			await this._db.deleteIndex(index);
-		} catch(e) {
+		} catch (e) {
 			console.log(e);
 		}
 	}
@@ -41,42 +41,31 @@ export class DbService {
 	public async getIndexes() {
 		try {
 			return await this._db.getIndexes();
-		} catch(e) {
+		} catch (e) {
 			console.log(e);
 		}
 	}
 
 	public async store<T extends Entity>(item: T) {
 		try {
-		var id = item.type + '_' + item._id;
-		this._db.upsert(id, doc => {
-			//item
-		})
-		} catch(e) {
+			const id = this.convertIdToDb(item);
+			await this._db.upsert(id, doc => {
+				item._id = id;
+				item._rev = doc._rev;
+				return item;
+			});
+		} catch (e) {
 			console.log(e);
 		}
-
-
-		const exItem = await this._db.get(item._id)
-			.catch(() => null);
-		if (exItem && exItem.type == item.type) {
-			item._rev = exItem._rev;
-		}
-		await this._db.put(item);
 	}
 
-	// let id = req.params.type + '_' + req.params.id;
-	// 	pouchDb.upsert(id, doc => {
-	// 		let item = req.body;
-	// 		item._id = id;
-	// 		item._rev = doc._rev;
-	// 		return item;
-
 	public async remove<T extends Entity>(item: T) {
-		const exItem = await this._db.get(item._id)
-			.catch(() => null);
-		if (exItem && exItem.type == item.type) {
-			await this._db.remove(exItem._id, exItem._rev);
+		try {
+			const id = this.convertIdToDb(item);
+			const exItem = await this._db.get(id);
+			await this._db.remove(exItem);
+		} catch(e) {
+			console.log(e);
 		}
 	}
 
@@ -96,5 +85,12 @@ export class DbService {
 		}).catch((e) => { console.log(e); return null; });
 		//console.log(res);
 		return res ? res.docs : [];
+	}
+
+	private convertIdToDb(item: Entity): string {
+		return item.type + '_' + item._id;
+	}
+	private convertIdToDomain(item: any): string {
+		return item._id.split('_')[1];
 	}
 }
