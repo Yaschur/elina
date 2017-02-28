@@ -8,6 +8,6 @@ declare var electron: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-	title = 'elina database';
+	// title = 'elina database';
 	constructor() {}
 }
