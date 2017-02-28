@@ -18,7 +18,6 @@ export class CountryListComponent implements OnInit {
 	) { }
 
 	items: Country[] = [];
-	term: string = '';
 
 	ngOnInit() {
 		this.findCountries();

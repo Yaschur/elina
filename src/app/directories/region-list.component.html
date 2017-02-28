@@ -2,7 +2,7 @@
 	<div class="toolbar-actions">
 		<div class="btn-group">
 			<button class="btn btn-large btn-default" (click)="gotoEdit('__new__')">
-        	<span class="icon icon-plus"></span> new country
+        	<span class="icon icon-plus"></span> new region
       </button>
 		</div>
 	</div>
@@ -11,14 +11,14 @@
 <table class="table-striped">
 	<thead>
 		<tr>
-			<th>country code</th>
-			<th>country name</th>
+			<th>region name</th>
+			<th>countries</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr *ngFor="let item of items" (click)="gotoEdit(item._id)">
-			<td>{{item._id}}</td>
 			<td>{{item.name}}</td>
+			<td>{{item.countries.join(' ')}}</td>
 		</tr>
 	</tbody>
 </table>

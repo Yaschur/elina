@@ -1,19 +1,4 @@
 <div class="window">
-	<!--<header class="toolbar toolbar-header">
-		<h1 class="title">{{title}}</h1>
-	</header>-->
-	<!--<div class="window-content">
-		<div class="pane-group">
-			<div class="pane-sm sidebar">
-				<h5 class="nav-group-title">Directories</h5>
-				<a routerLink="/countries" class="nav-group-item" routerLinkActive="active">countries</a>
-			</div>
-			<div class="pane">
-				<router-outlet></router-outlet>
-			</div>
-		</div>
-	</div>-->
-
 	<div class="window-content">
 		<div class="pane-group">
 			<div class="pane pane-sm sidebar">
@@ -21,6 +6,9 @@
 					<h5 class="nav-group-title">Directories</h5>
 					<a routerLink="/countries" class="nav-group-item" routerLinkActive="active">
 						<span class="icon icon-globe"></span> countries
+					</a>
+					<a routerLink="/regions" class="nav-group-item" routerLinkActive="active">
+						<span class="icon icon-address"></span> regions
 					</a>
 				</nav>
 			</div>
