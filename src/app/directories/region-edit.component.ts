@@ -40,21 +40,23 @@ export class RegionEditComponent implements OnInit {
 				return res;
 			})
 			.subscribe(region => {
+				let cnts = [];
 				if (region != null) {
 					this.region.id = region._id;
 					this.region.name = region.name;
-					//this.region.countries = region.countries;
-					const cnts = region.countries;
-					this._countrynRepo.findAll()
-						.then(countries => {
-							this.countries = countries
-								.filter(c => cnts.every(cr => cr !== c._id));
-							this.region.countries = cnts.map(code =>
-								countries.find(c => c._id === code)
-							);
-							console.log(this.region.countries);
-						});
+					// this.region.countries = region.countries;
+					cnts = region.countries;
 				}
+				this._countrynRepo.findAll()
+					.then(countries => {
+						this.countries = countries
+							.filter(c => cnts.every(cr => cr !== c._id));
+						this.region.countries = cnts.map(code => {
+							const v = countries.find(c => c._id === code);
+							return v ? v : new Country(code, '<undefined>')
+						});
+						console.log(this.region.countries);
+					});
 			});
 	}
 
@@ -74,7 +76,7 @@ export class RegionEditComponent implements OnInit {
 	}
 
 	include(code: string): void {
-		const index = this.countries.findIndex(c => c._id == code);
+		const index = this.countries.findIndex(c => c._id === code);
 		if (index > -1) {
 			const country = this.countries[index];
 			this.countries.splice(index, 1);
@@ -84,9 +86,9 @@ export class RegionEditComponent implements OnInit {
 	}
 
 	exclude(code: string): void {
-		const index = this.region.countries.findIndex(c => c._id == code);
+		const index = this.region.countries.findIndex(c => c._id === code);
 		if (index > -1) {
-			const country = this.countries[index];
+			const country = this.region.countries[index];
 			this.region.countries.splice(index, 1);
 			this.countries.push(country);
 			this.countries.sort((c1, c2) => c1.name > c2.name ? 1 : (c1.name < c2.name ? -1 : 0));

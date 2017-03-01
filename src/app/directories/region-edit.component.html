@@ -20,7 +20,7 @@
 	<div class="padded-less">
 		<h4>Region's countries:</h4>
 		<ul class="list-group">
-			<li class="list-group-item" *ngFor="let item of region.countries">
+			<li class="list-group-item" *ngFor="let item of region.countries" (click)="exclude(item._id)">
 				<div class="media-body">
 					<strong>{{item._id}}</strong>
 					<p>{{item.name}}</p>
@@ -29,7 +29,7 @@
 		</ul>
 	</div>
 	<div class="padded-less">
-		<h4>Other countries</h4>
+		<h4>Other countries:</h4>
 		<ul class="list-group">
 			<li class="list-group-item" *ngFor="let item of countries" (click)="include(item._id)">
 				<div class="media-body">
