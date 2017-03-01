@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+const { version: appVersion } = require('../../package.json')
+
 declare var electron: any;
 
 @Component({
@@ -8,6 +10,8 @@ declare var electron: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-	// title = 'elina database';
-	constructor() {}
+	appVersion = 'v'
+	constructor() {
+		this.appVersion += appVersion;
+	}
 }

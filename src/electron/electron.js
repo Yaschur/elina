@@ -1,4 +1,5 @@
 const electron = require('electron')
+const {Menu, MenuItem} = electron
 
 // Module to control application life.
 const app = electron.app
@@ -12,10 +13,10 @@ const url = require('url')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
+function createWindow() {
 	const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize
 	// Create the browser window.
-	mainWindow = new BrowserWindow({width: width, height: height})
+	mainWindow = new BrowserWindow({ width: width, height: height })
 	mainWindow.setMenu(null);
 
 	// and load the index.html of the app.
@@ -27,6 +28,26 @@ function createWindow () {
 
 	// Open the DevTools.
 	electron.globalShortcut.register('Ctrl+Shift+D', () => mainWindow.webContents.openDevTools())
+
+	let menu = new Menu()
+	menu.append(
+		new MenuItem({
+			label: "File",
+			submenu: [
+				new MenuItem({
+					label: 'Maintenance',
+					click: (mi, bw) => bw.loadURL(url.format({
+						pathname: path.join(__dirname, 'clt/maintenance.html'),
+						protocol: 'file:',
+						slashes: true
+					})),
+					type: 'normal'
+				})
+			]
+		})
+	)
+	
+	mainWindow.setMenu(menu)
 	// mainWindow.webContents.openDevTools()
 
 	// Emitted when the window is closed.
