@@ -12,7 +12,31 @@
 	<form>
 		<div class="form-group">
 			<label>Region name</label>
-			<input type="text" required="required" name="name" [(ngModel)]="region.name" class="form-control" placeholder="type name of region here"/>
+			<input type="text" required="required" name="name" [(ngModel)]="region.name" class="form-control" placeholder="type name of region here" />
 		</div>
 	</form>
+</div>
+<div class="padded">
+	<div class="padded-less">
+		<h4>Region's countries:</h4>
+		<ul class="list-group">
+			<li class="list-group-item" *ngFor="let item of region.countries">
+				<div class="media-body">
+					<strong>{{item._id}}</strong>
+					<p>{{item.name}}</p>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="padded-less">
+		<h4>Other countries</h4>
+		<ul class="list-group">
+			<li class="list-group-item" *ngFor="let item of countries" (click)="include(item._id)">
+				<div class="media-body">
+					<strong>{{item._id}}</strong>
+					<p>{{item.name}}</p>
+				</div>
+			</li>
+		</ul>
+	</div>
 </div>
