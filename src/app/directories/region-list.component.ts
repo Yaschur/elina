@@ -12,17 +12,18 @@ import { RegionRepository } from './repositories/region.repository';
 	providers: [RegionRepository]
 })
 export class RegionListComponent implements OnInit {
+
+	items: Region[] = [];
+
 	constructor(
 		private _repo: RegionRepository,
 		private _router: Router
 	) { }
 
-	items: Region[] = [];
-
 	ngOnInit() {
 		this.findRegions();
 	}
-	
+
 	findRegions() {
 		this._repo.findAll()
 			.then(res => this.items = res);

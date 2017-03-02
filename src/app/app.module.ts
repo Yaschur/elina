@@ -9,13 +9,13 @@ import { CountryListComponent } from './directories/country-list.component';
 import { CountryEditComponent } from './directories/country-edit.component';
 import { RegionListComponent } from './directories/region-list.component';
 import { RegionEditComponent } from './directories/region-edit.component';
-import { DbService } from './db/db.service';
+import { StoreService } from './db/store.service';
 
 const appRoutes: Routes = [
 	{ path: 'countries', component: CountryListComponent },
 	{ path: 'regions', component: RegionListComponent },
-	{ path:'country/edit/:id', component: CountryEditComponent },
-	{ path:'region/edit/:id', component: RegionEditComponent },
+	{ path: 'country/edit/:id', component: CountryEditComponent },
+	{ path: 'region/edit/:id', component: RegionEditComponent },
 	{ path: '', redirectTo: '/countries', pathMatch: 'full' }
 ];
 
@@ -33,7 +33,7 @@ const appRoutes: Routes = [
 		HttpModule,
 		RouterModule.forRoot(appRoutes)
 	],
-	providers: [DbService],
+	providers: [StoreService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

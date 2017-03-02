@@ -12,17 +12,18 @@ import { CountryRepository } from './repositories/country.repository';
 	providers: [CountryRepository]
 })
 export class CountryListComponent implements OnInit {
+
+	items: Country[] = [];
+
 	constructor(
 		private _repo: CountryRepository,
 		private _router: Router
 	) { }
 
-	items: Country[] = [];
-
 	ngOnInit() {
 		this.findCountries();
 	}
-	
+
 	findCountries() {
 		this._repo.findAll()
 			.then(res => this.items = res);

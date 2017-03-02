@@ -11,7 +11,7 @@ PouchDB.plugin(PouchDbUpsert);
 const MAIN_DB_NAME = 'elina_db';
 
 @Injectable()
-export class DbService {
+export class StoreService {
 
 	private _db: PouchDB.Database<any>;
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-const { version: appVersion } = require('../../package.json')
+const { version: appVersion } = require('../../package.json');
 
 declare var electron: any;
 
@@ -10,7 +10,7 @@ declare var electron: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-	appVersion = 'v'
+	appVersion = 'v';
 	constructor() {
 		this.appVersion += appVersion;
 	}

@@ -14,7 +14,7 @@ import { CountryRepository } from './repositories/country.repository';
 	providers: [CountryRepository]
 })
 export class CountryEditComponent implements OnInit {
-	country = {code: '', name: ''};
+	country = { code: '', name: '' };
 
 	constructor(
 		private _repo: CountryRepository,
@@ -25,11 +25,11 @@ export class CountryEditComponent implements OnInit {
 	ngOnInit() {
 		this._route.params
 			.switchMap((params: Params) => {
-				let id = params['id'];
+				const id = params['id'];
 				if (!id) {
 					return null;
 				}
-				let res = this._repo.getById(params['id']);
+				const res = this._repo.getById(params['id']);
 				return res;
 			})
 			.subscribe(country => {

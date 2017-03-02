@@ -1,6 +1,10 @@
 const electron = require('electron')
 const {Menu, MenuItem} = electron
 
+const {database: dbName} = require('./config.json')
+
+console.log(dbName)
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -32,7 +36,7 @@ function createWindow() {
 	let menu = new Menu()
 	menu.append(
 		new MenuItem({
-			label: "File",
+			label: "Database",
 			submenu: [
 				new MenuItem({
 					label: 'Maintenance',
@@ -83,3 +87,4 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+

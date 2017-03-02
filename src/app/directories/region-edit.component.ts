@@ -32,11 +32,11 @@ export class RegionEditComponent implements OnInit {
 	ngOnInit() {
 		this._route.params
 			.switchMap((params: Params) => {
-				let id = params['id'];
+				const id = params['id'];
 				if (!id) {
 					return null;
 				}
-				let res = this._regionRepo.getById(params['id']);
+				const res = this._regionRepo.getById(params['id']);
 				return res;
 			})
 			.subscribe(region => {
@@ -53,7 +53,7 @@ export class RegionEditComponent implements OnInit {
 							.filter(c => cnts.every(cr => cr !== c._id));
 						this.region.countries = cnts.map(code => {
 							const v = countries.find(c => c._id === code);
-							return v ? v : new Country(code, '<undefined>')
+							return v ? v : new Country(code, '<undefined>');
 						});
 						console.log(this.region.countries);
 					});
