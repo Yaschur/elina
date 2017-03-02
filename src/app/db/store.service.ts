@@ -5,10 +5,12 @@ import * as PouchDbUpsert from 'pouchdb-upsert';
 
 import { Entity } from './entity.model';
 
+const { database: dbConfig } = require('../../electron/config.json');
+
 PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
 // PouchDB.debug.disable();
-const MAIN_DB_NAME = 'elina_db';
+// const MAIN_DB_NAME = 'elina_db';
 
 @Injectable()
 export class StoreService {
@@ -16,7 +18,8 @@ export class StoreService {
 	private _db: PouchDB.Database<any>;
 
 	constructor() {
-		this._db = new PouchDB(MAIN_DB_NAME, {auto_compaction: true});
+		const dbName = dbConfig.nameOrUrl;
+		this._db = new PouchDB(dbName, {auto_compaction: true});
 		// TODO: refactor indexing
 		this._db.createIndex({ index: { fields: ['type'] } })
 			.catch((e) => console.log(e));

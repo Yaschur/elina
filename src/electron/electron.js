@@ -1,10 +1,6 @@
 const electron = require('electron')
 const {Menu, MenuItem} = electron
 
-const {database: dbName} = require('./config.json')
-
-console.log(dbName)
-
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -41,7 +37,7 @@ function createWindow() {
 				new MenuItem({
 					label: 'Maintenance',
 					click: (mi, bw) => bw.loadURL(url.format({
-						pathname: path.join(__dirname, 'clt/maintenance.html'),
+						pathname: path.join(__dirname, 'maintenance.html'),
 						protocol: 'file:',
 						slashes: true
 					})),

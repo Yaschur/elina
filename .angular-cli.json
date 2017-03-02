@@ -8,8 +8,7 @@
 			"root": "src",
 			"outDir": "dist/clt",
 			"assets": [
-				"assets",
-				"maintenance.html"
+				"assets"
 			],
 			"index": "index.html",
 			"main": "main.ts",
