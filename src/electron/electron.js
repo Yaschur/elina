@@ -1,5 +1,5 @@
 const electron = require('electron')
-const {Menu, MenuItem} = electron
+const { Menu, MenuItem } = electron
 
 // Module to control application life.
 const app = electron.app
@@ -14,7 +14,7 @@ const url = require('url')
 let mainWindow
 
 function createWindow() {
-	const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize
+	const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
 	// Create the browser window.
 	mainWindow = new BrowserWindow({ width: width, height: height })
 	mainWindow.setMenu(null);
@@ -46,7 +46,7 @@ function createWindow() {
 			]
 		})
 	)
-	
+
 	mainWindow.setMenu(menu)
 	// mainWindow.webContents.openDevTools()
 
@@ -83,4 +83,10 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
+electron.ipcMain.on('show-app', () => {
+	mainWindow.loadURL(url.format({
+		pathname: path.join(__dirname, 'clt/index.html'),
+		protocol: 'file:',
+		slashes: true
+	}))
+})
