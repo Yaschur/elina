@@ -12,7 +12,7 @@ const fileName = electron.remote.dialog.showOpenDialog({
 
 if (fileName) {
 	const pouchDb = new PouchDB(dbName)
-	fs.readFile(fileName, (err, data) =>
+	fs.readFile(fileName, (err, data) => {
 		if (err) {
 			console.log(err)
 		} else {
@@ -22,7 +22,7 @@ if (fileName) {
 				.then(() => electron.ipcRenderer.send('show-app'))
 				.catch((e) => console.log(e))
 		}
-	)
+	})
 }
 else {
 	electron.ipcRenderer.send('show-app')
