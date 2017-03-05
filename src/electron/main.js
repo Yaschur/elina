@@ -27,27 +27,27 @@ function createWindow() {
 	}))
 
 	// Open the DevTools.
-	electron.globalShortcut.register('Ctrl+Shift+D', () => mainWindow.webContents.openDevTools())
+	electron.globalShortcut.register('Ctrl+Shift+D', () => mainWindow.toggleDevTools())
 
-	let menu = new Menu()
-	menu.append(
-		new MenuItem({
-			label: "Database",
-			submenu: [
-				new MenuItem({
-					label: 'Maintenance',
-					click: (mi, bw) => bw.loadURL(url.format({
-						pathname: path.join(__dirname, 'maintenance.html'),
-						protocol: 'file:',
-						slashes: true
-					})),
-					type: 'normal'
-				})
-			]
-		})
-	)
+	// let menu = new Menu()
+	// menu.append(
+	// 	new MenuItem({
+	// 		label: "Database",
+	// 		submenu: [
+	// 			new MenuItem({
+	// 				label: 'Maintenance',
+	// 				click: (mi, bw) => bw.loadURL(url.format({
+	// 					pathname: path.join(__dirname, 'maintenance.html'),
+	// 					protocol: 'file:',
+	// 					slashes: true
+	// 				})),
+	// 				type: 'normal'
+	// 			})
+	// 		]
+	// 	})
+	// )
 
-	mainWindow.setMenu(menu)
+	//mainWindow.setMenu(menu)
 	// mainWindow.webContents.openDevTools()
 
 	// Emitted when the window is closed.
@@ -57,6 +57,8 @@ function createWindow() {
 		// when you should delete the corresponding element.
 		mainWindow = null
 	})
+
+	require('./menus/mainmenu')
 }
 
 // This method will be called when Electron has finished
