@@ -7,10 +7,36 @@ const template = [
 		label: 'File',
 		submenu: [
 			{
-				label: 'Export to file'
+				label: 'Reload',
+				click() {
+					require('electron').ipcMain.emit('show-app')
+				}
 			},
 			{
-				label: 'Import from file'
+				type: 'separator'
+			},
+			{
+				label: 'Export to file',
+				click(item, win) {
+					win.loadURL(url.format({
+						pathname: path.join(__dirname, '../transfer/export.html'),
+						protocol: 'file:',
+						slashes: true
+					}))
+				}
+			},
+			{
+				label: 'Import from file',
+				click(item, win) {
+					win.loadURL(url.format({
+						pathname: path.join(__dirname, '../transfer/import.html'),
+						protocol: 'file:',
+						slashes: true
+					}))
+				}
+			},
+			{
+				type: 'separator'
 			},
 			{
 				label: 'Exit',
