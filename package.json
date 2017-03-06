@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "lint": "ng lint",
-    "build-electron": "rm -r dist && ng build --base-href . && cp -a src/electron/* dist",
+    "build-electron": "rm -rf dist && ng build --base-href . && cp -a src/electron/* dist",
     "electron": "npm run build-electron && electron dist"
   },
   "dependencies": {
