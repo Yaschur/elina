@@ -3,27 +3,27 @@ const fs = require('fs')
 const path = require('path')
 const config = require('../config.json')
 
-const dbName = config.database.nameOrUrl;
+const dbName = config.database.nameOrUrl
 
 const fileName = electron.remote.dialog.showOpenDialog({
-	filters: [{ extensions: ['json'] }],
+	filters: [{ name: 'data', extensions: ['json'] }],
 	title: 'Choose file to import'
 })
-
+console.log(fileName)
 if (fileName) {
-	const pouchDb = new PouchDB(dbName)
-	fs.readFile(fileName, (err, data) => {
+	let pouchDb = new PouchDB(dbName)
+	fs.readFile(fileName[0], (err, data) => {
 		if (err) {
 			console.log(err)
 		} else {
 			pouchDb.destroy()
 			pouchDb = new PouchDB(dbName)
 			pouchDb.bulkDocs(JSON.parse(data))
-				.then(() => electron.ipcRenderer.send('show-app'))
+				.then(() => console.log('d')) //electron.ipcRenderer.send('show-app'))
 				.catch((e) => console.log(e))
 		}
 	})
 }
 else {
-	electron.ipcRenderer.send('show-app')
+	//electron.ipcRenderer.send('show-app')
 }

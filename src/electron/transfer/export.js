@@ -3,10 +3,10 @@ const fs = require('fs')
 const path = require('path')
 const config = require('../config.json')
 
-const dbName = config.database.nameOrUrl;
+const dbName = config.database.nameOrUrl
 
 const fileName = electron.remote.dialog.showSaveDialog({
-	filters: [{ extensions: ['json'] }],
+	filters: [{ name: 'data', extensions: ['json'] }],
 	title: 'Where to export data'
 })
 
@@ -27,6 +27,7 @@ if (fileName) {
 				if (err) {
 					console.log(err)
 				}
+				electron.ipcRenderer.send('show-app')
 			})
 		}).catch((e) => console.log(e))
 }
