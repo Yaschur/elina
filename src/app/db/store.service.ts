@@ -9,8 +9,6 @@ const { database: dbConfig } = require('../../electron/config.json');
 
 PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
-// PouchDB.debug.disable();
-// const MAIN_DB_NAME = 'elina_db';
 
 @Injectable()
 export class StoreService {
@@ -127,7 +125,6 @@ export class StoreService {
 	private convertIdToDb(type: string, id: string) {
 		return type + '_' + id;
 	}
-
 	private convertToDb(type: string, item: any): any {
 		console.log(item);
 		item._id = this.convertIdToDb(type, item._id);
