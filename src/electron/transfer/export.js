@@ -23,7 +23,7 @@ if (fileName) {
 					delete doc._rev
 					return doc
 				})
-			fs.appendFile(fileName, JSON.stringify(content), (err) => {
+			fs.writeFile(fileName, JSON.stringify(content), (err) => {
 				if (err) {
 					console.log(err)
 				}

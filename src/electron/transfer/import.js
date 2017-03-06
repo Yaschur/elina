@@ -17,13 +17,17 @@ if (fileName) {
 			console.log(err)
 		} else {
 			pouchDb.destroy()
-			pouchDb = new PouchDB(dbName)
-			pouchDb.bulkDocs(JSON.parse(data))
-				.then(() => console.log('d')) //electron.ipcRenderer.send('show-app'))
-				.catch((e) => console.log(e))
+				.then(() => {
+					pouchDb = new PouchDB(dbName)
+					const items = JSON.parse(data)
+					console.log(items)
+					pouchDb.bulkDocs(items)
+						.then((res) => electron.ipcRenderer.send('show-app'))
+						.catch((e) => console.log(e))
+				}).catch(e => console.log(e))
 		}
 	})
 }
 else {
-	//electron.ipcRenderer.send('show-app')
+	electron.ipcRenderer.send('show-app')
 }
