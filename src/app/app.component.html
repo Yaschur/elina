@@ -1,21 +1,19 @@
-<div class="window">
-	<div class="window-content">
-		<div class="pane-group">
-			<div class="pane pane-sm sidebar">
-				<nav class="nav-group">
-					<h5 class="nav-group-title">Directories</h5>
-					<a routerLink="/countries" class="nav-group-item" routerLinkActive="active">
-						<span class="icon icon-globe"></span> countries
-					</a>
-					<a routerLink="/regions" class="nav-group-item" routerLinkActive="active">
-						<span class="icon icon-address"></span> regions
-					</a>
-				</nav>
-			</div>
-			<div class="pane">
-				<router-outlet></router-outlet>
-			</div>
-		</div>
-	</div>
-	<footer class="toolbar toolbar-footer"> &gt; {{appVersion}}</footer>
+<div class="container">
+	<nav class="nav-group">
+		<h5 class="nav-group-title">Directories</h5>
+		<a routerLink="/countries" class="nav-group-item" routerLinkActive="active">
+			<span class="icon icon-globe"></span> countries
+		</a>
+		<a routerLink="/regions" class="nav-group-item" routerLinkActive="active">
+			<span class="icon icon-address"></span> regions
+		</a>
+	</nav>
 </div>
+<div class="pane">
+	<router-outlet></router-outlet>
+</div>
+<footer class="navbar-default navbar-fixed-bottom">
+	<div class="container-fluid">
+		<span>&gt; {{appVersion}}</span>
+	</div>
+</footer>

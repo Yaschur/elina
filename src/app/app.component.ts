@@ -10,7 +10,7 @@ declare var electron: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-	appVersion = 'v';
+	appVersion = 'v ';
 	constructor() {
 		this.appVersion += appVersion;
 	}
