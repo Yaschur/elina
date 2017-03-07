@@ -1,10 +1,7 @@
-<header>
-
-</header>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-3">
-			<nav class="navbar">
+			<nav class="navbar navbar-default">
 				<h4>directories</h4>
 				<ul class="nav nav-stacked">
 					<li routerLinkActive="active"><a routerLink="/countries"><span class="glyphicon glyphicon-globe"></span> Countries</a></li>
@@ -12,24 +9,10 @@
 				</ul>
 			</nav>
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-9">
 			<router-outlet></router-outlet>
 		</div>
 	</div>
-
-
-	<!--<nav class="nav-group">
-		<h5 class="nav-group-title">Directories</h5>
-		<a routerLink="/countries" class="nav-group-item" routerLinkActive="active">
-			<span class="icon icon-globe"></span> countries
-		</a>
-		<a routerLink="/regions" class="nav-group-item" routerLinkActive="active">
-			<span class="icon icon-address"></span> regions
-		</a>
-	</nav>-->
-	<!--</div>
-<div class="pane">
-	<router-outlet></router-outlet>-->
 </div>
 <footer class="navbar-default navbar-fixed-bottom">
 	<span>&gt; {{appVersion}}</span>

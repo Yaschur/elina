@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Country } from './models/Country.model';
-
 import { CountryRepository } from './repositories/country.repository';
 
 @Component({
@@ -14,6 +13,7 @@ import { CountryRepository } from './repositories/country.repository';
 export class CountryListComponent implements OnInit {
 
 	items: Country[] = [];
+	title = 'Countries';
 
 	constructor(
 		private _repo: CountryRepository,
