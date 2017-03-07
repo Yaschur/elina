@@ -13,7 +13,6 @@ import { CountryRepository } from './repositories/country.repository';
 export class CountryListComponent implements OnInit {
 
 	items: Country[] = [];
-	title = 'Countries';
 
 	constructor(
 		private _repo: CountryRepository,

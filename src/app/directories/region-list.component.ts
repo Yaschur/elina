@@ -14,7 +14,6 @@ import { RegionRepository } from './repositories/region.repository';
 export class RegionListComponent implements OnInit {
 
 	items: Region[] = [];
-	title = 'Regions';
 
 	constructor(
 		private _repo: RegionRepository,

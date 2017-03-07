@@ -1,22 +1,23 @@
-<header class="toolbar toolbar-header padded-less">
-	<div class="toolbar-actions">
-		<button class="btn btn-large btn-default" (click)="gotoBack()">
-			<span class="icon icon-cancel"></span> cancel
-		</button>
-		<button class="btn btn-large btn-default" (click)="save()">
-			<span class="icon icon-check"></span> SAVE
-		</button>
+<nav class="navbar navbar-default">
+	<p class="navbar-text">
+		<span class="glyphicon glyphicon-globe"></span> {{country.code ? country.code : 'new'}}
+	</p>
+	<button type="button" class="btn btn-default navbar-btn" (click)="gotoBack()">
+		<span class="glyphicon glyphicon-remove"></span> cancel
+	</button>
+	<button type="button" class="btn btn-default navbar-btn" (click)="save()">
+		<span class="glyphicon glyphicon-ok"></span> SAVE
+	</button>
+</nav>
+<form>
+	<div class="form-group">
+		<label for="code">Country code</label>
+		<input [(ngModel)]="country.code" type="text" name="code" id="code" maxlength="3" size="3" required="required" class="form-control"
+		 placeholder="type unique country code here">
 	</div>
-</header>
-<div class="pane padded">
-	<form>
-		<div class="form-group">
-			<label>Country code</label>
-			<input type="text" maxlength="3" required="required" name="code" [(ngModel)]="country.code" class="form-control" placeholder="type unique country code here"/>
-		</div>
-		<div class="form-group">
-			<label>Country name</label>
-			<input type="text" name="name" [(ngModel)]="country.name" class="form-control" placeholder="type country name here" />
-		</div>
-	</form>
-</div>
+
+	<div class="form-group">
+		<label for="name">Country name</label>
+		<input [(ngModel)]="country.name" type="text" name="name" id="name" class="form-control" placeholder="type country name here">
+	</div>
+</form>

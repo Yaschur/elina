@@ -1,41 +1,34 @@
-<header class="toolbar toolbar-header padded-less">
-	<div class="toolbar-actions">
-		<button class="btn btn-large btn-default" (click)="gotoBack()">
-			<span class="icon icon-cancel"></span> cancel
-		</button>
-		<button class="btn btn-large btn-default" (click)="save()">
-			<span class="icon icon-check"></span> SAVE
-		</button>
+<nav class="navbar navbar-default">
+	<p class="navbar-text">
+		<span class="glyphicon glyphicon-tags"></span> {{region.id ? region.id : 'new'}}
+	</p>
+	<button type="button" class="btn btn-default navbar-btn" (click)="gotoBack()">
+		<span class="glyphicon glyphicon-remove"></span> cancel
+	</button>
+	<button type="button" class="btn btn-default navbar-btn" (click)="save()">
+		<span class="glyphicon glyphicon-ok"></span> SAVE
+	</button>
+</nav>
+<form>
+	<div class="form-group">
+		<label for="name">Region name</label>
+		<input [(ngModel)]="region.name" type="text" name="name" id="name" required="required" class="form-control" placeholder="type name of region here">
 	</div>
-</header>
-<div class="pane padded">
-	<form>
-		<div class="form-group">
-			<label>Region name</label>
-			<input type="text" required="required" name="name" [(ngModel)]="region.name" class="form-control" placeholder="type name of region here" />
-		</div>
-	</form>
-</div>
-<div class="padded">
-	<div class="padded-less">
+</form>
+<div class="row">
+	<div class="col-md-6">
 		<h4>Region's countries:</h4>
 		<ul class="list-group">
 			<li class="list-group-item" *ngFor="let item of region.countries" (click)="exclude(item._id)">
-				<div class="media-body">
-					<strong>{{item._id}}</strong>
-					<p>{{item.name}}</p>
-				</div>
+				<span class="badge">{{item._id}}</span> {{item.name}}
 			</li>
 		</ul>
 	</div>
-	<div class="padded-less">
+	<div class="col-md-6">
 		<h4>Other countries:</h4>
 		<ul class="list-group">
 			<li class="list-group-item" *ngFor="let item of countries" (click)="include(item._id)">
-				<div class="media-body">
-					<strong>{{item._id}}</strong>
-					<p>{{item.name}}</p>
-				</div>
+				<span class="badge">{{item._id}}</span> {{item.name}}
 			</li>
 		</ul>
 	</div>
