@@ -1,14 +1,4 @@
-<nav class="navbar navbar-default">
-	<p class="navbar-text">
-		<span class="glyphicon glyphicon-globe"></span> {{country.code ? country.code : 'new'}}
-	</p>
-	<button type="button" class="btn btn-default navbar-btn" (click)="gotoBack()">
-		<span class="glyphicon glyphicon-remove"></span> cancel
-	</button>
-	<button type="button" class="btn btn-default navbar-btn" (click)="save()">
-		<span class="glyphicon glyphicon-ok"></span> SAVE
-	</button>
-</nav>
+<app-edit-header glyphTag="globe" label="{{country.code ? country.code : 'new'}}" (onSubmit)="submit($event)"></app-edit-header>
 <form>
 	<div class="form-group">
 		<label for="code">Country code</label>

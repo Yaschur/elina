@@ -57,7 +57,16 @@ export class RegionEditComponent implements OnInit {
 			});
 	}
 
-	save(): void {
+	submit(save: boolean) {
+		if (save) {
+			this.save();
+		}
+		else {
+			this.gotoBack();
+		}
+	}
+
+	private save(): void {
 		const country = new Region({
 			_id: this.region.id,
 			name: this.region.name,
@@ -67,7 +76,7 @@ export class RegionEditComponent implements OnInit {
 		this.gotoBack();
 	}
 
-	gotoBack(): void {
+	private gotoBack(): void {
 		this._location.back();
 	}
 

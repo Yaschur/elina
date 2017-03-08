@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Region } from './models/region.model';
-
 import { DirectoryRepository } from './repositories/directory.repository';
 
 @Component({

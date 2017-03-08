@@ -41,13 +41,22 @@ export class CountryEditComponent implements OnInit {
 			});
 	}
 
-	save(): void {
+	submit(save: boolean) {
+		if (save) {
+			this.save();
+		}
+		else {
+			this.gotoBack();
+		}
+	}
+
+	private save(): void {
 		const country = new Country({ _id: this.country.code, name: this.country.name });
 		this._repo.store(country);
 		this.gotoBack();
 	}
 
-	gotoBack(): void {
+	private gotoBack(): void {
 		this._location.back();
 	}
 }

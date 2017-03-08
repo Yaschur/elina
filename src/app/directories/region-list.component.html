@@ -1,11 +1,4 @@
-<nav class="navbar navbar-default">
-	<p class="navbar-text">
-		<span class="glyphicon glyphicon-tags"></span> Regions
-	</p>
-	<button type="button" class="btn btn-default navbar-btn" (click)="gotoEdit('__new__')">
-		<span class="glyphicon glyphicon-plus"></span> add new
-	</button>
-</nav>
+<app-list-header glyphTag="tags" title="Region" (onNew)="gotoEdit('__new__')"></app-list-header>
 <table class="table table-hover table-condensed">
 	<thead>
 		<tr>
