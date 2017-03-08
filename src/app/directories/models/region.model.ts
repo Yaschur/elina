@@ -4,9 +4,9 @@ export class Region extends Entity {
 	name: string;
 	countries: string[];
 
-	constructor(id: string, name: string, countries?: string[]) {
-		super(id && id.length > 0 ? id : null);
-		this.name = name ? name : '';
-		this.countries = countries ? countries : [];
+	constructor(item: any) {
+		super(item._id && item._id.length > 0 ? item._id : null);
+		this.name = item.name ? item.name : '';
+		this.countries = item.countries ? item.countries : [];
 	}
 }

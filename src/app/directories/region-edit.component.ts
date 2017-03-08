@@ -6,16 +6,14 @@ import { Location } from '@angular/common';
 import { Region } from './models/region.model';
 import { Country } from './models/country.model';
 
-import { RegionRepository } from './repositories/region.repository';
-import { CountryRepository } from './repositories/country.repository';
+import { DirectoryRepository } from './repositories/directory.repository';
 
 @Component({
 	moduleId: module.id,
 	selector: 'app-region-edit',
 	templateUrl: 'region-edit.component.html',
 	providers: [
-		RegionRepository,
-		CountryRepository
+		DirectoryRepository
 	]
 })
 export class RegionEditComponent implements OnInit {
@@ -23,8 +21,7 @@ export class RegionEditComponent implements OnInit {
 	countries: Country[] = [];
 
 	constructor(
-		private _regionRepo: RegionRepository,
-		private _countrynRepo: CountryRepository,
+		private _directoryRepo: DirectoryRepository,
 		private _route: ActivatedRoute,
 		private _location: Location
 	) { }
@@ -36,7 +33,7 @@ export class RegionEditComponent implements OnInit {
 				if (!id) {
 					return null;
 				}
-				const res = this._regionRepo.getById(params['id']);
+				const res = this._directoryRepo.getById(Region, params['id']);
 				return res;
 			})
 			.subscribe(region => {
@@ -47,13 +44,13 @@ export class RegionEditComponent implements OnInit {
 					// this.region.countries = region.countries;
 					cnts = region.countries;
 				}
-				this._countrynRepo.findAll()
+				this._directoryRepo.findAll(Country)
 					.then(countries => {
 						this.countries = countries
 							.filter(c => cnts.every(cr => cr !== c._id));
 						this.region.countries = cnts.map(code => {
 							const v = countries.find(c => c._id === code);
-							return v ? v : new Country(code, '<undefined>');
+							return v ? v : new Country({ _id: code, name: '<undefined>' });
 						});
 						console.log(this.region.countries);
 					});
@@ -61,13 +58,12 @@ export class RegionEditComponent implements OnInit {
 	}
 
 	save(): void {
-		const country = new Region(
-			this.region.id,
-			this.region.name,
-			this.region.countries
-				.map(c => c._id)
-		);
-		this._regionRepo.store(country);
+		const country = new Region({
+			_id: this.region.id,
+			name: this.region.name,
+			countries: this.region.countries.map(c => c._id)
+		});
+		this._directoryRepo.store(country);
 		this.gotoBack();
 	}
 

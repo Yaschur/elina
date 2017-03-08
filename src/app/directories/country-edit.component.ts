@@ -5,19 +5,19 @@ import { Location } from '@angular/common';
 
 import { Country } from './models/country.model';
 
-import { CountryRepository } from './repositories/country.repository';
+import { DirectoryRepository } from './repositories/directory.repository';
 
 @Component({
 	moduleId: module.id,
 	selector: 'app-country-edit',
 	templateUrl: 'country-edit.component.html',
-	providers: [CountryRepository]
+	providers: [DirectoryRepository]
 })
 export class CountryEditComponent implements OnInit {
 	country = { code: '', name: '' };
 
 	constructor(
-		private _repo: CountryRepository,
+		private _repo: DirectoryRepository,
 		private _route: ActivatedRoute,
 		private _location: Location
 	) { }
@@ -29,7 +29,7 @@ export class CountryEditComponent implements OnInit {
 				if (!id) {
 					return null;
 				}
-				const res = this._repo.getById(params['id']);
+				const res = this._repo.getById(Country, params['id']);
 				return res;
 			})
 			.subscribe(country => {
@@ -42,7 +42,7 @@ export class CountryEditComponent implements OnInit {
 	}
 
 	save(): void {
-		const country = new Country(this.country.code, this.country.name);
+		const country = new Country({ _id: this.country.code, name: this.country.name });
 		this._repo.store(country);
 		this.gotoBack();
 	}
