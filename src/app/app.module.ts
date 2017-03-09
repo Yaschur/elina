@@ -14,11 +14,11 @@ import { EditHeaderComponent } from './directories/components/edit-header.compon
 import { StoreService } from './db/store.service';
 
 const appRoutes: Routes = [
-	{ path: 'countries', component: CountryListComponent },
-	{ path: 'regions', component: RegionListComponent },
-	{ path: 'country/edit/:id', component: CountryEditComponent },
-	{ path: 'region/edit/:id', component: RegionEditComponent },
-	{ path: '', redirectTo: '/countries', pathMatch: 'full' }
+	{ path: 'directory/country', component: CountryListComponent },
+	{ path: 'directory/region', component: RegionListComponent },
+	{ path: 'directory/country/:id', component: CountryEditComponent },
+	{ path: 'directory/region/:id', component: RegionEditComponent },
+	{ path: '', redirectTo: 'directory/country', pathMatch: 'full' }
 ];
 
 @NgModule({

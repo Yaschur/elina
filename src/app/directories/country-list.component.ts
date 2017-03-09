@@ -29,6 +29,6 @@ export class CountryListComponent implements OnInit {
 	}
 
 	gotoEdit(id: string = ''): void {
-		this._router.navigate(['/country/edit', id]);
+		this._router.navigate(['directory/country', id]);
 	}
 }
