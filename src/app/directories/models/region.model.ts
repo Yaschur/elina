@@ -1,12 +1,10 @@
-import { Entity } from '../../db/entity.model';
+import { Entry } from './entry.model';
 
-export class Region extends Entity {
-	name: string;
+export class Region extends Entry {
 	countries: string[];
 
 	constructor(item: any) {
-		super(item._id && item._id.length > 0 ? item._id : null);
-		this.name = item.name ? item.name : '';
+		super(item);
 		this.countries = item.countries ? item.countries : [];
 	}
 }

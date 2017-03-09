@@ -44,8 +44,7 @@ export class CountryEditComponent implements OnInit {
 	submit(save: boolean) {
 		if (save) {
 			this.save();
-		}
-		else {
+		} else {
 			this.gotoBack();
 		}
 	}

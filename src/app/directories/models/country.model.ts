@@ -1,7 +1,6 @@
-import { Entity } from '../../db/entity.model';
+import { Entry } from './entry.model';
 
-export class Country extends Entity {
-	name: string;
+export class Country extends Entry {
 
 	constructor(item: any) {
 		if (item._id.length === 0) {
@@ -11,7 +10,6 @@ export class Country extends Entity {
 			throw new Error('Country code must 3 letters long');
 		}
 		item._id = item._id.toUpperCase();
-		super(item._id);
-		this.name = item.name ? item.name : '';
+		super(item);
 	}
 }
