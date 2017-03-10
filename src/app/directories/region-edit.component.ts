@@ -60,9 +60,8 @@ export class RegionEditComponent implements OnInit {
 	submit(save: boolean) {
 		if (save) {
 			this.save();
-		}	else {
-			this.gotoBack();
 		}
+		this._location.back();
 	}
 
 	private save(): void {
@@ -72,11 +71,6 @@ export class RegionEditComponent implements OnInit {
 			countries: this.region.countries.map(c => c._id)
 		});
 		this._directoryRepo.store(country);
-		this.gotoBack();
-	}
-
-	private gotoBack(): void {
-		this._location.back();
 	}
 
 	include(code: string): void {

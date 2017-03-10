@@ -44,18 +44,12 @@ export class CountryEditComponent implements OnInit {
 	submit(save: boolean) {
 		if (save) {
 			this.save();
-		} else {
-			this.gotoBack();
 		}
+		this._location.back();
 	}
 
 	private save(): void {
 		const country = new Country({ _id: this.country.code, name: this.country.name });
 		this._repo.store(country);
-		this.gotoBack();
-	}
-
-	private gotoBack(): void {
-		this._location.back();
 	}
 }

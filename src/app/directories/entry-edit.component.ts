@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Location } from '@angular/common';
 
 import { Entry } from './models/entry.model';
 import { JobResponsibility } from './models/job-responsibility.model';
@@ -18,40 +18,52 @@ class Meta {
 
 @Component({
 	moduleId: module.id,
-	selector: 'app-entry-list',
-	templateUrl: 'entry-list.component.html',
+	selector: 'app-entry-edit',
+	templateUrl: 'entry-edit.component.html',
 	providers: [DirectoryRepository]
 })
-export class EntryListComponent implements OnInit {
+export class EntryEditComponent implements OnInit {
 	static entryMap = {
 		'jobresponsibility': new Meta('check', 'Job Responsibility', JobResponsibility, 'jobresponsibility'),
 		'jobtitle': new Meta('list-alt', 'Job Title', JobTitle, 'jobtitle')
 	};
 	meta = new Meta('time', '', null, '');
-	items: Entry[] = [];
-
+	item = { _id: '', name: '' };
 	constructor(
 		private _repo: DirectoryRepository,
-		private _router: Router,
-		private _route: ActivatedRoute
+		private _route: ActivatedRoute,
+		private _location: Location
 	) { }
 
 	ngOnInit() {
 		this._route.params
-			.subscribe(params => {
+			.switchMap(params => {
 				const entry = params['entry'];
-				this.meta = EntryListComponent.entryMap[entry];
-				this.findItems();
+				const id = params['id'];
+				this.meta = EntryEditComponent.entryMap[entry];
+				const item = this._repo.getById(this.meta.entryType, id);
+				return item;
+			})
+			.subscribe(item => {
+				if (item) {
+					this.item._id = item._id;
+					this.item.name = item.name;
+				}
 			});
 	}
 
-	findItems() {
-		this._repo.findAll<Entry>(this.meta.entryType)
-			.then(res => this.items = res);
+	submit(save: boolean) {
+		if (save) {
+			this.save();
+		}
+		this._location.back();
 	}
 
-	gotoEdit(id: string = ''): void {
-		this._router.navigate(['directory/' + this.meta.entryName, id]);
-		return;
+	private save(): void {
+		if (!this.item.name.trim()) {
+			return;
+		}
+		const item = new this.meta.entryType({ _id: this.item._id, name: this.item.name });
+		this._repo.store(item);
 	}
 }

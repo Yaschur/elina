@@ -12,6 +12,7 @@ import { RegionEditComponent } from './directories/region-edit.component';
 import { ListHeaderComponent } from './directories/components/list-header.component';
 import { EditHeaderComponent } from './directories/components/edit-header.component';
 import { EntryListComponent } from './directories/entry-list.component';
+import { EntryEditComponent } from './directories/entry-edit.component';
 import { StoreService } from './db/store.service';
 
 const appRoutes: Routes = [
@@ -20,6 +21,7 @@ const appRoutes: Routes = [
 	{ path: 'directory/country/:id', component: CountryEditComponent },
 	{ path: 'directory/region/:id', component: RegionEditComponent },
 	{ path: 'directory/:entry', component: EntryListComponent },
+	{ path: 'directory/:entry/:id', component: EntryEditComponent },
 	{ path: '', redirectTo: 'directory/country', pathMatch: 'full' }
 ];
 
@@ -32,7 +34,8 @@ const appRoutes: Routes = [
 		RegionEditComponent,
 		ListHeaderComponent,
 		EditHeaderComponent,
-		EntryListComponent
+		EntryListComponent,
+		EntryEditComponent
 	],
 	imports: [
 		BrowserModule,
