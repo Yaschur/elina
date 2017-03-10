@@ -6,7 +6,10 @@ import { Entry } from './models/entry.model';
 import { JobResponsibility } from './models/job-responsibility.model';
 import { JobTitle } from './models/job-title.model';
 import { Activity } from './models/activity.model';
+import { ContentResponsibility } from './models/content-responsibility.model';
+import { RightsResponsibility } from './models/rights-responsibility.model';
 import { DirectoryRepository } from './repositories/directory.repository';
+
 
 class Meta {
 	constructor(
@@ -27,7 +30,9 @@ export class EntryListComponent implements OnInit {
 	static entryMap = {
 		'jobresponsibility': new Meta('check', 'Job Responsibility', JobResponsibility, 'jobresponsibility'),
 		'jobtitle': new Meta('list-alt', 'Job Title', JobTitle, 'jobtitle'),
-		'activity': new Meta('dashboard', 'Activity', Activity, 'activity')
+		'activity': new Meta('dashboard', 'Activity', Activity, 'activity'),
+		'contentresponsibility': new Meta('picture', 'Content Responsibility', ContentResponsibility, 'contentresponsibility'),
+		'rightsresponsibility': new Meta('briefcase', 'Rights Responsibility', RightsResponsibility, 'rightsresponsibility')
 	};
 	meta = new Meta('time', '', null, '');
 	items: Entry[] = [];
