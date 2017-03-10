@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Entry } from './models/entry.model';
 import { JobResponsibility } from './models/job-responsibility.model';
 import { JobTitle } from './models/job-title.model';
+import { Activity } from './models/activity.model';
 import { DirectoryRepository } from './repositories/directory.repository';
 
 class Meta {
@@ -25,7 +26,8 @@ class Meta {
 export class EntryListComponent implements OnInit {
 	static entryMap = {
 		'jobresponsibility': new Meta('check', 'Job Responsibility', JobResponsibility, 'jobresponsibility'),
-		'jobtitle': new Meta('list-alt', 'Job Title', JobTitle, 'jobtitle')
+		'jobtitle': new Meta('list-alt', 'Job Title', JobTitle, 'jobtitle'),
+		'activity': new Meta('dashboard', 'Activity', Activity, 'activity')
 	};
 	meta = new Meta('time', '', null, '');
 	items: Entry[] = [];
