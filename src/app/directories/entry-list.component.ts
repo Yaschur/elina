@@ -8,10 +8,10 @@ import { DirectoryRepository } from './repositories/directory.repository';
 
 class Meta {
 	constructor(
-		public glythTag: string,
+		public glyphTag: string,
 		public title: string,
 		public entryType: new (x: any) => Entry,
-		public entryNameLower: string
+		public entryName: string
 	) { }
 }
 
@@ -22,6 +22,10 @@ class Meta {
 	providers: [DirectoryRepository]
 })
 export class EntryListComponent implements OnInit {
+	static entryMap = {
+		'jobresponsibility': new Meta('check', 'Job Responsibility', JobResponsibility, 'jobresponsibility'),
+		'jobtitle': new Meta('check', 'Job Responsibility', JobResponsibility, 'jobresponsibility')
+	};
 	meta = new Meta('time', '', null, '');
 	items: Entry[] = [];
 
@@ -33,19 +37,10 @@ export class EntryListComponent implements OnInit {
 
 	ngOnInit() {
 		this._route.params
-			.switchMap((params: Params) => {
+			.subscribe(params => {
 				const entry = params['entry'];
-				if (!entry) {
-					return null;
-				}
-				const meta = new Meta('check', 'Job Responsibility', JobResponsibility, entry.toLowerCase());
-				return Promise.resolve(meta);
-			})
-			.subscribe(meta => {
-				if (meta != null) {
-					this.meta = meta;
-					this.findItems();
-				}
+				this.meta = EntryListComponent.entryMap[entry];
+				this.findItems();
 			});
 	}
 
@@ -55,9 +50,7 @@ export class EntryListComponent implements OnInit {
 	}
 
 	gotoEdit(id: string = ''): void {
-		this._router.navigate(['directory/country', id]);
+		this._router.navigate(['directory/' + this.meta.entryName, id]);
 		return;
 	}
-
-	// static entryMap:	
 }
