@@ -3,42 +3,21 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Entry } from './models/entry.model';
-import { JobResponsibility } from './models/job-responsibility.model';
-import { JobTitle } from './models/job-title.model';
-import { Activity } from './models/activity.model';
-import { ContentResponsibility } from './models/content-responsibility.model';
-import { RightsResponsibility } from './models/rights-responsibility.model';
-import { DirectoryRepository } from './repositories/directory.repository';
 
-
-class Meta {
-	constructor(
-		public glyphTag: string,
-		public title: string,
-		public entryType: new (x: any) => Entry,
-		public entryName: string
-	) { }
-}
+import { DirectoryService } from './services/directory.service';
 
 @Component({
 	moduleId: module.id,
 	selector: 'app-entry-list',
-	templateUrl: 'entry-list.component.html',
-	providers: [DirectoryRepository]
+	templateUrl: 'entry-list.component.html'
 })
 export class EntryListComponent implements OnInit {
-	static entryMap = {
-		'jobresponsibility': new Meta('check', 'Job Responsibility', JobResponsibility, 'jobresponsibility'),
-		'jobtitle': new Meta('list-alt', 'Job Title', JobTitle, 'jobtitle'),
-		'activity': new Meta('dashboard', 'Activity', Activity, 'activity'),
-		'contentresponsibility': new Meta('picture', 'Content Responsibility', ContentResponsibility, 'contentresponsibility'),
-		'rightsresponsibility': new Meta('briefcase', 'Rights Responsibility', RightsResponsibility, 'rightsresponsibility')
-	};
-	meta = new Meta('time', '', null, '');
+	entryKey = '';
+	meta = DirectoryService.metaEntryEmpty;
 	items: Entry[] = [];
 
 	constructor(
-		private _repo: DirectoryRepository,
+		private _dirSrv: DirectoryService,
 		private _router: Router,
 		private _route: ActivatedRoute
 	) { }
@@ -46,19 +25,19 @@ export class EntryListComponent implements OnInit {
 	ngOnInit() {
 		this._route.params
 			.subscribe(params => {
-				const entry = params['entry'];
-				this.meta = EntryListComponent.entryMap[entry];
+				this.entryKey = params['entry'];
+				this.meta = this._dirSrv.getMeta(this.entryKey);
 				this.findItems();
 			});
 	}
 
 	findItems() {
-		this._repo.findAll<Entry>(this.meta.entryType)
-			.then(res => this.items = res);
+		this._dirSrv.datas
+			.subscribe(datas => this.items = datas[this.entryKey]);
 	}
 
 	gotoEdit(id: string = ''): void {
-		this._router.navigate(['directory/' + this.meta.entryName, id]);
+		this._router.navigate(['directory/' + this.entryKey, id]);
 		return;
 	}
 }

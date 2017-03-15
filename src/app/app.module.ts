@@ -14,6 +14,8 @@ import { EditHeaderComponent } from './directories/components/edit-header.compon
 import { EntryListComponent } from './directories/entry-list.component';
 import { EntryEditComponent } from './directories/entry-edit.component';
 import { StoreService } from './db/store.service';
+import { DirectoryRepository } from './directories/repositories/directory.repository';
+import { DirectoryService } from './directories/services/directory.service';
 
 const appRoutes: Routes = [
 	{ path: 'directory/country', component: CountryListComponent },
@@ -43,7 +45,7 @@ const appRoutes: Routes = [
 		HttpModule,
 		RouterModule.forRoot(appRoutes)
 	],
-	providers: [StoreService],
+	providers: [StoreService, DirectoryRepository, DirectoryService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,7 @@
 <app-edit-header glyphTag="{{meta.glyphTag}}" label="{{item._id ? item._id : 'new'}}" (onSubmit)="submit($event)"></app-edit-header>
 <form>
 	<div class="form-group">
-		<label for="name">{{meta.title}} name</label>
-		<input [(ngModel)]="item.name" type="text" name="name" id="name" class="form-control" placeholder="type {{meta.title.toLowerCase()}} name here">
+		<label for="name">{{meta.singularTitle}} name</label>
+		<input [(ngModel)]="item.name" type="text" name="name" id="name" class="form-control" placeholder="type {{meta.singularTitle.toLowerCase()}} name here">
 	</div>
 </form>

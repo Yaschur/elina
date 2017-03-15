@@ -3,40 +3,22 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Entry } from './models/entry.model';
-import { JobResponsibility } from './models/job-responsibility.model';
-import { JobTitle } from './models/job-title.model';
-import { Activity } from './models/activity.model';
-import { ContentResponsibility } from './models/content-responsibility.model';
-import { RightsResponsibility } from './models/rights-responsibility.model';
-import { DirectoryRepository } from './repositories/directory.repository';
 
-class Meta {
-	constructor(
-		public glyphTag: string,
-		public title: string,
-		public entryType: new (x: any) => Entry,
-		public entryName: string
-	) { }
-}
+import { DirectoryRepository } from './repositories/directory.repository';
+import { DirectoryService } from './services/directory.service';
 
 @Component({
 	moduleId: module.id,
 	selector: 'app-entry-edit',
-	templateUrl: 'entry-edit.component.html',
-	providers: [DirectoryRepository]
+	templateUrl: 'entry-edit.component.html'
 })
 export class EntryEditComponent implements OnInit {
-	static entryMap = {
-		'jobresponsibility': new Meta('check', 'Job Responsibility', JobResponsibility, 'jobresponsibility'),
-		'jobtitle': new Meta('list-alt', 'Job Title', JobTitle, 'jobtitle'),
-		'activity': new Meta('dashboard', 'Activity', Activity, 'activity'),
-		'contentresponsibility': new Meta('picture', 'Content Responsibility', ContentResponsibility, 'contentresponsibility'),
-		'rightsresponsibility': new Meta('briefcase', 'Rights Responsibility', RightsResponsibility, 'rightsresponsibility')
-	};
-	meta = new Meta('time', '', null, '');
+	entryKey = '';
+	meta = DirectoryService.metaEntryEmpty;
 	item = { _id: '', name: '' };
 	constructor(
-		private _repo: DirectoryRepository,
+		private _dirRepo: DirectoryRepository,
+		private _dirSrv: DirectoryService,
 		private _route: ActivatedRoute,
 		private _location: Location
 	) { }
@@ -44,10 +26,10 @@ export class EntryEditComponent implements OnInit {
 	ngOnInit() {
 		this._route.params
 			.switchMap(params => {
-				const entry = params['entry'];
+				this.entryKey = params['entry'];
 				const id = params['id'];
-				this.meta = EntryEditComponent.entryMap[entry];
-				const item = this._repo.getById(this.meta.entryType, id);
+				this.meta = this._dirSrv.getMeta(this.entryKey);
+				const item = this._dirRepo.getById(this.meta.entryCtor, id);
 				return item;
 			})
 			.subscribe(item => {
@@ -69,7 +51,7 @@ export class EntryEditComponent implements OnInit {
 		if (!this.item.name.trim()) {
 			return;
 		}
-		const item = new this.meta.entryType({ _id: this.item._id, name: this.item.name });
-		this._repo.store(item);
+		const item = new this.meta.entryCtor({ _id: this.item._id, name: this.item.name });
+		this._dirSrv.storeEntry(this.entryKey, item);
 	}
 }
