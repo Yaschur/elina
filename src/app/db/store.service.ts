@@ -9,6 +9,7 @@ const { database: dbConfig } = require('../../electron/config.json');
 
 PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
+PouchDB.debug.disable();
 
 @Injectable()
 export class StoreService {
@@ -126,10 +127,8 @@ export class StoreService {
 		return type + '_' + id;
 	}
 	private convertToDb(type: string, item: any): any {
-		console.log(item);
 		item._id = this.convertIdToDb(type, item._id);
 		item.type = type;
-		console.log(item);
 		return item;
 	}
 	private convertIdToDomain(item: any): string {

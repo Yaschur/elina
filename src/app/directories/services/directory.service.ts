@@ -60,14 +60,15 @@ export class DirectoryService {
 	}
 
 	public storeEntry(key: string, item: Entry) {
+		const org = Object.assign({}, item);
 		this._dirRepo.store(item)
 			.then(() => {
 				const d = this._datas.getValue();
-				const ind = d[key].findIndex(entry => entry._id === item._id);
+				const ind = d[key].findIndex(entry => entry._id === org._id);
 				if (ind < 0) {
-					d[key].push(item);
+					d[key].push(org);
 				} else {
-					d[key][ind] = item;
+					d[key][ind] = org;
 				}
 				d[key] = d[key].sort((a, b) => a.name.localeCompare(b.name));
 				this._datas.next(d);
