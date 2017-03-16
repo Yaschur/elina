@@ -11,10 +11,7 @@ import { DirectoryRepository } from './repositories/directory.repository';
 @Component({
 	moduleId: module.id,
 	selector: 'app-region-edit',
-	templateUrl: 'region-edit.component.html',
-	providers: [
-		DirectoryRepository
-	]
+	templateUrl: 'region-edit.component.html'
 })
 export class RegionEditComponent implements OnInit {
 	region = { id: '', name: '', countries: [] };

@@ -7,8 +7,7 @@ import { DirectoryRepository } from './repositories/directory.repository';
 @Component({
 	moduleId: module.id,
 	selector: 'app-country-list',
-	templateUrl: 'country-list.component.html',
-	providers: [DirectoryRepository]
+	templateUrl: 'country-list.component.html'
 })
 export class CountryListComponent implements OnInit {
 

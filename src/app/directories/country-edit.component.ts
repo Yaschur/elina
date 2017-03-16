@@ -10,8 +10,7 @@ import { DirectoryRepository } from './repositories/directory.repository';
 @Component({
 	moduleId: module.id,
 	selector: 'app-country-edit',
-	templateUrl: 'country-edit.component.html',
-	providers: [DirectoryRepository]
+	templateUrl: 'country-edit.component.html'
 })
 export class CountryEditComponent implements OnInit {
 	country = { code: '', name: '' };
