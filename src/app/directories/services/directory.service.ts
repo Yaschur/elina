@@ -60,10 +60,6 @@ export class DirectoryService {
 		}
 	}
 
-	// get dirEntries() {
-	// 	return this._dirs;
-	// }
-
 	public getDir(key: string): DirEntries {
 		return this._dirs[key] ? this._dirs[key] : DirectoryService.dirEntriesEmpty;
 	}

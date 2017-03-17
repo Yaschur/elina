@@ -5,7 +5,8 @@ import { Location } from '@angular/common';
 
 import { Country } from './models/country.model';
 
-import { DirectoryRepository } from './repositories/directory.repository';
+import { DirEntries } from './models/dir-entries.model';
+import { DirectoryService } from './services/directory.service';
 
 @Component({
 	moduleId: module.id,
@@ -13,29 +14,30 @@ import { DirectoryRepository } from './repositories/directory.repository';
 	templateUrl: 'country-edit.component.html'
 })
 export class CountryEditComponent implements OnInit {
-	country = { code: '', name: '' };
+	dirEntries: DirEntries = DirectoryService.dirEntriesEmpty;
+	code = '';
+	name = '';
 
 	constructor(
-		private _repo: DirectoryRepository,
+		private _dirSrv: DirectoryService,
 		private _route: ActivatedRoute,
 		private _location: Location
 	) { }
 
 	ngOnInit() {
 		this._route.params
-			.switchMap((params: Params) => {
-				const id = params['id'];
-				if (!id) {
-					return null;
-				}
-				const res = this._repo.getById(Country, params['id']);
-				return res;
-			})
-			.subscribe(country => {
-				if (country != null) {
-					console.log(country);
-					this.country.code = country._id;
-					this.country.name = country.name;
+			.subscribe(params => {
+				this.code = params['id'];
+				this.dirEntries = this._dirSrv.getDir('country');
+			});
+		this.dirEntries.data
+			.subscribe(items => {
+				const ind = items.findIndex(e => e._id === this.code);
+				if (ind >= 0) {
+					this.name = items[ind].name;
+				} else {
+					this.code = '';
+					this.name = '';
 				}
 			});
 	}
@@ -48,7 +50,7 @@ export class CountryEditComponent implements OnInit {
 	}
 
 	private save(): void {
-		const country = new Country({ _id: this.country.code, name: this.country.name });
-		this._repo.store(country);
+		const country = new Country({ _id: this.code, name: this.name });
+		this._dirSrv.storeEntry('country', country);
 	}
 }

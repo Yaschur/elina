@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Country } from './models/country.model';
-import { DirectoryRepository } from './repositories/directory.repository';
+import { DirEntries } from './models/dir-entries.model';
+
+import { DirectoryService } from './services/directory.service';
 
 @Component({
 	moduleId: module.id,
@@ -11,20 +12,15 @@ import { DirectoryRepository } from './repositories/directory.repository';
 })
 export class CountryListComponent implements OnInit {
 
-	items: Country[] = [];
+	dirEntries: DirEntries = DirectoryService.dirEntriesEmpty;
 
 	constructor(
-		private _repo: DirectoryRepository,
+		private _dirSrv: DirectoryService,
 		private _router: Router
 	) { }
 
 	ngOnInit() {
-		this.findCountries();
-	}
-
-	findCountries() {
-		this._repo.findAll(Country)
-			.then(res => this.items = res);
+		this.dirEntries = this._dirSrv.getDir('country');
 	}
 
 	gotoEdit(id: string = ''): void {

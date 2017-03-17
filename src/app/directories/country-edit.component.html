@@ -1,13 +1,13 @@
-<app-edit-header glyphTag="globe" label="{{country.code ? country.code : 'new'}}" (onSubmit)="submit($event)"></app-edit-header>
+<app-edit-header glyphTag="{{dirEntries.meta.glyphTag}}" label="{{code ? code : 'new'}}" (onSubmit)="submit($event)"></app-edit-header>
 <form>
 	<div class="form-group">
-		<label for="code">Country code</label>
-		<input [(ngModel)]="country.code" type="text" name="code" id="code" maxlength="3" size="3" required="required" class="form-control"
-		 placeholder="type unique country code here">
+		<label for="code">{{dirEntries.meta.singularTitle}} code</label>
+		<input [(ngModel)]="code" type="text" name="code" id="code" maxlength="3" size="3" required="required" class="form-control"
+		 placeholder="type unique {{dirEntries.meta.singularTitle.toLowerCase()}} code here">
 	</div>
 
 	<div class="form-group">
-		<label for="name">Country name</label>
-		<input [(ngModel)]="country.name" type="text" name="name" id="name" class="form-control" placeholder="type country name here">
+		<label for="name">{{dirEntries.meta.singularTitle}} name</label>
+		<input [(ngModel)]="name" type="text" name="name" id="name" class="form-control" placeholder="type {{dirEntries.meta.singularTitle.toLowerCase()}} name here">
 	</div>
 </form>

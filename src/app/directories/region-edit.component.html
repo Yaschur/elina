@@ -1,15 +1,15 @@
-<app-edit-header glyphTag="tags" label="{{region.id ? region.id : 'new'}}" (onSubmit)="submit($event)"></app-edit-header>
+<app-edit-header glyphTag="{{meta.glyphTag}}" label="{{id ? id : 'new'}}" (onSubmit)="submit($event)"></app-edit-header>
 <form>
 	<div class="form-group">
-		<label for="name">Region name</label>
-		<input [(ngModel)]="region.name" type="text" name="name" id="name" required="required" class="form-control" placeholder="type name of region here">
+		<label for="name">{{meta.singularTitle}} name</label>
+		<input [(ngModel)]="name" type="text" name="name" id="name" required="required" class="form-control" placeholder="type name of {{meta.singularTitle.toLowerCase()}} here">
 	</div>
 </form>
 <div class="row">
 	<div class="col-md-6">
-		<h4>Region's countries:</h4>
+		<h4>{{meta.singularTitle}}'s countries:</h4>
 		<ul class="list-group">
-			<li class="list-group-item" *ngFor="let item of region.countries" (click)="exclude(item._id)">
+			<li class="list-group-item" *ngFor="let item of countries" (click)="exclude(item._id)">
 				<span class="badge">{{item._id}}</span> {{item.name}}
 			</li>
 		</ul>
@@ -17,7 +17,7 @@
 	<div class="col-md-6">
 		<h4>Other countries:</h4>
 		<ul class="list-group">
-			<li class="list-group-item" *ngFor="let item of countries" (click)="include(item._id)">
+			<li class="list-group-item" *ngFor="let item of dirCountries" (click)="include(item._id)">
 				<span class="badge">{{item._id}}</span> {{item.name}}
 			</li>
 		</ul>

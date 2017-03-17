@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Region } from './models/region.model';
-import { DirectoryRepository } from './repositories/directory.repository';
+import { DirEntries } from './models/dir-entries.model';
+
+import { DirectoryService } from './services/directory.service';
 
 @Component({
 	moduleId: module.id,
@@ -11,20 +12,15 @@ import { DirectoryRepository } from './repositories/directory.repository';
 })
 export class RegionListComponent implements OnInit {
 
-	items: Region[] = [];
+	dirEntries: DirEntries = DirectoryService.dirEntriesEmpty;
 
 	constructor(
-		private _repo: DirectoryRepository,
+		private _dirSrv: DirectoryService,
 		private _router: Router
 	) { }
 
 	ngOnInit() {
-		this.findRegions();
-	}
-
-	findRegions() {
-		this._repo.findAll(Region)
-			.then(res => this.items = res);
+		this.dirEntries = this._dirSrv.getDir('region');
 	}
 
 	gotoEdit(id: string = ''): void {

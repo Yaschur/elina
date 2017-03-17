@@ -26,14 +26,14 @@ export class DirEntries {
 	}
 
 	setItem(item: Entry) {
-		let d = this._data.getValue();
+		const d = this._data.getValue();
 		const ind = d.findIndex(entry => entry._id === item._id);
 		if (ind < 0) {
 			d.push(item);
 		} else {
 			d[ind] = item;
 		}
-		d = d.sort((a, b) => a.name.localeCompare(b.name));
+		d.sort((a, b) => a.name.localeCompare(b.name));
 		this._data.next(d);
 	}
 }
