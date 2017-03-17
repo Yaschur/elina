@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import { Entry } from './models/entry.model';
+import { DirEntries } from './models/dir-entries.model';
 
 import { DirectoryService } from './services/directory.service';
 
@@ -13,8 +13,7 @@ import { DirectoryService } from './services/directory.service';
 })
 export class EntryListComponent implements OnInit {
 	entryKey = '';
-	meta = DirectoryService.metaEntryEmpty;
-	items: Entry[] = [];
+	dirEntries: DirEntries = DirectoryService.dirEntriesEmpty;
 
 	constructor(
 		private _dirSrv: DirectoryService,
@@ -26,15 +25,14 @@ export class EntryListComponent implements OnInit {
 		this._route.params
 			.subscribe(params => {
 				this.entryKey = params['entry'];
-				this.meta = this._dirSrv.getMeta(this.entryKey);
-				this.findItems();
+				this.dirEntries = this._dirSrv.getDir(this.entryKey);
 			});
 	}
 
-	findItems() {
-		this._dirSrv.datas
-			.subscribe(datas => this.items = datas[this.entryKey]);
-	}
+	// findItems() {
+	// 	this._dirSrv.datas
+	// 		.subscribe(datas => this.items = datas[this.entryKey]);
+	// }
 
 	gotoEdit(id: string = ''): void {
 		this._router.navigate(['directory/' + this.entryKey, id]);
