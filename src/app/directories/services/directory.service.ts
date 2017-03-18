@@ -70,4 +70,11 @@ export class DirectoryService {
 			.then(() => this.getDir(key).setItem(org))
 			.catch(e => console.log(e));
 	}
+
+	public removeEntry(key: string, item: Entry) {
+		const org = Object.assign({}, item);
+		this._dirRepo.remove(item)
+			.then(() => this.getDir(key).clearItem(org))
+			.catch(e => console.log(e));
+	}
 }

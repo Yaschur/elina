@@ -14,6 +14,7 @@ import { DirectoryService } from './services/directory.service';
 	templateUrl: 'country-edit.component.html'
 })
 export class CountryEditComponent implements OnInit {
+	private _origId = '';
 	dirEntries: DirEntries = DirectoryService.dirEntriesEmpty;
 	code = '';
 	name = '';
@@ -28,6 +29,7 @@ export class CountryEditComponent implements OnInit {
 		this._route.params
 			.subscribe(params => {
 				this.code = params['id'];
+				this._origId = params['id'];
 				this.dirEntries = this._dirSrv.getDir('country');
 			});
 		this.dirEntries.data
@@ -36,7 +38,7 @@ export class CountryEditComponent implements OnInit {
 				if (ind >= 0) {
 					this.name = items[ind].name;
 				} else {
-					this.code = '';
+					this.code = this._origId = '';
 					this.name = '';
 				}
 			});
@@ -51,6 +53,9 @@ export class CountryEditComponent implements OnInit {
 
 	private save(): void {
 		const country = new Country({ _id: this.code, name: this.name });
+		if (this._origId && this._origId !== this.code) {
+			this._dirSrv.removeEntry('country', new Country({ _id: this._origId }));
+		}
 		this._dirSrv.storeEntry('country', country);
 	}
 }

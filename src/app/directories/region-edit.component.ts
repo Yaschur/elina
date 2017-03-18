@@ -42,7 +42,7 @@ export class RegionEditComponent implements OnInit {
 
 		this._dirSrv.getDir('country').data
 			.subscribe(cnts => {
-				this.dirCountries = cnts;
+				this.dirCountries = Array.from(cnts);
 			});
 
 		dirEntry.data
@@ -50,8 +50,11 @@ export class RegionEditComponent implements OnInit {
 				const ind = items.findIndex(e => e._id === this.id);
 				if (ind >= 0) {
 					this.name = items[ind].name;
-					this.countries = this.dirCountries
-						.filter(c => (<Region>items[ind]).countries.includes(c._id));
+					this.countries = (<Region>items[ind]).countries
+						.map(cid => { 
+							const country = this.dirCountries.find(c => c._id === cid);
+							return country ? country : new Country({_id: cid, name: '<!undefined!>'});
+						});
 					this.dirCountries = this.dirCountries
 						.filter(c => !this.countries.map(c1 => c1._id).includes(c._id));
 				} else {
@@ -92,6 +95,9 @@ export class RegionEditComponent implements OnInit {
 		if (index > -1) {
 			const country = this.countries[index];
 			this.countries.splice(index, 1);
+			if (country.name === '<!undefined!>') {
+				return;
+			}
 			this.dirCountries.push(country);
 			this.dirCountries.sort((a, b) => a.name.localeCompare(b.name));
 		}

@@ -36,4 +36,13 @@ export class DirEntries {
 		d.sort((a, b) => a.name.localeCompare(b.name));
 		this._data.next(d);
 	}
+
+	clearItem(item: Entry) {
+		const d = this._data.getValue();
+		const ind = d.findIndex(entry => entry._id === item._id);
+		if (ind >= 0) {
+			d.splice(ind, 1);
+			this._data.next(d);
+		}
+	}
 }
