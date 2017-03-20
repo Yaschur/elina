@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
+import { InfraModule } from './infra/infra.module';
+
 import { AppComponent } from './app.component';
 import { CountryListComponent } from './directories/country-list.component';
 import { CountryEditComponent } from './directories/country-edit.component';
@@ -13,7 +15,6 @@ import { ListHeaderComponent } from './directories/components/list-header.compon
 import { EditHeaderComponent } from './directories/components/edit-header.component';
 import { EntryListComponent } from './directories/entry-list.component';
 import { EntryEditComponent } from './directories/entry-edit.component';
-import { StoreService } from './db/store.service';
 import { DirectoryRepository } from './directories/repositories/directory.repository';
 import { DirectoryService } from './directories/services/directory.service';
 
@@ -43,9 +44,10 @@ const appRoutes: Routes = [
 		BrowserModule,
 		FormsModule,
 		HttpModule,
-		RouterModule.forRoot(appRoutes)
+		RouterModule.forRoot(appRoutes),
+		InfraModule
 	],
-	providers: [StoreService, DirectoryRepository, DirectoryService],
+	providers: [DirectoryRepository, DirectoryService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }
