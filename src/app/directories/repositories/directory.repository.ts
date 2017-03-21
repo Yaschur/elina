@@ -4,18 +4,18 @@ import { StoreService } from '../../infra/store.service';
 @Injectable()
 export class DirectoryRepository {
 
-	constructor(private _dbService: StoreService) { }
+	constructor(private _storeService: StoreService) { }
 
 	public async store<T>(entry: T) {
-		await this._dbService.store(this.getTypeName(entry), entry);
+		await this._storeService.store(this.getTypeName(entry), entry);
 	}
 
 	public async remove<T>(entry: T) {
-		await this._dbService.remove(this.getTypeName(entry), entry);
+		await this._storeService.remove(this.getTypeName(entry), entry);
 	}
 
 	public async getById<T>(ctor: { new (x): T }, id: string): Promise<T> {
-		const dbItem = await this._dbService.get(ctor.name.toLowerCase(), id);
+		const dbItem = await this._storeService.get(ctor.name.toLowerCase(), id);
 		if (!dbItem) {
 			return null;
 		}
@@ -23,7 +23,7 @@ export class DirectoryRepository {
 	}
 
 	public async findAll<T>(ctor: { new (x): T }): Promise<T[]> {
-		return (await this._dbService.find(
+		return (await this._storeService.find(
 			ctor.name.toLowerCase(),
 			{ name: { $gt: null } },
 			['name']

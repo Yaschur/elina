@@ -3,7 +3,7 @@ import { Entry } from './entry.model';
 export class Country extends Entry {
 
 	constructor(item: any) {
-		if (item._id.length === 0) {
+		if (!item._id) {
 			throw new Error('Country code must be set');
 		}
 		if (item._id.length !== 3) {

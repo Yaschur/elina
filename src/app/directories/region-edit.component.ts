@@ -51,9 +51,9 @@ export class RegionEditComponent implements OnInit {
 				if (ind >= 0) {
 					this.name = items[ind].name;
 					this.countries = (<Region>items[ind]).countries
-						.map(cid => { 
+						.map(cid => {
 							const country = this.dirCountries.find(c => c._id === cid);
-							return country ? country : new Country({_id: cid, name: '<!undefined!>'});
+							return country ? country : new Country({ _id: cid, name: '<!undefined!>' });
 						});
 					this.dirCountries = this.dirCountries
 						.filter(c => !this.countries.map(c1 => c1._id).includes(c._id));
