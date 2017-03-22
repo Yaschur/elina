@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -20,9 +20,11 @@ import { DirectoryService } from './directories/services/directory.service';
 
 import { CompanyRepository } from './companies/repositories/company.repository';
 import { CompanyListComponent } from './companies/company-list.component';
+import { CompanyEditComponent } from './companies/company-edit.component';
 
 const appRoutes: Routes = [
 	{ path: 'company', component: CompanyListComponent },
+	{ path: 'company/new', component: CompanyEditComponent },
 	{ path: 'directory/country', component: CountryListComponent },
 	{ path: 'directory/region', component: RegionListComponent },
 	{ path: 'directory/country/:id', component: CountryEditComponent },
@@ -43,11 +45,13 @@ const appRoutes: Routes = [
 		EditHeaderComponent,
 		EntryListComponent,
 		EntryEditComponent,
-		CompanyListComponent
+		CompanyListComponent,
+		CompanyEditComponent
 	],
 	imports: [
 		BrowserModule,
 		FormsModule,
+		ReactiveFormsModule,
 		HttpModule,
 		RouterModule.forRoot(appRoutes)
 	],
