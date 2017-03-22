@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
-import { InfraModule } from './infra/infra.module';
+import { StoreService } from './infra/store.service';
 
 import { AppComponent } from './app.component';
 import { CountryListComponent } from './directories/country-list.component';
@@ -48,10 +48,13 @@ const appRoutes: Routes = [
 		BrowserModule,
 		FormsModule,
 		HttpModule,
-		RouterModule.forRoot(appRoutes),
-		InfraModule
+		RouterModule.forRoot(appRoutes)
 	],
-	providers: [DirectoryRepository, DirectoryService],
+	providers: [
+		StoreService,
+		DirectoryRepository,
+		DirectoryService
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }
