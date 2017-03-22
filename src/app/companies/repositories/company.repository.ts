@@ -4,7 +4,7 @@ import { Company } from '../models/company.model';
 
 @Injectable()
 export class CompanyRepository {
-	static entityType = 'country';
+	static entityType = 'company';
 	constructor(private _storeService: StoreService) { }
 
 	public async store(company: Company) {

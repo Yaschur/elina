@@ -18,6 +18,7 @@ import { EntryEditComponent } from './directories/entry-edit.component';
 import { DirectoryRepository } from './directories/repositories/directory.repository';
 import { DirectoryService } from './directories/services/directory.service';
 
+import { CompanyRepository } from './companies/repositories/company.repository';
 import { CompanyListComponent } from './companies/company-list.component';
 
 const appRoutes: Routes = [
@@ -53,7 +54,8 @@ const appRoutes: Routes = [
 	providers: [
 		StoreService,
 		DirectoryRepository,
-		DirectoryService
+		DirectoryService,
+		CompanyRepository
 	],
 	bootstrap: [AppComponent]
 })
