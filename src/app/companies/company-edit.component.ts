@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
 	moduleId: module.id,
@@ -8,9 +8,13 @@ import { FormControl } from '@angular/forms';
 })
 export class CompanyEditComponent implements OnInit {
 	// company:
-	name = new FormControl();
+	companyForm: FormGroup;
 
-	constructor() { }
+	constructor(private _fb: FormBuilder) {
+		this.companyForm = this._fb.group({
+			name: ['', Validators.required]
+		});
+	}
 
 	ngOnInit() { }
 }

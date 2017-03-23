@@ -9,9 +9,15 @@
 		<span class="glyphicon glyphicon-ok"></span> SAVE
 	</button>
 </nav>
-<label class="center-block">Name:
-	<input class="form-control" [formControl]="name">
-</label>
+<form [formGroup]="companyForm" novalidate>
+  <div class="form-group">
+    <label class="center-block">Name:
+      <input class="form-control" formControlName="name">
+    </label>
+  </div>
+</form>
+<p>Form value: {{ companyForm.value | json }}</p>
+<p>Form status: {{ companyForm.status | json }}</p>
 <!--<form>
 	<div class="form-group">
 		<label for="code">{{dirEntries.meta.singularTitle}} code</label>
