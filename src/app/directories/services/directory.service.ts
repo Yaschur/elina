@@ -9,8 +9,6 @@ import { Country } from '../models/country.model';
 import { Region } from '../models/region.model';
 import { Activity } from '../models/activity.model';
 import { ContentResponsibility } from '../models/content-responsibility.model';
-import { RightsResponsibility } from '../models/rights-responsibility.model';
-import { JobTitle } from '../models/job-title.model';
 import { JobResponsibility } from '../models/job-responsibility.model';
 
 import { DirectoryRepository } from '../repositories/directory.repository';
@@ -34,12 +32,6 @@ export class DirectoryService {
 		),
 		'contentresponsibility': new DirEntries(
 			new MetaEntry('Content Responsibility', 'Content Responsibilities', ContentResponsibility, 'picture')
-		),
-		'rightsresponsibility': new DirEntries(
-			new MetaEntry('Rights Responsibility', 'Rights Responsibilities', RightsResponsibility, 'briefcase')
-		),
-		'jobtitle': new DirEntries(
-			new MetaEntry('Job Title', 'Job Titles', JobTitle, 'list-alt')
 		),
 		'jobresponsibility': new DirEntries(
 			new MetaEntry('Job Responsibility', 'Job Responsibilities', JobResponsibility, 'check')
