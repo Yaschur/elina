@@ -4,6 +4,8 @@ import { Contact } from './contact.model';
 export class Company extends Entity {
 	name: string;
 	country: string;
+	city: string;
+
 	contacts: Contact[];
 
 	constructor(item: any) {
@@ -13,6 +15,7 @@ export class Company extends Entity {
 		super(item._id);
 		this.name = item.name;
 		this.country = item.country;
+		this.city = item.city;
 		this.contacts = item.contacts ? item.contacts : [];
 	}
 }
