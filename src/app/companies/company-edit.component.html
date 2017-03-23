@@ -10,11 +10,24 @@
 	</button>
 </nav>
 <form [formGroup]="companyForm" novalidate>
-  <div class="form-group">
-    <label class="center-block">Name:
+	<div class="form-group">
+		<label class="center-block">Name:
       <input class="form-control" formControlName="name">
     </label>
-  </div>
+	</div>
+	<div class="form-group">
+		<label class="center-block">Country:
+      <select class="form-control" formControlName="country">
+				<option value=""></option>
+				<option *ngFor="let item of countries" [value]="item._id">{{item.name}}</option>
+      </select>
+    </label>
+	</div>
+	<div class="form-group">
+		<label class="center-block">City:
+      <input class="form-control" formControlName="city">
+    </label>
+	</div>
 </form>
 <p>Form value: {{ companyForm.value | json }}</p>
 <p>Form status: {{ companyForm.status | json }}</p>
