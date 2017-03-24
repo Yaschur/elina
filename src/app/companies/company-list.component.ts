@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+
 import { Company } from './models/company.model';
 import { CompanyRepository } from './repositories/company.repository';
 
@@ -13,13 +15,13 @@ import 'rxjs/add/observable/fromPromise';
 export class CompanyListComponent implements OnInit {
 	companies: Observable<Company[]>;
 
-	constructor(private _companyRepo: CompanyRepository) { }
+	constructor(private _companyRepo: CompanyRepository, private _router: Router) { }
 
 	ngOnInit() {
 		this.companies = Observable.fromPromise(this._companyRepo.findAll());
 	}
 
-	gotoEdit(id) {
-
+	gotoEdit(id): void {
+		this._router.navigate(['company', id]);
 	}
 }

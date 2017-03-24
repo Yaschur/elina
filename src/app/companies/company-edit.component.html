@@ -1,34 +1,45 @@
-<nav class="navbar navbar-default">
-	<p class="navbar-text">
-		<span class="glyphicon glyphicon-home"></span> Company
-	</p>
-	<button type="button" class="btn btn-default navbar-btn">
+<form [formGroup]="companyForm" novalidate>
+	<nav class="navbar navbar-default">
+		<p class="navbar-text">
+			<span class="glyphicon glyphicon-home"></span> Company
+		</p>
+		<button type="button" class="btn btn-default navbar-btn">
 		<span class="glyphicon glyphicon-remove"></span> cancel
 	</button>
-	<button type="button" class="btn btn-default navbar-btn">
+		<button type="button" class="btn btn-default navbar-btn">
 		<span class="glyphicon glyphicon-ok"></span> SAVE
 	</button>
-</nav>
-<form [formGroup]="companyForm" novalidate>
+	</nav>
+
 	<div class="form-group">
-		<label class="center-block">Name:
-      <input class="form-control" formControlName="name">
-    </label>
+		<label for="name">Name:</label>
+		<input id="name" formControlName="name" type="text" class="form-control" placeholder="type name of company here (required)">
 	</div>
 	<div class="form-group">
-		<label class="center-block">Country:
-      <select class="form-control" formControlName="country">
-				<option value=""></option>
-				<option *ngFor="let item of countries" [value]="item._id">{{item.name}}</option>
-      </select>
-    </label>
+		<label for="description">Description:</label>
+		<textarea id="description" formControlName="description" rows="5" class="form-control"></textarea>
 	</div>
 	<div class="form-group">
-		<label class="center-block">City:
-      <input class="form-control" formControlName="city">
-    </label>
+		<label for="country">Country:</label>
+		<select id="country" formControlName="country" class="form-control">
+			<option value="">[no country]</option>
+			<option *ngFor="let item of countries | async" [value]="item._id">{{item.name}}</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="city">City:</label>
+		<input id="city" formControlName="city" type="text" class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="phone">Phone number:</label>
+		<input id="phone" formControlName="phone" type="tel" class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="website">Website:</label>
+		<input id="website" formControlName="website" type="url" class="form-control">
 	</div>
 </form>
+
 <p>Form value: {{ companyForm.value | json }}</p>
 <p>Form status: {{ companyForm.status | json }}</p>
 <!--<form>

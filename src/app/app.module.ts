@@ -24,14 +24,14 @@ import { CompanyEditComponent } from './companies/company-edit.component';
 
 const appRoutes: Routes = [
 	{ path: 'company', component: CompanyListComponent },
-	{ path: 'company/new', component: CompanyEditComponent },
+	{ path: 'company/:id', component: CompanyEditComponent },
 	{ path: 'directory/country', component: CountryListComponent },
 	{ path: 'directory/region', component: RegionListComponent },
 	{ path: 'directory/country/:id', component: CountryEditComponent },
 	{ path: 'directory/region/:id', component: RegionEditComponent },
 	{ path: 'directory/:entry', component: EntryListComponent },
 	{ path: 'directory/:entry/:id', component: EntryEditComponent },
-	{ path: '', redirectTo: 'directory/country', pathMatch: 'full' }
+	{ path: '', redirectTo: 'company', pathMatch: 'full' }
 ];
 
 @NgModule({

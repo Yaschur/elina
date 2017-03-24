@@ -1,18 +1,13 @@
-import { Entity } from '../../infra/entity.model';
-
-export class Contact extends Entity {
-	firstName: string;
-	lastName: string;
+export class Contact {
+	name: string;
 	phone: string;
 	email: string;
 
 	constructor(item: any) {
-		if (!item.firstName || !item.lastName) {
-			throw new Error('First and last names must be set');
+		if (!item.name) {
+			throw new Error('Name must be set');
 		}
-		super(item._id);
-		this.firstName = item.firstName;
-		this.lastName = item.lastName;
+		this.name = item.name;
 		this.phone = item.phone;
 		this.email = item.email;
 	}
