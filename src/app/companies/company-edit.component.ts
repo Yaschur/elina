@@ -44,14 +44,30 @@ export class CompanyEditComponent implements OnInit {
 	}
 
 	onSubmit() {
-		console.log('submit');
+		const company = new Company({
+			_id: this.company ? this.company._id : null,
+			name: this.companyForm.get('name').value,
+			description: this.companyForm.get('description').value,
+			country: this.companyForm.get('country').value,
+			city: this.companyForm.get('city').value,
+			activities: this.companyForm.get('activities').value,
+			phone: this.companyForm.get('phone').value,
+			website: this.companyForm.get('website').value,
+			created: this.company ? this.company.created : null,
+			updated: this.company ? new Date() : null,
+			notes: this.company ? this.company.notes : [],
+			contacts: this.company ? this.company.contacts : []
+		});
+		this._companyRepo.store(company)
+			.then(() => console.log('saved, created: ' + company.created + ', updated: ' + company.updated))
+			.catch(e => console.log(e));
 	}
 
 	private createForm() {
 		this.companyForm = this._fb.group({
 			name: ['', Validators.required],
 			description: '',
-			country: 'RUS',
+			country: '',
 			city: '',
 			activities: { value: [], disabled: false },
 			phone: '',
@@ -70,7 +86,7 @@ export class CompanyEditComponent implements OnInit {
 			description: this.company.description,
 			country: this.company.country,
 			city: this.company.city,
-			activities: { value: this.company.activities, disabled: false },
+			activities: this.company.activities,
 			phone: this.company.phone,
 			website: this.company.website
 		});

@@ -1,6 +1,5 @@
 import { Entity } from '../../infra/entity.model';
 import { Contact } from './contact.model';
-import { Activity } from '../../directories/models/activity.model';
 import { Note } from './note.model';
 
 export class Company extends Entity {
@@ -8,7 +7,7 @@ export class Company extends Entity {
 	description: string;
 	country: string;
 	city: string;
-	activities: Activity[];
+	activities: string[];
 	phone: string;
 	website: string;
 	created: Date;
@@ -26,7 +25,7 @@ export class Company extends Entity {
 		this.description = item.description;
 		this.country = item.country;
 		this.city = item.city;
-		this.activities = item.activity || [];
+		this.activities = item.activities || [];
 		this.phone = item.phone;
 		this.website = item.website;
 		this.created = item.created || new Date();

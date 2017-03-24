@@ -15,7 +15,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let company of companies | async" (click)="gotoEdit(item._id)">
+		<tr *ngFor="let company of companies | async" (click)="gotoEdit(company._id)">
 			<td>{{company.name}}</td>
 			<th scope="row">{{company.country}}</th>
 			<th scope="row">{{company.contacts.length}}</th>
