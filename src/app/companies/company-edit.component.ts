@@ -43,13 +43,17 @@ export class CompanyEditComponent implements OnInit {
 			});
 	}
 
+	onSubmit() {
+		console.log('submit');
+	}
+
 	private createForm() {
 		this.companyForm = this._fb.group({
 			name: ['', Validators.required],
 			description: '',
-			country: '',
+			country: 'RUS',
 			city: '',
-			// activities: [],
+			activities: { value: [], disabled: false },
 			phone: '',
 			website: ''
 			// created: {value: 'new', disabled: true}
@@ -66,6 +70,7 @@ export class CompanyEditComponent implements OnInit {
 			description: this.company.description,
 			country: this.company.country,
 			city: this.company.city,
+			activities: { value: this.company.activities, disabled: false },
 			phone: this.company.phone,
 			website: this.company.website
 		});

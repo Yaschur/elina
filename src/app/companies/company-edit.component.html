@@ -1,4 +1,4 @@
-<form [formGroup]="companyForm" novalidate>
+<form [formGroup]="companyForm" (ngSubmit)="onSubmit()" novalidate>
 	<nav class="navbar navbar-default">
 		<p class="navbar-text">
 			<span class="glyphicon glyphicon-home"></span> Company
@@ -6,7 +6,7 @@
 		<button type="button" class="btn btn-default navbar-btn">
 		<span class="glyphicon glyphicon-remove"></span> cancel
 	</button>
-		<button type="button" class="btn btn-default navbar-btn">
+		<button type="button" [disabled]="companyForm.pristine || companyForm.invalid" class="btn btn-default navbar-btn" (click)="onSubmit()">
 		<span class="glyphicon glyphicon-ok"></span> SAVE
 	</button>
 	</nav>
@@ -31,6 +31,12 @@
 		<input id="city" formControlName="city" type="text" class="form-control">
 	</div>
 	<div class="form-group">
+		<label for="activities">Activities:</label>
+		<select multiple id="activities" formControlName="activities" class="form-control">
+			<option *ngFor="let item of activities | async" [value]="item._id">{{item.name}}</option>
+		</select>
+	</div>
+	<div class="form-group">
 		<label for="phone">Phone number:</label>
 		<input id="phone" formControlName="phone" type="tel" class="form-control">
 	</div>
@@ -39,18 +45,3 @@
 		<input id="website" formControlName="website" type="url" class="form-control">
 	</div>
 </form>
-
-<p>Form value: {{ companyForm.value | json }}</p>
-<p>Form status: {{ companyForm.status | json }}</p>
-<!--<form>
-	<div class="form-group">
-		<label for="code">{{dirEntries.meta.singularTitle}} code</label>
-		<input [(ngModel)]="code" type="text" name="code" id="code" maxlength="3" size="3" required="required" class="form-control"
-		 placeholder="type unique {{dirEntries.meta.singularTitle.toLowerCase()}} code here">
-	</div>
-
-	<div class="form-group">
-		<label for="name">{{dirEntries.meta.singularTitle}} name</label>
-		<input [(ngModel)]="name" type="text" name="name" id="name" class="form-control" placeholder="type {{dirEntries.meta.singularTitle.toLowerCase()}} name here">
-	</div>
-</form>-->
