@@ -11,7 +11,19 @@ const url = require('url')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow = null
+
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+	// Someone tried to run a second instance, we should focus our window.
+	if (mainWindow) {
+		if (mainWindow.isMinimized()) mainWindow.restore()
+		mainWindow.focus()
+	}
+})
+
+if (shouldQuit) {
+	app.quit()
+}
 
 function createWindow() {
 	const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
