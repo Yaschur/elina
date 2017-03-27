@@ -2,6 +2,7 @@ export class Contact {
 	name: string;
 	phone: string;
 	email: string;
+	active: boolean;
 
 	constructor(item: any) {
 		if (!item.name) {
@@ -10,5 +11,6 @@ export class Contact {
 		this.name = item.name;
 		this.phone = item.phone;
 		this.email = item.email;
+		this.active = item.active;
 	}
 }
