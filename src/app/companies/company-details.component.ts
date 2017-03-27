@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Company } from './models/company.model';
 import { CompanyRepository } from './repositories/company.repository';
@@ -14,8 +14,9 @@ import { DirectoryService } from '../directories/services/directory.service';
 export class CompanyDetailsComponent implements OnInit {
 	company;
 	constructor(
-		private _companyRepo: CompanyRepository,
 		private _route: ActivatedRoute,
+		private _router: Router,
+		private _companyRepo: CompanyRepository,
 		private _dirSrv: DirectoryService
 	) {
 		this.company = {};
@@ -27,7 +28,12 @@ export class CompanyDetailsComponent implements OnInit {
 			.subscribe(item => this.mapCompany(item));
 	}
 
+	gotoEdit(id): void {
+		this._router.navigate(['company/edit', id]);
+	}
+
 	private mapCompany(company: Company) {
+		this.company.id = company._id;
 		this.company.name = company.name;
 		this.company.description = company.description;
 		// this.company.country =

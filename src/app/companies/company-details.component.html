@@ -2,6 +2,9 @@
 	<p class="navbar-text">
 		<span class="glyphicon glyphicon-home"></span> Company
 	</p>
+	<button type="button" class="btn btn-default navbar-btn" (click)="gotoEdit(company.id)">
+		<span class="glyphicon glyphicon-pencil"></span> edit
+	</button>
 </nav>
 <div class="row">
 	<div class="col-md-9">{{company.name}}</div>
