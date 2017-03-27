@@ -1,0 +1,19 @@
+<nav class="navbar navbar-default">
+	<p class="navbar-text">
+		<span class="glyphicon glyphicon-home"></span> Company
+	</p>
+</nav>
+<div class="row">
+	<div class="col-md-9">{{company.name}}</div>
+</div>
+<div class="row">
+	<div class="col-md-9">{{company.description}}</div>
+</div>
+<div class="row">
+	<div class="col-md-4">{{company.country}}</div>
+	<div class="col-md-4 col-md-offset-1">{{company.city}}</div>
+</div>
+<div class="row">
+	<div class="col-md-4">updated: {{company.updated | date:'short'}}</div>
+	<div class="col-md-4 col-md-offset-1">created: {{company.created | date:'short'}}</div>
+</div>

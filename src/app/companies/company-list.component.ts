@@ -21,7 +21,7 @@ export class CompanyListComponent implements OnInit {
 		this.companies = Observable.fromPromise(this._companyRepo.findAll());
 	}
 
-	gotoEdit(id): void {
-		this._router.navigate(['company', id]);
+	gotoDetails(id): void {
+		this._router.navigate(['company/details', id]);
 	}
 }
