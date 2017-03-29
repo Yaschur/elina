@@ -7,47 +7,24 @@
 	</button>
 </nav>
 <div class="panel panel-default">
-	<div class="panel-heading"><strong>{{company.name}}</strong></div>
 	<div class="panel-body">
-		<!--<div class="row">
-			<div class="col-md-2">Company name</div>
-			<div class="col-md-10"><strong>{{company.name}}</strong></div>
-		</div>-->
-		<!--<div class="row">
-			<div class="col-md-2">Description</div>
-			<div class="col-md-10">{{company.description}}</div>
-		</div>
-		<div class="row">
-			<div class="col-md-2">Country</div>
-			<div class="col-md-10">{{company.country}}</div>
-		</div>
-		<div class="row">
-			<div class="col-md-2">City</div>
-			<div class="col-md-10">{{company.city}}</div>
-		</div>
-		<div class="row">
-			<div class="col-md-2">Phone</div>
-			<div class="col-md-10">{{company.phone}}</div>
-		</div>
-		<div class="row">
-			<div class="col-md-2">Website</div>
-			<div class="col-md-10">{{company.website}}</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12"><small>updated: {{company.updated | date:'short'}}, created: {{company.created | date:'short'}}</small></div>
-		</div>-->
 		<dl class="dl-horizontal">
+			<dt>Company name</dt>
+			<dd>{{company.name}}</dd>
 			<dt>Description</dt>
-			<dd>{{company.description}}</dd>
+			<dd><p>{{company.description}}</p></dd>
 			<dt>Country</dt>
 			<dd>{{company.country}}</dd>
+			<dt>Activities</dt>
+			<dd>{{company.activities}}</dd>
 			<dt>City</dt>
-			<dd><{{company.city}}</dd>
+			<dd>{{company.city}}</dd>
 			<dt>Phone</dt>
 			<dd>{{company.phone}}</dd>
 			<dt>Website</dt>
 			<dd>{{company.website}}</dd>
 		</dl>
+		<span class="text-nowrap"><small>created: {{company.created | date:'short'}}</small></span> <span class="text-nowrap"><small>updated: {{company.updated | date:'short'}}</small></span>
 	</div>
 </div>
 <h4>notes</h4>
