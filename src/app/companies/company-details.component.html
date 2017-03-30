@@ -7,7 +7,10 @@
 	</button>
 </nav>
 <div class="panel panel-default">
-	<div class="panel-heading">Info</div>
+	<div class="panel-heading">
+		Info
+		<button type="button" class="btn btn-link btn-xs" (click)="gotoEdit(company.id)">edit</button>
+	</div>
 	<div class="panel-body">
 		<dl class="dl-horizontal">
 			<dt>Company name</dt>
@@ -33,7 +36,7 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
 		Notes
-		<button type="button" class="btn btn-link">add note</button>
+		<button type="button" class="btn btn-link btn-xs">add note</button>
 	</div>
 	<div class="panel-body"></div>
 </div>
