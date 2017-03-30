@@ -46,13 +46,13 @@ export class CompanyEditComponent implements OnInit {
 	onSubmit() {
 		const company = new Company({
 			_id: this.company ? this.company._id : null,
-			name: this.companyForm.get('name').value,
-			description: this.companyForm.get('description').value,
+			name: this.companyForm.get('name').value.trim(),
+			description: this.companyForm.get('description').value.trim(),
 			country: this.companyForm.get('country').value,
-			city: this.companyForm.get('city').value,
+			city: this.companyForm.get('city').value.trim(),
 			activities: this.companyForm.get('activities').value,
-			phone: this.companyForm.get('phone').value,
-			website: this.companyForm.get('website').value,
+			phone: this.companyForm.get('phone').value.trim(),
+			website: this.companyForm.get('website').value.trim(),
 			created: this.company ? this.company.created : null,
 			updated: this.company ? new Date() : null,
 			notes: this.company ? this.company.notes : [],

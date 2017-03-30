@@ -7,12 +7,15 @@
 	</button>
 </nav>
 <div class="panel panel-default">
+	<div class="panel-heading">Info</div>
 	<div class="panel-body">
 		<dl class="dl-horizontal">
 			<dt>Company name</dt>
 			<dd>{{company.name}}</dd>
 			<dt>Description</dt>
-			<dd><p>{{company.description}}</p></dd>
+			<dd>
+				<pre class="memo">{{company.description}}</pre>
+			</dd>
 			<dt>Country</dt>
 			<dd>{{company.country}}</dd>
 			<dt>Activities</dt>
@@ -27,7 +30,11 @@
 		<span class="text-nowrap"><small>created: {{company.created | date:'short'}}</small></span> <span class="text-nowrap"><small>updated: {{company.updated | date:'short'}}</small></span>
 	</div>
 </div>
-<h4>notes</h4>
+<div class="panel panel-default">
+	<div class="panel-heading">Notes</div>
+	<div class="panel-body"></div>
+</div>
+<!--<h4>notes</h4>
 <div class="row">
 	<div class="col-md-12" *ngIf="!this.note">
 		<button type="button" class="btn btn-default btn-xs" (click)="addNote()"><span class="glyphicon glyphicon-plus"></span> new note</button>
@@ -49,4 +56,8 @@
 	<div class="col-md-11">
 		<pre style="white-space: pre-wrap;">{{note.text}}</pre>
 	</div>
+</div>-->
+<div class="panel panel-default">
+	<div class="panel-heading">Contacts</div>
+	<div class="panel-body"></div>
 </div>
