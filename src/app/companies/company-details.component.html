@@ -30,43 +30,35 @@
 			<dt>Website</dt>
 			<dd>{{company.website}}</dd>
 		</dl>
-		<span class="text-nowrap"><small>created: {{company.created | date:'short'}}</small></span> <span class="text-nowrap"><small>updated: {{company.updated | date:'short'}}</small></span>
+		<span class="text-nowrap"><small>created: <em>{{company.created | date:'short'}}</em></small></span>
+		<span class="text-nowrap"><small>updated: <em>{{company.updated | date:'short'}}</em></small></span>
 	</div>
 </div>
 <div class="panel panel-default">
 	<div class="panel-heading">
 		Notes
-		<button type="button" class="btn btn-link btn-xs">add note</button>
+		<button type="button" class="btn btn-link btn-xs" (click)="addNote()" [disabled]="note">add note</button>
 	</div>
-	<div class="panel-body"></div>
-</div>
-<!--<h4>notes</h4>
-<div class="row">
-	<div class="col-md-12" *ngIf="!this.note">
-		<button type="button" class="btn btn-default btn-xs" (click)="addNote()"><span class="glyphicon glyphicon-plus"></span> new note</button>
-	</div>
-	<div class="col-md-1" *ngIf="this.note">
-		<button type="button" class="btn btn-default btn-xs" (click)="cancelNote()">
-			<span class="glyphicon glyphicon-remove"></span>
-		</button>
-		<button type="button" class="btn btn-default btn-xs" (click)="saveNote()">
-			<span class="glyphicon glyphicon-ok"></span>
-		</button>
-	</div>
-	<div class="col-md-11" *ngIf="this.note">
-		<textarea id="note.text" [(ngModel)]="note.text" rows="3" class="form-control"></textarea>
+	<div class="panel-body">
+		<div class="form-group" *ngIf="note">
+			<textarea [(ngModel)]="note.text" name="note.text" id="note.text" rows="3" class="form-control"></textarea>
+			<button type="button" class="btn btn-default btn-sm" (click)="cancelNote()"><span class="glyphicon glyphicon-remove"></span> cancel</button>
+			<button type="button" class="btn btn-default btn-sm" (click)="saveNote()"><span class="glyphicon glyphicon-ok"></span> SAVE</button>
+		</div>
+		<div class="row" *ngFor="let note of company.notes">
+			<div class="col-md-1">
+				<span class="text-nowrap"><small><em>{{note.created | date:'short'}}</em></small></span>
+			</div>
+			<div class="col-md-11">
+				<pre class="memo">{{note.text}}</pre>
+			</div>
+		</div>
 	</div>
 </div>
-<div class="row" *ngFor="let note of company.notes">
-	<div class="col-md-1 text-right"><small>{{note.created | date:'short'}}</small></div>
-	<div class="col-md-11">
-		<pre style="white-space: pre-wrap;">{{note.text}}</pre>
-	</div>
-</div>-->
 <div class="panel panel-default">
 	<div class="panel-heading">
 		Contacts
-		<button type="button" class="btn btn-link">add contact</button>
+		<button type="button" class="btn btn-link btn-xs">add contact</button>
 	</div>
 	<div class="panel-body"></div>
 </div>
