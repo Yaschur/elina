@@ -22,19 +22,19 @@
 	<div class="form-group">
 		<label for="jobResponsibilities">Job Responsibilities:</label>
 		<select multiple id="jobResponsibilities" formControlName="jobResponsibilities" class="form-control">
-				<!--<option *ngFor="let item of activities | async" [value]="item._id">{{item.name}}</option>-->
+				<option *ngFor="let item of jobResponsibilities | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
 	<div class="form-group">
-		<label for="buyContents">Buy Contents:</label>
+		<label for="buyContents">Buy Content Responsibilities:</label>
 		<select multiple id="buyContents" formControlName="buyContents" class="form-control">
-				<!--<option *ngFor="let item of activities | async" [value]="item._id">{{item.name}}</option>-->
+				<option *ngFor="let item of contentResponsibilities | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
 	<div class="form-group">
-		<label for="sellContents">Sell Contents:</label>
+		<label for="sellContents">Sell Contents Responsibilities:</label>
 		<select multiple id="sellContents" formControlName="sellContents" class="form-control">
-				<!--<option *ngFor="let item of activities | async" [value]="item._id">{{item.name}}</option>-->
+				<option *ngFor="let item of contentResponsibilities | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
 	<div class="form-group">

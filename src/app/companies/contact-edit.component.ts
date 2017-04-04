@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { Observable } from 'rxjs/Observable';
+
 import { Company } from './models/company.model';
 import { Contact } from './models/contact.model';
+import { JobResponsibility } from '../directories/models/job-responsibility.model';
+import { ContentResponsibility } from '../directories/models/content-responsibility.model';
 import { CompanyRepository } from './repositories/company.repository';
 import { DirectoryService } from '../directories/services/directory.service';
 
@@ -17,15 +21,19 @@ export class ContactEditComponent implements OnInit {
 	company: Company;
 	contact: Contact;
 
+	jobResponsibilities: Observable<JobResponsibility[]>;
+	contentResponsibilities: Observable<ContentResponsibility[]>;
+
 	contactForm: FormGroup;
+
 	constructor(
 		private _companyRepo: CompanyRepository,
 		private _route: ActivatedRoute,
 		private _fb: FormBuilder,
 		private _dirSrv: DirectoryService
 	) {
-		// this.countries = this._dirSrv.getDir('country').data;
-		// this.activities = this._dirSrv.getDir('activity').data;
+		this.jobResponsibilities = this._dirSrv.getDir('jobresponsibility').data;
+		this.contentResponsibilities = this._dirSrv.getDir('contentresponsibility').data;
 		this.createForm();
 	}
 
@@ -46,30 +54,36 @@ export class ContactEditComponent implements OnInit {
 	}
 
 	onSubmit() {
-		// const company = new Company({
-		// 	_id: this.company ? this.company._id : null,
-		// 	name: this.companyForm.get('name').value.trim(),
-		// 	description: this.companyForm.get('description').value.trim(),
-		// 	country: this.companyForm.get('country').value,
-		// 	city: this.companyForm.get('city').value.trim(),
-		// 	activities: this.companyForm.get('activities').value,
-		// 	phone: this.companyForm.get('phone').value.trim(),
-		// 	website: this.companyForm.get('website').value.trim(),
-		// 	created: this.company ? this.company.created : null,
-		// 	updated: this.company ? new Date() : null,
-		// 	notes: this.company ? this.company.notes : [],
-		// 	contacts: this.company ? this.company.contacts : []
-		// });
-		// this._companyRepo.store(company)
-		// 	.then(() => console.log('saved, created: ' + company.created + ', updated: ' + company.updated))
-		// 	.catch(e => console.log(e));
+		const contact = new Contact({
+			_id: this.contact ? this.contact._id : null,
+			name: this.contactForm.get('name').value.trim(),
+			jobTitle: this.contactForm.get('jobTitle').value.trim(),
+			jobResponsibilities: this.contactForm.get('jobResponsibilities').value,
+			buyContents: this.contactForm.get('buyContents').value,
+			sellContents: this.contactForm.get('sellContents').value,
+			phone: this.contactForm.get('phone').value.trim(),
+			mobile: this.contactForm.get('mobile').value.trim(),
+			email: this.contactForm.get('email').value.trim(),
+			active: this.contact ? this.contact.active : true,
+			created: this.contact ? this.contact.created : null,
+			updated: this.contact ? new Date() : null
+		});
+		if (this.contact) {
+			const ind = this.company.contacts.findIndex(c => c._id === contact._id);
+			this.company.contacts[ind] = contact;
+		} else {
+			this.company.contacts.push(contact);
+		}
+		this._companyRepo.store(this.company)
+			.then(() => console.log(this.company))
+			.catch(e => console.log(e));
 	}
 
 	private createForm() {
 		this.contactForm = this._fb.group({
 			name: ['', Validators.required],
 			jobTitle: '',
-			jobResponsibilities: '',
+			jobResponsibilities: { value: [], disabled: false },
 			buyContents: { value: [], disabled: false },
 			sellContents: { value: [], disabled: false },
 			phone: '',
