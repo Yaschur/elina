@@ -26,7 +26,7 @@ export class Contact extends Entity {
 		this.phone = item.phone;
 		this.mobile = item.mobile;
 		this.email = item.email;
-		this.active = item.active;
+		this.active = item.active === undefined ? true : item.active;
 		this.created = item.created || new Date();
 		this.updated = item.updated || new Date();
 	}
