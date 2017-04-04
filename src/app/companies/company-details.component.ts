@@ -17,6 +17,7 @@ export class CompanyDetailsComponent implements OnInit {
 	domainItem: Company;
 	company;
 	note;
+	indNoteToDel;
 	constructor(
 		private _route: ActivatedRoute,
 		private _router: Router,
@@ -24,7 +25,7 @@ export class CompanyDetailsComponent implements OnInit {
 		private _dirSrv: DirectoryService
 	) {
 		this.company = {};
-		this.note = undefined;
+		this.cancelNote();
 	}
 
 	ngOnInit() {
@@ -44,7 +45,12 @@ export class CompanyDetailsComponent implements OnInit {
 		this.note = { text: '' };
 	}
 	cancelNote() {
-		this.note = undefined;
+		if (this.note) {
+			this.note = undefined;
+		}
+		if (this.indNoteToDel !== -1) {
+			this.indNoteToDel = -1;
+		}
 	}
 	saveNote() {
 		const newNote = new Note({ text: this.note.text.trim() });
@@ -52,13 +58,19 @@ export class CompanyDetailsComponent implements OnInit {
 		this._companyRepo.store(this.domainItem)
 			.then(() => this.company.notes.unshift({ created: newNote.created, text: newNote.text }))
 			.catch(e => console.log(e));
-		this.note = undefined;
+		this.cancelNote();
 	}
 	removeNote(i) {
-		this.domainItem.notes.splice(i, 1);
+		if (this.indNoteToDel === -1) {
+			this.indNoteToDel = i;
+			return;
+		}
+		const ind = this.indNoteToDel;
+		this.domainItem.notes.splice(ind, 1);
 		this._companyRepo.store(this.domainItem)
-			.then(() => this.company.notes.splice(i, 1))
+			.then(() => this.company.notes.splice(ind, 1))
 			.catch(e => console.log(e));
+		this.cancelNote();
 	}
 
 	private mapCompany() {

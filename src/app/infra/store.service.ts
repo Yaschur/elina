@@ -127,9 +127,10 @@ export class StoreService {
 		return type + '_' + id;
 	}
 	private convertToDb(type: string, item: any): any {
-		item._id = this.convertIdToDb(type, item._id);
-		item.type = type;
-		return item;
+		const itemToStore = Object.assign({}, item);
+		itemToStore._id = this.convertIdToDb(type, itemToStore._id);
+		itemToStore.type = type;
+		return itemToStore;
 	}
 	private convertIdToDomain(item: any): string {
 		return item._id.split('_')[1];
