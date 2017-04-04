@@ -54,6 +54,12 @@ export class CompanyDetailsComponent implements OnInit {
 			.catch(e => console.log(e));
 		this.note = undefined;
 	}
+	removeNote(i) {
+		this.domainItem.notes.splice(i, 1);
+		this._companyRepo.store(this.domainItem)
+			.then(() => this.company.notes.splice(i, 1))
+			.catch(e => console.log(e));
+	}
 
 	private mapCompany() {
 		const company = this.domainItem;

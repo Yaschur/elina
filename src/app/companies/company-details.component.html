@@ -45,14 +45,18 @@
 			<button type="button" class="btn btn-default btn-sm" (click)="cancelNote()"><span class="glyphicon glyphicon-remove"></span> cancel</button>
 			<button type="button" class="btn btn-default btn-sm" (click)="saveNote()"><span class="glyphicon glyphicon-ok"></span> SAVE</button>
 		</div>
-		<div class="row" *ngFor="let note of company.notes">
-			<div class="col-md-1">
-				<span class="text-nowrap"><small><em>{{note.created | date:'short'}}</em></small></span>
-			</div>
-			<div class="col-md-11">
-				<pre class="memo">{{note.text}}</pre>
-			</div>
-		</div>
+		<dl>
+			<ng-template ngFor let-note [ngForOf]="company.notes" let-i="index">
+				<dt class="note">
+					<small><em>{{note.created | date:'short'}}</em></small>
+					<button type="button" title="delete note below" class="btn btn-default btn-xs" (click)="removeNote(i)"><span class="glyphicon glyphicon-trash"></span></button>
+				</dt>
+				<dd>
+					<pre class="memo">{{note.text}}</pre>
+				</dd>
+			</ng-template>
+
+		</dl>
 	</div>
 </div>
 <div class="panel panel-default">
