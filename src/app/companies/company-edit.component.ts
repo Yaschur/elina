@@ -72,8 +72,6 @@ export class CompanyEditComponent implements OnInit {
 			activities: { value: [], disabled: false },
 			phone: '',
 			website: ''
-			// created: {value: 'new', disabled: true}
-			// updated: Date
 		});
 	}
 
