@@ -58,20 +58,26 @@ export class CompanyDetailsComponent implements OnInit {
 		this.company.name = company.name;
 		this.company.description = company.description;
 		this.company.city = company.city;
-		// this.company.activities =
 		this.company.website = company.website;
 		this.company.phone = company.phone;
 		this.company.created = company.created;
 		this.company.updated = company.updated;
 		this.company.notes = company.notes
 			.map(n => ({ created: n.created, text: n.text }));
-		// this.comapny.contacts =
+		// this.company.contacts =
 		this._dirSrv.getDir('country').data
 			.subscribe(cs => {
 				const country = cs.find(c => c._id == company.country);
 				if (country) {
 					this.company.country = country.name;
 				}
+			});
+		this._dirSrv.getDir('activity').data
+			.subscribe(as => {
+				this.company.activities = as
+					.filter(a => company.activities.includes(a._id))
+					.map(a => a.name)
+					.join(", ");
 			});
 	}
 }
