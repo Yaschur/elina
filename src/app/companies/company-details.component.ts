@@ -14,6 +14,7 @@ import { DirectoryService } from '../directories/services/directory.service';
 })
 
 export class CompanyDetailsComponent implements OnInit {
+	domainItem: Company;
 	company;
 	note;
 	constructor(
@@ -29,7 +30,10 @@ export class CompanyDetailsComponent implements OnInit {
 	ngOnInit() {
 		this._route.params
 			.switchMap(params => this._companyRepo.getById(params['id']))
-			.subscribe(item => this.mapCompany(item));
+			.subscribe(item => {
+				this.domainItem = item;
+				this.mapCompany();
+			});
 	}
 
 	gotoEdit(id): void {
@@ -43,17 +47,16 @@ export class CompanyDetailsComponent implements OnInit {
 		this.note = undefined;
 	}
 	saveNote() {
-		try {
-			const newNote = new Note({ text: this.note.text.trim() });
-			this.company.notes.unshift({ created: newNote.created, text: newNote.text });
-		}
-		catch (e) {
-			console.log(e);
-		}
+		const newNote = new Note({ text: this.note.text.trim() });
+		this.domainItem.notes.unshift(newNote);
+		this._companyRepo.store(this.domainItem)
+			.then(() => this.company.notes.unshift({ created: newNote.created, text: newNote.text }))
+			.catch(e => console.log(e));
 		this.note = undefined;
 	}
 
-	private mapCompany(company: Company) {
+	private mapCompany() {
+		const company = this.domainItem;
 		this.company.id = company._id;
 		this.company.name = company.name;
 		this.company.description = company.description;
@@ -67,7 +70,7 @@ export class CompanyDetailsComponent implements OnInit {
 		// this.company.contacts =
 		this._dirSrv.getDir('country').data
 			.subscribe(cs => {
-				const country = cs.find(c => c._id == company.country);
+				const country = cs.find(c => c._id === company.country);
 				if (country) {
 					this.company.country = country.name;
 				}
@@ -77,7 +80,7 @@ export class CompanyDetailsComponent implements OnInit {
 				this.company.activities = as
 					.filter(a => company.activities.includes(a._id))
 					.map(a => a.name)
-					.join(", ");
+					.join(', ');
 			});
 	}
 }
