@@ -22,11 +22,13 @@ import { CompanyRepository } from './companies/repositories/company.repository';
 import { CompanyListComponent } from './companies/company-list.component';
 import { CompanyEditComponent } from './companies/company-edit.component';
 import { CompanyDetailsComponent } from './companies/company-details.component';
+import { ContactEditComponent } from './companies/contact-edit.component';
 
 const appRoutes: Routes = [
 	{ path: 'company', component: CompanyListComponent },
 	{ path: 'company/edit/:id', component: CompanyEditComponent },
 	{ path: 'company/details/:id', component: CompanyDetailsComponent },
+	{ path: 'contact/edit/:company_id/:contact_id', component: ContactEditComponent },
 	{ path: 'directory/country', component: CountryListComponent },
 	{ path: 'directory/region', component: RegionListComponent },
 	{ path: 'directory/country/:id', component: CountryEditComponent },
@@ -49,7 +51,8 @@ const appRoutes: Routes = [
 		EntryEditComponent,
 		CompanyListComponent,
 		CompanyEditComponent,
-		CompanyDetailsComponent
+		CompanyDetailsComponent,
+		ContactEditComponent
 	],
 	imports: [
 		BrowserModule,

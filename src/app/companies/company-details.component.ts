@@ -41,6 +41,10 @@ export class CompanyDetailsComponent implements OnInit {
 		this._router.navigate(['company/edit', id]);
 	}
 
+	editContact(contactId): void {
+		this._router.navigate(['contact/edit', this.domainItem._id, contactId]);
+	}
+
 	addNote() {
 		this.note = { text: '' };
 	}
