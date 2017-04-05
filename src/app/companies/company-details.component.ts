@@ -37,12 +37,12 @@ export class CompanyDetailsComponent implements OnInit {
 			});
 	}
 
-	gotoEdit(id): void {
-		this._router.navigate(['company/edit', id]);
+	gotoEdit(): void {
+		this._router.navigate(['company/edit', this.domainItem._id]);
 	}
 
-	editContact(contactId): void {
-		this._router.navigate(['contact/edit', this.domainItem._id, contactId]);
+	contactDetails(contactId): void {
+		this._router.navigate(['contact/details', this.domainItem._id, contactId]);
 	}
 
 	addNote() {

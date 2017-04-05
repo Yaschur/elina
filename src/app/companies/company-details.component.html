@@ -2,7 +2,7 @@
 	<p class="navbar-text">
 		<span class="glyphicon glyphicon-home"></span> Company
 	</p>
-	<button type="button" class="btn btn-default navbar-btn" (click)="gotoEdit(company.id)">
+	<button type="button" class="btn btn-default navbar-btn" (click)="gotoEdit()">
 		<span class="glyphicon glyphicon-pencil"></span> edit
 	</button>
 </nav>
@@ -77,7 +77,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let contact of company.contacts" (click)="editContact(contact._id)">
+				<tr *ngFor="let contact of company.contacts" (click)="contactDetails(contact._id)">
 					<td>{{contact.name}}</td>
 					<td>{{contact.jobTitle}}</td>
 				</tr>
