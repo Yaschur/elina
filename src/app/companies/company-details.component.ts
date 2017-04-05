@@ -89,7 +89,7 @@ export class CompanyDetailsComponent implements OnInit {
 		this.company.updated = company.updated;
 		this.company.notes = company.notes
 			.map(n => ({ created: n.created, text: n.text }));
-		// this.company.contacts =
+		this.company.contacts = company.contacts;
 		this._dirSrv.getDir('country').data
 			.subscribe(cs => {
 				const country = cs.find(c => c._id === company.country);
