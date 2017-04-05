@@ -10,11 +10,11 @@ export class Company extends Entity {
 	activities: string[];
 	phone: string;
 	website: string;
-	created: Date;
-	updated: Date;
-
 	notes: Note[];
 	contacts: Contact[];
+
+	created: Date;
+	updated: Date;
 
 	constructor(item: any) {
 		if (!item.name) {
