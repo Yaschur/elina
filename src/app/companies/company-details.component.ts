@@ -9,8 +9,8 @@ import { DirectoryService } from '../directories/services/directory.service';
 @Component({
 	moduleId: module.id,
 	selector: 'app-company-details',
-	templateUrl: 'company-details.component.html',
-	styleUrls: ['company-details.component.css']
+	templateUrl: './company-details.component.html',
+	styleUrls: ['./company-details.component.css']
 })
 
 export class CompanyDetailsComponent implements OnInit {

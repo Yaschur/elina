@@ -23,12 +23,14 @@ import { CompanyListComponent } from './companies/company-list.component';
 import { CompanyEditComponent } from './companies/company-edit.component';
 import { CompanyDetailsComponent } from './companies/company-details.component';
 import { ContactEditComponent } from './companies/contact-edit.component';
+import { ContactDetailsComponent } from './companies/contact-details.component';
 
 const appRoutes: Routes = [
 	{ path: 'company', component: CompanyListComponent },
 	{ path: 'company/edit/:id', component: CompanyEditComponent },
 	{ path: 'company/details/:id', component: CompanyDetailsComponent },
 	{ path: 'contact/edit/:company_id/:contact_id', component: ContactEditComponent },
+	{ path: 'contact/details/:company_id/:contact_id', component: ContactDetailsComponent },
 	{ path: 'directory/country', component: CountryListComponent },
 	{ path: 'directory/region', component: RegionListComponent },
 	{ path: 'directory/country/:id', component: CountryEditComponent },
@@ -52,7 +54,8 @@ const appRoutes: Routes = [
 		CompanyListComponent,
 		CompanyEditComponent,
 		CompanyDetailsComponent,
-		ContactEditComponent
+		ContactEditComponent,
+		ContactDetailsComponent
 	],
 	imports: [
 		BrowserModule,
