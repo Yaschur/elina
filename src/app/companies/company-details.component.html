@@ -2,14 +2,14 @@
 	<p class="navbar-text">
 		<span class="glyphicon glyphicon-home"></span> Company
 	</p>
-	<button type="button" class="btn btn-default navbar-btn" (click)="gotoEdit()">
-		<span class="glyphicon glyphicon-pencil"></span> edit
+	<button type="button" class="btn btn-default navbar-btn" (click)="gotoList()">
+		<span class="glyphicon glyphicon-menu-hamburger"></span>
 	</button>
 </nav>
 <div class="panel panel-default">
 	<div class="panel-heading">
 		Info
-		<button type="button" class="btn btn-link btn-xs" (click)="gotoEdit(company.id)">edit</button>
+		<button type="button" class="btn btn-link btn-xs" (click)="gotoEdit()">edit</button>
 	</div>
 	<div class="panel-body">
 		<dl class="dl-horizontal">
@@ -21,10 +21,10 @@
 			</dd>
 			<dt>Country</dt>
 			<dd>{{company.country}}</dd>
-			<dt>Activities</dt>
-			<dd>{{company.activities}}</dd>
 			<dt>City</dt>
 			<dd>{{company.city}}</dd>
+			<dt>Activities</dt>
+			<dd>{{company.activities}}</dd>
 			<dt>Phone</dt>
 			<dd>{{company.phone}}</dd>
 			<dt>Website</dt>
@@ -66,7 +66,7 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
 		Contacts
-		<button type="button" class="btn btn-link btn-xs" (click)="editContact('__new__')">add contact</button>
+		<button type="button" class="btn btn-link btn-xs" (click)="addContact()">add contact</button>
 	</div>
 	<div class="panel-body">
 		<table class="table table-hover table-condensed">
@@ -77,8 +77,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let contact of company.contacts" (click)="contactDetails(contact._id)">
-					<td>{{contact.name}}</td>
+				<tr *ngFor="let contact of company.contacts" (click)="contactDetails(contact.id)">
+					<td>
+						{{contact.name}}
+						<sup *ngIf="contact.isNew"><mark>new</mark></sup></td>
 					<td>{{contact.jobTitle}}</td>
 				</tr>
 			</tbody>

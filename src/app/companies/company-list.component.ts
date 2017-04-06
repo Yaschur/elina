@@ -60,11 +60,11 @@ class CompanyListVm {
 	constructor(company: Company, countries: Country[]) {
 		this.id = company._id;
 		this.name = company.name;
-		const c = countries
-			.find(c => c._id == company.country);
-		this.location = c ? c.name : '';
+		const country = countries
+			.find(c => c._id === company.country);
+		this.location = country ? country.name : '';
 		if (company.city) {
-			this.location += ' (' + company.city + ')'
+			this.location += ' (' + company.city + ')';
 		}
 		this.activitiesNum = company.activities.length;
 		this.contactsNum = company.contacts.length;

@@ -3,7 +3,7 @@
 		<p class="navbar-text">
 			<span class="glyphicon glyphicon-home"></span> Company
 		</p>
-		<button type="button" class="btn btn-default navbar-btn">
+		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
 		<span class="glyphicon glyphicon-remove"></span> cancel
 	</button>
 		<button type="button" [disabled]="companyForm.pristine || companyForm.invalid" class="btn btn-default navbar-btn" (click)="onSubmit()">
@@ -31,7 +31,7 @@
 		<input id="city" formControlName="city" type="text" class="form-control">
 	</div>
 	<div class="form-group">
-		<label for="activities">Activities:</label>
+		<label for="activities">Activities:</label> <small>use Ctrl-click to multiple selection or deselection</small>
 		<select multiple id="activities" formControlName="activities" class="form-control">
 			<option *ngFor="let item of activities | async" [value]="item._id">{{item.name}}</option>
 		</select>

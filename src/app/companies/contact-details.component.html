@@ -1,36 +1,36 @@
 <nav class="navbar navbar-default">
-  <p class="navbar-text">
-    <span class="glyphicon glyphicon-user"></span> Contact
-  </p>
-  <button type="button" class="btn btn-default navbar-btn" (click)="gotoEdit()">
+	<p class="navbar-text">
+		<span class="glyphicon glyphicon-user"></span> Contact
+	</p>
+	<button type="button" class="btn btn-default navbar-btn" (click)="gotoEdit()">
 		<span class="glyphicon glyphicon-pencil"></span> edit
 	</button>
 </nav>
 <div class="panel panel-default">
-  <div class="panel-heading">
-    Info
-    <button type="button" class="btn btn-link btn-xs" (click)="gotoEdit()">edit</button>
-  </div>
-  <div class="panel-body">
-    <dl class="dl-horizontal">
-      <dt>Contact name</dt>
-      <dd>{{contact.name}}</dd>
-      <dt>Job title</dt>
-      <dd>{{contact.jobTitle}}</dd>
-      <dt>Job responsibilities</dt>
-      <dd>{{contact.jobResponsibilities}}</dd>
-      <dt>BUY content responsibilities</dt>
-      <dd>{{contact.buyContents}}</dd>
-      <dt>SELL content responsibilities</dt>
-      <dd>{{contact.sellContents}}</dd>
-      <dt>Phone</dt>
-      <dd>{{contact.phone}}</dd>
-      <dt>Mobile</dt>
-      <dd>{{contact.mobile}}</dd>
-      <dt>Email</dt>
-      <dd>{{contact.email}}</dd>
-    </dl>
-    <span class="text-nowrap"><small>created: <em>{{contact.created | date:'short'}}</em></small></span>
-    <span class="text-nowrap"><small>updated: <em>{{contact.updated | date:'short'}}</em></small></span>
-  </div>
+	<div class="panel-heading">
+		Info
+		<button type="button" class="btn btn-link btn-xs" (click)="gotoEdit()">edit</button>
+	</div>
+	<div class="panel-body">
+		<dl class="dl-horizontal">
+			<dt>Contact name</dt>
+			<dd>{{contact.name}}</dd>
+			<dt>Job title</dt>
+			<dd>{{contact.jobTitle}}</dd>
+			<dt>Job responsibilities</dt>
+			<dd>{{contact.jobResponsibilities}}</dd>
+			<dt>BUY content responsibilities</dt>
+			<dd>{{contact.buyContents}}</dd>
+			<dt>SELL content responsibilities</dt>
+			<dd>{{contact.sellContents}}</dd>
+			<dt>Phone</dt>
+			<dd>{{contact.phone}}</dd>
+			<dt>Mobile</dt>
+			<dd>{{contact.mobile}}</dd>
+			<dt>Email</dt>
+			<dd>{{contact.email}}</dd>
+		</dl>
+		<span class="text-nowrap"><small>created: <em>{{contact.created | date:'short'}}</em></small></span>
+		<span class="text-nowrap"><small>updated: <em>{{contact.updated | date:'short'}}</em></small></span>
+	</div>
 </div>

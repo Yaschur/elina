@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +27,8 @@ export class CompanyEditComponent implements OnInit {
 	constructor(
 		private _companyRepo: CompanyRepository,
 		private _route: ActivatedRoute,
+		private _router: Router,
+		private _location: Location,
 		private _fb: FormBuilder,
 		private _dirSrv: DirectoryService
 	) {
@@ -59,8 +62,12 @@ export class CompanyEditComponent implements OnInit {
 			contacts: this.company ? this.company.contacts : []
 		});
 		this._companyRepo.store(company)
-			.then(() => console.log('saved, created: ' + company.created + ', updated: ' + company.updated))
+			.then(() => this._router.navigate(['company/details', company._id]))
 			.catch(e => console.log(e));
+	}
+
+	onCancel() {
+		this._location.back();
 	}
 
 	private createForm() {
