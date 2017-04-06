@@ -13,16 +13,17 @@
 			<th>location</th>
 			<th># of activities</th>
 			<th># of contacts</th>
-			<th>new</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr *ngFor="let company of companies | async" (click)="gotoDetails(company.id)">
-			<td>{{company.name}}</td>
+			<td>
+				{{company.name}}
+				<sup *ngIf="company.isNew"><mark>new</mark></sup>
+			</td>
 			<td scope="row">{{company.location}}</td>
 			<td scope="row">{{company.activitiesNum}}</td>
 			<td scope="row">{{company.contactsNum}}</td>
-			<td scope="row">{{company.isNew}}</td>
 		</tr>
 	</tbody>
 </table>

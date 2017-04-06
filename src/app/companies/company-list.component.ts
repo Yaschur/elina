@@ -9,7 +9,7 @@ import { CompanyRepository } from './repositories/company.repository';
 
 import 'rxjs/add/observable/fromPromise';
 
-const NEWPERIOD = 24 * 60 * 60 * 1000;
+const NEWPERIOD = 365 * 60 * 60 * 1000;
 
 @Component({
 	moduleId: module.id,
