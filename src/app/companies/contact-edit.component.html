@@ -3,7 +3,7 @@
 		<p class="navbar-text">
 			<span class="glyphicon glyphicon-user"></span> Contact
 		</p>
-		<button type="button" class="btn btn-default navbar-btn">
+		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
 		<span class="glyphicon glyphicon-remove"></span> cancel
 	</button>
 		<button type="button" [disabled]="contactForm.pristine || contactForm.invalid" class="btn btn-default navbar-btn" (click)="onSubmit()">

@@ -41,6 +41,10 @@ export class ContactDetailsComponent implements OnInit {
 			});
 	}
 
+	gotoCompany(): void {
+		this._router.navigate(['company/details', this.domainCompany._id]);
+	}
+
 	gotoEdit(): void {
 		this._router.navigate(['contact/edit', this.domainCompany._id, this.contact.id]);
 	}
