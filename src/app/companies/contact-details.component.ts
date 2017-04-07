@@ -16,6 +16,8 @@ export class ContactDetailsComponent implements OnInit {
 	domainCompany: Company;
 	company;
 	contact;
+	hiringSign = '';
+	hiringGlyph = '';
 
 	constructor(
 		private _route: ActivatedRoute,
@@ -49,7 +51,25 @@ export class ContactDetailsComponent implements OnInit {
 		this._router.navigate(['contact/edit', this.domainCompany._id, this.contact.id]);
 	}
 
-	mapContact(contactId) {
+	toggleHiring(): void {
+		const contInd = this.domainCompany.contacts
+			.findIndex(c => c._id === this.contact.id);
+		if (contInd < 0) {
+			return;
+		}
+		this.domainCompany.contacts[contInd].toggleHiring();
+		this._companyRepo.store(this.domainCompany)
+			.then(() => {
+				if (!this.domainCompany.contacts[contInd].active) {
+					this._router.navigate(['company/details', this.domainCompany._id]);
+				} else {
+					this.contact.active = true;
+					this.setHiringSign();
+				}
+			}).catch(e => console.log(e));
+	}
+
+	private mapContact(contactId) {
 		// TODO: comapny mapping
 		const contact = this.domainCompany.contacts
 			.find(c => c._id === contactId);
@@ -60,6 +80,7 @@ export class ContactDetailsComponent implements OnInit {
 		this.contact.mobile = contact.mobile;
 		this.contact.email = contact.email;
 		this.contact.active = contact.active;
+		this.setHiringSign();
 		this.contact.created = contact.created;
 		this.contact.updated = contact.updated;
 		this._dirSrv.getDir('jobresponsibility').data
@@ -80,5 +101,10 @@ export class ContactDetailsComponent implements OnInit {
 					.map(a => a.name)
 					.join(', ');
 			});
+	}
+
+	private setHiringSign() {
+		this.hiringSign = this.contact.active ? 'fire' : 'hire';
+		this.hiringGlyph = this.contact.active ? 'log-out' : 'log-in';
 	}
 }

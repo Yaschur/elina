@@ -31,7 +31,7 @@ export class Company extends Entity {
 		this.created = item.created || new Date();
 		this.updated = item.updated || new Date();
 
-		this.notes = item.notes || [];
-		this.contacts = item.contacts || [];
+		this.notes = item.notes.map(n => new Note(n)) || [];
+		this.contacts = item.contacts.map(c => new Contact(c)) || [];
 	}
 }

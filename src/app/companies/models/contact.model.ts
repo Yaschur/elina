@@ -30,4 +30,8 @@ export class Contact extends Entity {
 		this.created = item.created || new Date();
 		this.updated = item.updated || new Date();
 	}
+
+	toggleHiring(): void {
+		this.active = !this.active;
+	}
 }

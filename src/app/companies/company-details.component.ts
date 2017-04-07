@@ -22,6 +22,9 @@ export class CompanyDetailsComponent implements OnInit {
 	company;
 	note;
 	indNoteToDel;
+	includeFired = false;
+	checkGlyph = 'unchecked';
+
 	constructor(
 		private _route: ActivatedRoute,
 		private _router: Router,
@@ -52,6 +55,12 @@ export class CompanyDetailsComponent implements OnInit {
 
 	contactDetails(contactId): void {
 		this._router.navigate(['contact/details', this.domainItem._id, contactId]);
+	}
+
+	toggleActive(): void {
+		this.includeFired = !this.includeFired;
+		this.checkGlyph = this.includeFired ? 'check' : 'unchecked';
+		this.mapContacts(this.includeFired);
 	}
 
 	addContact(): void {
@@ -100,10 +109,9 @@ export class CompanyDetailsComponent implements OnInit {
 		this.company.phone = company.phone;
 		this.company.created = company.created;
 		this.company.updated = company.updated;
+		this.mapContacts(this.includeFired);
 		this.company.notes = company.notes
 			.map(n => ({ created: n.created, text: n.text }));
-		this.company.contacts = company.contacts
-			.map(c => new ContactListVm(c));
 		this._dirSrv.getDir('country').data
 			.subscribe(cs => {
 				const country = cs.find(c => c._id === company.country);
@@ -119,6 +127,12 @@ export class CompanyDetailsComponent implements OnInit {
 					.join(', ');
 			});
 	}
+
+	private mapContacts(withFired) {
+		this.company.contacts = this.domainItem.contacts
+			.filter(c => withFired || c.active)
+			.map(c => new ContactListVm(c));
+	}
 }
 
 class ContactListVm {
@@ -131,7 +145,7 @@ class ContactListVm {
 	// phone: string;
 	// mobile: string;
 	// email: string;
-	// active: boolean;
+	active: boolean;
 	isNew: boolean;
 	// created: Date;
 	// updated: Date;
@@ -140,6 +154,7 @@ class ContactListVm {
 		this.id = contact._id;
 		this.name = contact.name;
 		this.jobTitle = contact.jobTitle;
-		this.isNew = new Date().getTime() - new Date(contact.created).getTime() < NEWPERIOD;
+		this.isNew = contact.active && new Date().getTime() - new Date(contact.created).getTime() < NEWPERIOD;
+		this.active = contact.active;
 	}
 }

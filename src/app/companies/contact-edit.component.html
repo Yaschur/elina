@@ -4,11 +4,11 @@
 			<span class="glyphicon glyphicon-user"></span> Contact
 		</p>
 		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
-		<span class="glyphicon glyphicon-remove"></span> cancel
-	</button>
+			<span class="glyphicon glyphicon-remove"></span> cancel
+		</button>
 		<button type="button" [disabled]="contactForm.pristine || contactForm.invalid" class="btn btn-default navbar-btn" (click)="onSubmit()">
-		<span class="glyphicon glyphicon-ok"></span> SAVE
-	</button>
+			<span class="glyphicon glyphicon-ok"></span> SAVE
+		</button>
 	</nav>
 
 	<div class="form-group">
@@ -20,19 +20,19 @@
 		<input id="jobTitle" formControlName="jobTitle" type="text" class="form-control">
 	</div>
 	<div class="form-group">
-		<label for="jobResponsibilities">Job Responsibilities:</label> <small>use Ctrl-click to multiple selection or deselection</small>
+		<label for="jobResponsibilities">Job Responsibilities:</label> <small>use Ctrl-click for multiple selection or deselection</small>
 		<select multiple id="jobResponsibilities" formControlName="jobResponsibilities" class="form-control">
 				<option *ngFor="let item of jobResponsibilities | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
 	<div class="form-group">
-		<label for="buyContents">Buy Content Responsibilities:</label> <small>use Ctrl-click to multiple selection or deselection</small>
+		<label for="buyContents">Buy Content Responsibilities:</label> <small>use Ctrl-click for multiple selection or deselection</small>
 		<select multiple id="buyContents" formControlName="buyContents" class="form-control">
 				<option *ngFor="let item of contentResponsibilities | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
 	<div class="form-group">
-		<label for="sellContents">Sell Contents Responsibilities:</label> <small>use Ctrl-click to multiple selection or deselection</small>
+		<label for="sellContents">Sell Contents Responsibilities:</label> <small>use Ctrl-click for multiple selection or deselection</small>
 		<select multiple id="sellContents" formControlName="sellContents" class="form-control">
 				<option *ngFor="let item of contentResponsibilities | async" [value]="item._id">{{item.name}}</option>
 		</select>
