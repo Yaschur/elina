@@ -9,7 +9,7 @@ import { CompanyRepository } from './repositories/company.repository';
 
 import 'rxjs/add/observable/fromPromise';
 
-const NEWPERIOD = 365 * 60 * 60 * 1000;
+const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 
 @Component({
 	moduleId: module.id,
@@ -67,7 +67,9 @@ class CompanyListVm {
 			this.location += ' (' + company.city + ')';
 		}
 		this.activitiesNum = company.activities.length;
-		this.contactsNum = company.contacts.length;
+		this.contactsNum = company.contacts
+			.filter(c => c.active)
+			.length;
 		this.isNew = new Date().getTime() - new Date(company.created).getTime() < NEWPERIOD;
 	}
 }

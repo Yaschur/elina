@@ -8,7 +8,7 @@ import { Note } from './models/note.model';
 import { CompanyRepository } from './repositories/company.repository';
 import { DirectoryService } from '../directories/services/directory.service';
 
-const NEWPERIOD = 365 * 60 * 60 * 1000;
+const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 
 @Component({
 	moduleId: module.id,
