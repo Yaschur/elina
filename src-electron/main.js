@@ -75,9 +75,9 @@ app.on('activate', function () {
 ipcMain.on('load-config', (event, content) => {
 	let ret = 'no config found';
 	if (fs.existsSync(configFilePath)) {
-		ret = 'config exists in app dir';
-	} else if (fs.exists(oldConfigFilePath)) {
-		ret = 'config exist in user data dir';
+		ret = 'config exists in user data dir';
+	} else if (fs.existsSync(oldConfigFilePath)) {
+		ret = 'config exist in app dir';
 	} else {
 		ret = ret + ': ' + configFilePath + ', ' + oldConfigFilePath;
 	}

@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
+import { NgxElectronModule } from 'ngx-electron';
+
 import { StoreService } from './infra/store.service';
 
 import { AppComponent } from './app.component';
@@ -25,6 +27,8 @@ import { CompanyDetailsComponent } from './companies/company-details.component';
 import { ContactEditComponent } from './companies/contact-edit.component';
 import { ContactDetailsComponent } from './companies/contact-details.component';
 
+import { ConfigComponent } from './config/config-rand.component';
+
 const appRoutes: Routes = [
 	{ path: 'company', component: CompanyListComponent },
 	{ path: 'company/edit/:id', component: CompanyEditComponent },
@@ -37,6 +41,8 @@ const appRoutes: Routes = [
 	{ path: 'directory/region/:id', component: RegionEditComponent },
 	{ path: 'directory/:entry', component: EntryListComponent },
 	{ path: 'directory/:entry/:id', component: EntryEditComponent },
+	{ path: 'directory/:entry/:id', component: EntryEditComponent },
+	{ path: 'system/config', component: ConfigComponent },
 	{ path: '', redirectTo: 'company', pathMatch: 'full' }
 ];
 
@@ -55,14 +61,16 @@ const appRoutes: Routes = [
 		CompanyEditComponent,
 		CompanyDetailsComponent,
 		ContactEditComponent,
-		ContactDetailsComponent
+		ContactDetailsComponent,
+		ConfigComponent
 	],
 	imports: [
 		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
 		HttpModule,
-		RouterModule.forRoot(appRoutes)
+		RouterModule.forRoot(appRoutes),
+		NgxElectronModule
 	],
 	providers: [
 		StoreService,

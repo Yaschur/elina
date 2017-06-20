@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { ElectronService } from 'ngx-electron';
 
 @Component({
 	selector: 'app-config-rand',
@@ -6,7 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class ConfigComponent implements OnInit {
-	constructor() { }
+	info = '';
+	constructor(private _electronService: ElectronService, private _ngZone: NgZone) { }
 
-	ngOnInit() { }
+	ngOnInit() {
+		if (this._electronService.isElectronApp) {
+			this._electronService.ipcRenderer.on('config-loaded', (event, arg) => {
+				this._ngZone.run(() => {
+					this.info = arg;
+				});
+			});
+		}
+		this._electronService.ipcRenderer.send('load-config');
+	}
 }
