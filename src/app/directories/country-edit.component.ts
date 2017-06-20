@@ -9,7 +9,6 @@ import { DirEntries } from './models/dir-entries.model';
 import { DirectoryService } from './services/directory.service';
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-country-edit',
 	templateUrl: 'country-edit.component.html'
 })

@@ -11,7 +11,6 @@ import { DirectoryService } from '../directories/services/directory.service';
 const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-company-details',
 	templateUrl: './company-details.component.html',
 	styleUrls: ['./company-details.component.css']

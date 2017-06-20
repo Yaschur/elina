@@ -13,7 +13,6 @@ import { CompanyRepository } from './repositories/company.repository';
 import { DirectoryService } from '../directories/services/directory.service';
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-contact-edit',
 	templateUrl: 'contact-edit.component.html'
 })

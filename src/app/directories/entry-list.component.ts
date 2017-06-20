@@ -7,7 +7,6 @@ import { DirEntries } from './models/dir-entries.model';
 import { DirectoryService } from './services/directory.service';
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-entry-list',
 	templateUrl: 'entry-list.component.html'
 })

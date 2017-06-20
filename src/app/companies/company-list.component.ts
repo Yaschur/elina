@@ -12,7 +12,6 @@ import 'rxjs/add/observable/fromPromise';
 const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-company-list',
 	templateUrl: 'company-list.component.html'
 })

@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-edit-header',
 	templateUrl: 'edit-header.component.html'
 })

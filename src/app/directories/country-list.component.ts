@@ -6,7 +6,6 @@ import { DirEntries } from './models/dir-entries.model';
 import { DirectoryService } from './services/directory.service';
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-country-list',
 	templateUrl: 'country-list.component.html'
 })

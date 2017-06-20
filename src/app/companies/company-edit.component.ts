@@ -12,7 +12,6 @@ import { Activity } from '../directories/models/activity.model';
 import { CompanyRepository } from './repositories/company.repository';
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-company-edit',
 	templateUrl: 'company-edit.component.html'
 })

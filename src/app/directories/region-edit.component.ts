@@ -11,7 +11,6 @@ import { Country } from './models/country.model';
 import { DirectoryService } from './services/directory.service';
 
 @Component({
-	moduleId: module.id,
 	selector: 'app-region-edit',
 	templateUrl: 'region-edit.component.html'
 })
