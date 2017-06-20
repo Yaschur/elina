@@ -1,7 +1,14 @@
 const electron = require('electron');
-const { app, BrowserWindow, globalShortcut } = electron;
+const { app, BrowserWindow, globalShortcut, ipcMain } = electron;
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
+const configFileName = 'config.json';
+const configFilePath = path.join(
+	app.getPath('userData'),
+	configFileName
+);
+const oldConfigFilePath = path.join(__dirname, configFileName);
 
 let mainWindow = null;
 
@@ -63,4 +70,16 @@ app.on('activate', function () {
 	if (mainWindow === null) {
 		createWindow();
 	}
+});
+
+ipcMain.on('load-config', (event, content) => {
+	let ret = 'no config found';
+	if (fs.existsSync(configFilePath)) {
+		ret = 'config exists in app dir';
+	} else if (fs.exists(oldConfigFilePath)) {
+		ret = 'config exist in user data dir';
+	} else {
+		ret = ret + ': ' + configFilePath + ', ' + oldConfigFilePath;
+	}
+	event.sender.send('config-loaded', ret);
 });
