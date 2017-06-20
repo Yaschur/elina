@@ -20,7 +20,7 @@
     "@angular/router": "^4.2.3",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
-    "ng2-bootstrap": "^1.6.3",
+    "ngx-bootstrap": "^1.7.1",
     "ngx-electron": "^1.0.2",
     "pouchdb": "^6.2.0",
     "pouchdb-find": "^6.2.0",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@angular/cli": "^1.1.2",
     "@angular/compiler-cli": "^4.2.3",
-    "@types/node": "^7.0.31",
+    "@types/node": "^8.0.0",
     "@types/pouchdb": "^6.1.1",
     "@types/pouchdb-find": "^0.10.1",
     "@types/pouchdb-upsert": "^2.0.3",
