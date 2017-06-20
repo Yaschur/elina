@@ -73,13 +73,12 @@ app.on('activate', function () {
 });
 
 ipcMain.on('load-config', (event, content) => {
-	let ret = 'no config found';
+	let ret = '';
 	if (fs.existsSync(configFilePath)) {
-		ret = 'config exists in user data dir';
+		ret = fs.readFileSync(configFilePath, 'utf8');
 	} else if (fs.existsSync(oldConfigFilePath)) {
-		ret = 'config exist in app dir';
-	} else {
-		ret = ret + ': ' + configFilePath + ', ' + oldConfigFilePath;
+		ret = fs.readFileSync(oldConfigFilePath, 'utf8');
+		fs.writeFileSync(configFilePath, ret);
 	}
 	event.sender.send('config-loaded', ret);
 });
