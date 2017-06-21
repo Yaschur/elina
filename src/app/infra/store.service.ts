@@ -5,11 +5,6 @@ import * as PouchDbUpsert from 'pouchdb-upsert';
 
 import { ConfigService } from '../config/config.service';
 import { Entity } from './entity.model';
-// import { Observable } from 'rxjs/Observable';
-// import { Subject } from 'rxjs/Subject';
-// import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/map';
 
 PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
@@ -21,26 +16,20 @@ export class StoreService {
 	private _dbp: Promise<PouchDB.Database<any>>;
 
 	constructor(private _config: ConfigService) {
-		this._dbp = _config.currentConfig
-			.map(config => {
-				console.log(config);
-				const db = new PouchDB(config.database.nameOrUrl);
-				// TODO: refactor indexing
-				db.createIndex({ index: { fields: ['type'] } })
-					.catch((e) => console.log(e));
-				db.createIndex({ index: { fields: ['name'] } })
-					.catch((e) => console.log(e));
-				db.createIndex({ index: { fields: ['type', 'name'] } })
-					.catch((e) => console.log(e));
-				return db;
-			}).toPromise();
-		this._dbp
-			.then(() => console.log('promise resolved'))
-			.catch((e) => console.log(e));
-	}
-
-	private getDb() {
-		return new Promise()
+		this._dbp = new Promise<PouchDB.Database<any>>((resolve, reject) => {
+			this._config.currentConfig
+				.then(config => {
+					const db = new PouchDB(config.database.nameOrUrl);
+					// TODO: refactor indexing
+					db.createIndex({ index: { fields: ['type'] } })
+						.catch((e) => console.log(e));
+					db.createIndex({ index: { fields: ['name'] } })
+						.catch((e) => console.log(e));
+					db.createIndex({ index: { fields: ['type', 'name'] } })
+						.catch((e) => console.log(e));
+					resolve(db);
+				});
+		});
 	}
 
 	public async createIndex(index: any) {

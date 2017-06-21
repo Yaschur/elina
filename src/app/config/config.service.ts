@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/toPromise';
 
 import { ElectronService } from 'ngx-electron';
 
@@ -16,19 +17,22 @@ interface Config {
 @Injectable()
 export class ConfigService {
 
-	private _current: Subject<Config>;
+	private _current: AsyncSubject<Config>;
 
-	constructor(private _electronService: ElectronService, private _ngZone: NgZone) {
-		this._current = new Subject();
+	constructor(private _electronService: ElectronService) {
+		this._current = new AsyncSubject<Config>();
 		this.init();
 		this.reload();
 	}
 
-	get currentConfig(): Observable<Config> {
-		return this._current.asObservable();
+	get currentConfig(): Promise<Config> {
+		return this._current.toPromise();
 	}
 
 	public reload() {
+		if (this._current.isStopped) {
+			this._current = new AsyncSubject<Config>();
+		}
 		this._electronService.ipcRenderer.send('load-config');
 	}
 
@@ -36,9 +40,11 @@ export class ConfigService {
 		if (this._electronService.isElectronApp) {
 			this._electronService.ipcRenderer.on('config-loaded', (event, arg) => {
 				console.log('receive config loaded: ' + arg);
-				// this._ngZone.run(() => 
-				this._current.next(JSON.parse(arg))
-				// );
+				if (this._current.isStopped) {
+					this._current = new AsyncSubject<Config>();
+				}
+				this._current.next(JSON.parse(arg));
+				this._current.complete();
 			});
 		}
 	}
