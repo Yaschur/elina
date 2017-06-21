@@ -5,9 +5,11 @@ import * as PouchDbUpsert from 'pouchdb-upsert';
 
 import { ConfigService } from '../config/config.service';
 import { Entity } from './entity.model';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/mergeMap';
+// import { Observable } from 'rxjs/Observable';
+// import { Subject } from 'rxjs/Subject';
+// import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/map';
 
 PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
@@ -16,47 +18,42 @@ PouchDB.debug.disable();
 @Injectable()
 export class StoreService {
 
-	private _db: Subject<PouchDB.Database<any>>;
+	private _dbp: Promise<PouchDB.Database<any>>;
 
 	constructor(private _config: ConfigService) {
-		this._db = new Subject();
-		// _config.currentConfig.switchMap(config => {
-		// 	const db = new PouchDB(config.database.nameOrUrl);
-		// 	// TODO: refactor indexing
-		// 	db.createIndex({ index: { fields: ['type'] } })
-		// 		.catch((e) => console.log(e));
-		// 	db.createIndex({ index: { fields: ['name'] } })
-		// 		.catch((e) => console.log(e));
-		// 	db.createIndex({ index: { fields: ['type', 'name'] } })
-		// 		.catch((e) => console.log(e));
-		// 	return new Subject()
-		// });
+		this._dbp = _config.currentConfig
+			.map(config => {
+				console.log(config);
+				const db = new PouchDB(config.database.nameOrUrl);
+				// TODO: refactor indexing
+				db.createIndex({ index: { fields: ['type'] } })
+					.catch((e) => console.log(e));
+				db.createIndex({ index: { fields: ['name'] } })
+					.catch((e) => console.log(e));
+				db.createIndex({ index: { fields: ['type', 'name'] } })
+					.catch((e) => console.log(e));
+				return db;
+			}).toPromise();
+		this._dbp
+			.then(() => console.log('promise resolved'))
+			.catch((e) => console.log(e));
+	}
 
-		_config.currentConfig.subscribe(config => {
-			const db = new PouchDB(config.database.nameOrUrl);
-			// TODO: refactor indexing
-			db.createIndex({ index: { fields: ['type'] } })
-				.catch((e) => console.log(e));
-			db.createIndex({ index: { fields: ['name'] } })
-				.catch((e) => console.log(e));
-			db.createIndex({ index: { fields: ['type', 'name'] } })
-				.catch((e) => console.log(e));
-			this._db.next(db);
-		});
+	private getDb() {
+		return new Promise()
 	}
 
 	public async createIndex(index: any) {
-		this._db.asObservable().
-		// try {
-		// 	await this._db.createIndex(index);
-		// } catch (e) {
-		// 	console.log(e);
-		// }
+		try {
+			await (await this._dbp).createIndex(index);
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	public async deleteIndex(index: any) {
 		try {
-			await this._db.deleteIndex(index);
+			await (await this._dbp).deleteIndex(index);
 		} catch (e) {
 			console.log(e);
 		}
@@ -64,7 +61,7 @@ export class StoreService {
 
 	public async getIndexes() {
 		try {
-			return await this._db.getIndexes();
+			return await (await this._dbp).getIndexes();
 		} catch (e) {
 			console.log(e);
 		}
@@ -73,7 +70,7 @@ export class StoreService {
 	public async store(type: string, item: any) {
 		try {
 			const dbItem = this.convertToDb(type, item);
-			await this._db.upsert(dbItem._id, doc => {
+			await (await this._dbp).upsert(dbItem._id, doc => {
 				dbItem._rev = doc._rev;
 				console.log(dbItem);
 				return dbItem;
@@ -86,8 +83,8 @@ export class StoreService {
 	public async remove(type: string, item: any) {
 		try {
 			const dbId = this.convertIdToDb(type, item._id);
-			const exItem = await this._db.get(dbId);
-			await this._db.remove(exItem);
+			const exItem = await (await this._dbp).get(dbId);
+			await (await this._dbp).remove(exItem);
 		} catch (e) {
 			console.log(e);
 		}
@@ -96,7 +93,7 @@ export class StoreService {
 	public async get(type: string, id: string): Promise<any> {
 		try {
 			const dbId = this.convertIdToDb(type, id);
-			const exItem = await this._db.get(dbId);
+			const exItem = await (await this._dbp).get(dbId);
 			return this.convertToDomain(exItem);
 		} catch (e) {
 			console.log(e);
@@ -127,7 +124,8 @@ export class StoreService {
 				query.limit = limit;
 			}
 			console.log(query);
-			const res = await this._db.find(query);
+			const db = await this._dbp;
+			const res = await db.find(query);
 			console.log(res);
 			const items: any[] = [];
 			res.docs.forEach(doc => {
