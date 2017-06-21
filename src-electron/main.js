@@ -9,6 +9,11 @@ const configFilePath = path.join(
 	configFileName
 );
 const oldConfigFilePath = path.join(__dirname, configFileName);
+// const dbBackupPath = path.join(__dirname, 'dbBackups');
+
+// if (!fs.existsSync(dbBackupPath)) {
+// 	fs.mkdirSync(dbBackupPath);
+// }
 
 let mainWindow = null;
 
