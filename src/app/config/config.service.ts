@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
 import { ElectronService } from 'ngx-electron';
@@ -16,9 +16,10 @@ interface Config {
 @Injectable()
 export class ConfigService {
 
-	private _current: BehaviorSubject<Config>;
+	private _current: Subject<Config>;
 
 	constructor(private _electronService: ElectronService) {
+		this._current = new Subject();
 		this.init();
 		this._electronService.ipcRenderer.send('load-config');
 	}

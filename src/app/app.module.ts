@@ -19,6 +19,7 @@ import { EntryListComponent } from './directories/entry-list.component';
 import { EntryEditComponent } from './directories/entry-edit.component';
 import { DirectoryRepository } from './directories/repositories/directory.repository';
 import { DirectoryService } from './directories/services/directory.service';
+import { ConfigService } from './config/config.service';
 
 import { CompanyRepository } from './companies/repositories/company.repository';
 import { CompanyListComponent } from './companies/company-list.component';
@@ -26,8 +27,6 @@ import { CompanyEditComponent } from './companies/company-edit.component';
 import { CompanyDetailsComponent } from './companies/company-details.component';
 import { ContactEditComponent } from './companies/contact-edit.component';
 import { ContactDetailsComponent } from './companies/contact-details.component';
-
-import { ConfigComponent } from './config/config-rand.component';
 
 const appRoutes: Routes = [
 	{ path: 'company', component: CompanyListComponent },
@@ -42,7 +41,6 @@ const appRoutes: Routes = [
 	{ path: 'directory/:entry', component: EntryListComponent },
 	{ path: 'directory/:entry/:id', component: EntryEditComponent },
 	{ path: 'directory/:entry/:id', component: EntryEditComponent },
-	{ path: 'system/config', component: ConfigComponent },
 	{ path: '', redirectTo: 'company', pathMatch: 'full' }
 ];
 
@@ -61,8 +59,7 @@ const appRoutes: Routes = [
 		CompanyEditComponent,
 		CompanyDetailsComponent,
 		ContactEditComponent,
-		ContactDetailsComponent,
-		ConfigComponent
+		ContactDetailsComponent
 	],
 	imports: [
 		BrowserModule,
@@ -73,6 +70,7 @@ const appRoutes: Routes = [
 		NgxElectronModule
 	],
 	providers: [
+		ConfigService,
 		StoreService,
 		DirectoryRepository,
 		DirectoryService,

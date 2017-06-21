@@ -3,9 +3,11 @@ import * as PouchDB from 'pouchdb';
 import * as PouchDbFind from 'pouchdb-find';
 import * as PouchDbUpsert from 'pouchdb-upsert';
 
+import { ConfigService } from '../config/config.service';
 import { Entity } from './entity.model';
-
-const { database: dbConfig } = require('../../electron/config.json');
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/mergeMap';
 
 PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
@@ -14,26 +16,42 @@ PouchDB.debug.disable();
 @Injectable()
 export class StoreService {
 
-	private _db: PouchDB.Database<any>;
+	private _db: Subject<PouchDB.Database<any>>;
 
-	constructor() {
-		const dbName = dbConfig.nameOrUrl;
-		this._db = new PouchDB(dbName, {auto_compaction: true});
-		// TODO: refactor indexing
-		this._db.createIndex({ index: { fields: ['type'] } })
-			.catch((e) => console.log(e));
-		this._db.createIndex({ index: { fields: ['name'] } })
-			.catch((e) => console.log(e));
-		this._db.createIndex({ index: { fields: ['type', 'name'] } })
-			.catch((e) => console.log(e));
+	constructor(private _config: ConfigService) {
+		this._db = new Subject();
+		// _config.currentConfig.switchMap(config => {
+		// 	const db = new PouchDB(config.database.nameOrUrl);
+		// 	// TODO: refactor indexing
+		// 	db.createIndex({ index: { fields: ['type'] } })
+		// 		.catch((e) => console.log(e));
+		// 	db.createIndex({ index: { fields: ['name'] } })
+		// 		.catch((e) => console.log(e));
+		// 	db.createIndex({ index: { fields: ['type', 'name'] } })
+		// 		.catch((e) => console.log(e));
+		// 	return new Subject()
+		// });
+
+		_config.currentConfig.subscribe(config => {
+			const db = new PouchDB(config.database.nameOrUrl);
+			// TODO: refactor indexing
+			db.createIndex({ index: { fields: ['type'] } })
+				.catch((e) => console.log(e));
+			db.createIndex({ index: { fields: ['name'] } })
+				.catch((e) => console.log(e));
+			db.createIndex({ index: { fields: ['type', 'name'] } })
+				.catch((e) => console.log(e));
+			this._db.next(db);
+		});
 	}
 
 	public async createIndex(index: any) {
-		try {
-			await this._db.createIndex(index);
-		} catch (e) {
-			console.log(e);
-		}
+		this._db.asObservable().
+		// try {
+		// 	await this._db.createIndex(index);
+		// } catch (e) {
+		// 	console.log(e);
+		// }
 	}
 
 	public async deleteIndex(index: any) {
