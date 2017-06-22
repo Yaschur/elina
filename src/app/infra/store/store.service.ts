@@ -1,59 +1,15 @@
 import { Injectable } from '@angular/core';
-import * as PouchDB from 'pouchdb';
-import * as PouchDbFind from 'pouchdb-find';
-import * as PouchDbUpsert from 'pouchdb-upsert';
 
-import { ConfigService } from '../config/config.service';
-import { Entity } from './entity.model';
-
-PouchDB.plugin(PouchDbFind);
-PouchDB.plugin(PouchDbUpsert);
-PouchDB.debug.disable();
+import { DbMaintService } from './db-maint.service';
+import { Entity } from '../entity.model';
 
 @Injectable()
 export class StoreService {
 
 	private _dbp: Promise<PouchDB.Database<any>>;
 
-	constructor(private _config: ConfigService) {
-		this._dbp = new Promise<PouchDB.Database<any>>((resolve, reject) => {
-			this._config.currentConfig
-				.then(config => {
-					const db = new PouchDB(config.database.nameOrUrl);
-					// TODO: refactor indexing
-					db.createIndex({ index: { fields: ['type'] } })
-						.catch((e) => console.log(e));
-					db.createIndex({ index: { fields: ['name'] } })
-						.catch((e) => console.log(e));
-					db.createIndex({ index: { fields: ['type', 'name'] } })
-						.catch((e) => console.log(e));
-					resolve(db);
-				});
-		});
-	}
-
-	public async createIndex(index: any) {
-		try {
-			await (await this._dbp).createIndex(index);
-		} catch (e) {
-			console.log(e);
-		}
-	}
-
-	public async deleteIndex(index: any) {
-		try {
-			await (await this._dbp).deleteIndex(index);
-		} catch (e) {
-			console.log(e);
-		}
-	}
-
-	public async getIndexes() {
-		try {
-			return await (await this._dbp).getIndexes();
-		} catch (e) {
-			console.log(e);
-		}
+	constructor(private _dbService: DbMaintService) {
+		this._dbp = this._dbService.dbInstance;
 	}
 
 	public async store(type: string, item: any) {
