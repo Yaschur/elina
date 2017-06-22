@@ -1,4 +1,4 @@
-import { Entity } from '../../infra/entity.model';
+import { Entity } from '../../infra';
 
 export abstract class Entry extends Entity {
 	name: string;

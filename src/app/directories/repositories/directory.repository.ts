@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StoreService } from '../../infra/store/store.service';
+import { StoreService } from '../../infra';
 
 @Injectable()
 export class DirectoryRepository {
