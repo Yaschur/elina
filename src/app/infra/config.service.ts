@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { ElectronService } from 'ngx-electron';
 
-interface Config {
+export interface Config {
 	readonly database: {
 		readonly nameOrUrl: string;
 		readonly backupAllowed: boolean;
