@@ -1,13 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { RouterModule, Routes } from '@angular/router';
-
-import { InfraModule } from './infra';
-
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
+import { Routes, RouterModule } from '@angular/router';
 
 import { CountryListComponent } from './directories/country-list.component';
 import { CountryEditComponent } from './directories/country-edit.component';
@@ -17,17 +9,13 @@ import { ListHeaderComponent } from './directories/components/list-header.compon
 import { EditHeaderComponent } from './directories/components/edit-header.component';
 import { EntryListComponent } from './directories/entry-list.component';
 import { EntryEditComponent } from './directories/entry-edit.component';
-import { DirectoryRepository } from './directories/repositories/directory.repository';
-import { DirectoryService } from './directories/services/directory.service';
-
-import { CompanyRepository } from './companies/repositories/company.repository';
 import { CompanyListComponent } from './companies/company-list.component';
 import { CompanyEditComponent } from './companies/company-edit.component';
 import { CompanyDetailsComponent } from './companies/company-details.component';
 import { ContactEditComponent } from './companies/contact-edit.component';
 import { ContactDetailsComponent } from './companies/contact-details.component';
 
-const appRoutes: Routes = [
+const routes: Routes = [
 	{ path: 'company', component: CompanyListComponent },
 	{ path: 'company/edit/:id', component: CompanyEditComponent },
 	{ path: 'company/details/:id', component: CompanyDetailsComponent },
@@ -44,35 +32,9 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-	declarations: [
-		AppComponent,
-		CountryListComponent,
-		CountryEditComponent,
-		RegionListComponent,
-		RegionEditComponent,
-		ListHeaderComponent,
-		EditHeaderComponent,
-		EntryListComponent,
-		EntryEditComponent,
-		CompanyListComponent,
-		CompanyEditComponent,
-		CompanyDetailsComponent,
-		ContactEditComponent,
-		ContactDetailsComponent
-	],
-	imports: [
-		BrowserModule,
-		FormsModule,
-		ReactiveFormsModule,
-		HttpModule,
-		InfraModule,
-		AppRoutingModule
-	],
-	providers: [
-		DirectoryRepository,
-		DirectoryService,
-		CompanyRepository
-	],
-	bootstrap: [AppComponent]
+	imports: [RouterModule.forRoot(routes)],
+	exports: [RouterModule]
 })
-export class AppModule { }
+export class AppRoutingModule { }
+
+// export const routedComponents = [NameComponent];

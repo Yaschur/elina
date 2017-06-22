@@ -87,4 +87,11 @@ export class DbMaintService {
 		await trgDb.bulkDocs(items);
 		this._db = DbMaintService.init(trgDb);
 	}
+
+	async doClear(): Promise<void> {
+		let trgDb = await this._db;
+		await trgDb.destroy();
+		trgDb = new PouchDB(this._config.database.nameOrUrl);
+		this._db = DbMaintService.init(trgDb);
+	}
 }
