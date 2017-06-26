@@ -6,16 +6,16 @@ import { Entity } from '../entity.model';
 @Injectable()
 export class StoreService {
 
-	private _dbp: Promise<PouchDB.Database<any>>;
+	// private _dbp: Promise<PouchDB.Database<any>>;
 
 	constructor(private _dbService: DbMaintService) {
-		this._dbp = this._dbService.dbInstance;
+		// this._dbp = this._dbService.dbInstance;
 	}
 
 	public async store(type: string, item: any) {
 		try {
 			const dbItem = this.convertToDb(type, item);
-			await (await this._dbp).upsert(dbItem._id, doc => {
+			await (await this._dbService.dbInstance).upsert(dbItem._id, doc => {
 				dbItem._rev = doc._rev;
 				console.log(dbItem);
 				return dbItem;
@@ -28,8 +28,8 @@ export class StoreService {
 	public async remove(type: string, item: any) {
 		try {
 			const dbId = this.convertIdToDb(type, item._id);
-			const exItem = await (await this._dbp).get(dbId);
-			await (await this._dbp).remove(exItem);
+			const exItem = await (await this._dbService.dbInstance).get(dbId);
+			await (await this._dbService.dbInstance).remove(exItem);
 		} catch (e) {
 			console.log(e);
 		}
@@ -38,7 +38,7 @@ export class StoreService {
 	public async get(type: string, id: string): Promise<any> {
 		try {
 			const dbId = this.convertIdToDb(type, id);
-			const exItem = await (await this._dbp).get(dbId);
+			const exItem = await (await this._dbService.dbInstance).get(dbId);
 			return this.convertToDomain(exItem);
 		} catch (e) {
 			console.log(e);
@@ -69,7 +69,7 @@ export class StoreService {
 				query.limit = limit;
 			}
 			console.log(query);
-			const db = await this._dbp;
+			const db = await this._dbService.dbInstance;
 			const res = await db.find(query);
 			console.log(res);
 			const items: any[] = [];

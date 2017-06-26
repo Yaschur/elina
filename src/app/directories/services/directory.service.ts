@@ -40,15 +40,29 @@ export class DirectoryService {
 
 
 	constructor(private _dirRepo: DirectoryRepository) {
+		this.init();
+	}
+
+	public init() {
 		for (const key in this._dirs) {
 			if (!this._dirs.hasOwnProperty(key)) {
 				continue;
 			}
 			console.log('init ' + key + ' directory data');
 			const dir = this._dirs[key];
-			_dirRepo.findAll(dir.meta.entryCtor)
+			this._dirRepo.findAll(dir.meta.entryCtor)
 				.then(items => dir.setData(items))
 				.catch(e => console.log(e));
+		}
+	}
+
+	public purge() {
+		for (const key in this._dirs) {
+			if (!this._dirs.hasOwnProperty(key)) {
+				continue;
+			}
+			const dir = this._dirs[key];
+			dir.setData([]);
 		}
 	}
 
