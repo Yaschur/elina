@@ -16,7 +16,7 @@ export class DbMaintService {
 		{ index: { fields: ['type'] } },
 		{ index: { fields: ['name'] } },
 		{ index: { fields: ['type', 'name'] } }
-	]
+	];
 
 	private _db: Promise<PouchDB.Database<any>>;
 	private _config: Config;

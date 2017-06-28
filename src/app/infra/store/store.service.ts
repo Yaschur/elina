@@ -6,11 +6,7 @@ import { Entity } from '../entity.model';
 @Injectable()
 export class StoreService {
 
-	// private _dbp: Promise<PouchDB.Database<any>>;
-
-	constructor(private _dbService: DbMaintService) {
-		// this._dbp = this._dbService.dbInstance;
-	}
+	constructor(private _dbService: DbMaintService) { }
 
 	public async store(type: string, item: any) {
 		try {
