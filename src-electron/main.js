@@ -83,7 +83,7 @@ app.on('activate', function () {
 	}
 });
 
-ipcMain.on('load-config', (event, content) => {
+ipcMain.on('load-config', event => {
 	let ret = '';
 	if (fs.existsSync(configFilePath)) {
 		ret = fs.readFileSync(configFilePath, 'utf8');
@@ -91,7 +91,7 @@ ipcMain.on('load-config', (event, content) => {
 		ret = fs.readFileSync(oldConfigFilePath, 'utf8');
 		fs.writeFileSync(configFilePath, ret);
 	}
-	event.sender.send('content-loaded', ret);
+	event.sender.send('config-loaded', ret);
 });
 
 ipcMain.on('save-file', (event, content) => {
@@ -101,11 +101,31 @@ ipcMain.on('save-file', (event, content) => {
 		title: 'Where to export data'
 	});
 	if (fileName) {
-		fs.writeFile(fileName, content, (err) => event.sender.send('content-saved', ret));
+		fs.writeFile(fileName, content, (err) => event.sender.send('file-saved', ret));
 	}
 	else {
-		event.sender.send('content-saved', 'cancelled by user');
+		event.sender.send('file-saved', 'cancelled by user');
 	}
-})
+});
+
+ipcMain.on('load-file', event => {
+	const fileName = electron.dialog.showOpenDialog({
+		filters: [{ name: 'data', extensions: ['json'] }],
+		title: 'Choose file to import'
+	});
+	if (fileName) {
+		fs.readFile(fileName[0], (err, data) => {
+			if (err) {
+				event.sender.send('file-loaded', '');
+			}
+			else {
+				event.sender.send('file-loaded', data);
+			}
+		})
+	}
+	else {
+		event.sender.send('file-loaded', '');
+	}
+});
 
 ipcMain.on('reload-app', () => loadWindow());

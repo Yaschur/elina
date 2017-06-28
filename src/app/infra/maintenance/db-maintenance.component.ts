@@ -19,13 +19,13 @@ export class DbMaintenanceComponent {
 		private _ngZone: NgZone
 	) {
 		if (this._electronService.isElectronApp) {
-			
-			this._electronService.ipcRenderer.on('content-saved', (event, arg) => {
+
+			this._electronService.ipcRenderer.on('file-saved', (event, arg) => {
 				console.log('receive file saved: ' + arg);
 				this._ngZone.run(() => this.transferStatus = arg ? 'File is not saved: ' + arg : 'File is saved successfully');
 			});
 
-			this._electronService.ipcRenderer.on('content-loaded', (event, arg) => {
+			this._electronService.ipcRenderer.on('file-loaded', (event, arg) => {
 				console.log('receive file loaded');
 				if (arg) {
 					this._dbMaintService.doImport(arg)
@@ -68,5 +68,9 @@ export class DbMaintenanceComponent {
 		this._dbMaintService.doExport()
 			.then(content => this._electronService.ipcRenderer.send('save-file', content))
 			.catch(e => this.transferStatus = 'File export failed: ' + e);
+	}
+	import() {
+		this.transferStatus = 'File import is started...';
+		this._electronService.ipcRenderer.send('load-file');
 	}
 }

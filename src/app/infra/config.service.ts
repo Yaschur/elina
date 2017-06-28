@@ -38,7 +38,7 @@ export class ConfigService {
 
 	private init() {
 		if (this._electronService.isElectronApp) {
-			this._electronService.ipcRenderer.on('content-loaded', (event, arg) => {
+			this._electronService.ipcRenderer.on('config-loaded', (event, arg) => {
 				console.log('receive config loaded: ' + arg);
 				if (this._current.isStopped) {
 					this._current = new AsyncSubject<Config>();
