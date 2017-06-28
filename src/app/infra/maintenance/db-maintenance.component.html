@@ -4,6 +4,14 @@
 	</p>
 </nav>
 <div class="panel panel-default">
+	<div class="panel-heading">Database data transfer</div>
+	<div class="panel-body">
+		<p class="bg-danger">Database content manipulation functions, use carefully!</p>
+		<p><button type="button" class="btn btn-default navbar-btn" (click)="export()">Export database to file</button></p>
+		<p>{{transferStatus}}</p>
+	</div>
+</div>
+<div class="panel panel-default">
 	<div class="panel-heading">Database backup / restoring / clearing</div>
 	<div class="panel-body">
 		<p class="bg-danger">Experimental functions, use carefully!</p>
