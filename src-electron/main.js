@@ -102,8 +102,7 @@ ipcMain.on('save-file', (event, content) => {
 	});
 	if (fileName) {
 		fs.writeFile(fileName, content, (err) => event.sender.send('file-saved', ret));
-	}
-	else {
+	} else {
 		event.sender.send('file-saved', 'cancelled by user');
 	}
 });
@@ -117,13 +116,11 @@ ipcMain.on('load-file', event => {
 		fs.readFile(fileName[0], (err, data) => {
 			if (err) {
 				event.sender.send('file-loaded', '');
-			}
-			else {
+			}	else {
 				event.sender.send('file-loaded', data);
 			}
 		})
-	}
-	else {
+	} else {
 		event.sender.send('file-loaded', '');
 	}
 });

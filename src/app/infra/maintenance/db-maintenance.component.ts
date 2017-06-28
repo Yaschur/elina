@@ -32,8 +32,7 @@ export class DbMaintenanceComponent {
 						.then(() => this._ngZone.run(() => this.replicationStatus = 'File is imported successfully'))
 						.then(() => this._electronService.ipcRenderer.send('reload-app'))
 						.catch(e => this._ngZone.run(() => this.transferStatus = 'File import failed: ' + e));
-				}
-				else {
+				} else {
 					this._ngZone.run(() => this.transferStatus = 'File import failed: unknown error');
 				}
 			});
