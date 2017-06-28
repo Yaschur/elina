@@ -7,9 +7,9 @@
 	<div class="panel-heading">Database backup / restoring / clearing</div>
 	<div class="panel-body">
 		<p class="bg-danger">Experimental functions, use carefully!</p>
-		<button type="button" class="btn btn-default navbar-btn" (click)="backup()">Backup database</button>
-		<button type="button" class="btn btn-default navbar-btn" (click)="restore()">Restore database</button>
-		<button type="button" class="btn btn-default navbar-btn" (click)="clear()">Clear database</button>
+		<p><button type="button" class="btn btn-default navbar-btn" (click)="backup()">Backup database</button></p>
+		<p class="text-center"><button type="button" class="btn btn-default navbar-btn" (click)="restore()">Restore database</button></p>
+		<p class="text-right"><button type="button" class="btn btn-default navbar-btn" (click)="clear()">Clear database</button></p>
 		<p>{{replicationStatus}}</p>
 	</div>
 </div>

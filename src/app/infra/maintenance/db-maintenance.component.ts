@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-// import { Component, OnInit, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 
 import { DbMaintService } from '../store/db-maint.service';
@@ -9,7 +8,7 @@ import { DbMaintService } from '../store/db-maint.service';
 	templateUrl: './db-maintenance.component.html'
 })
 
-export class DbMaintenanceComponent implements OnInit {
+export class DbMaintenanceComponent {
 
 	replicationStatus = '';
 	transferStatus = '';
@@ -18,17 +17,6 @@ export class DbMaintenanceComponent implements OnInit {
 		private _electronService: ElectronService,
 		private _dbMaintService: DbMaintService
 	) { }
-
-	ngOnInit() {
-		if (this._electronService.isElectronApp) {
-			// this._electronService.ipcRenderer.on('config-loaded', (event, arg) => {
-			// 	this._ngZone.run(() => {
-			// 		this.info = arg;
-			// 	});
-			// });
-		}
-		// this._electronService.ipcRenderer.send('load-config');
-	}
 
 	backup() {
 		this.replicationStatus = 'Database backup is started...';
@@ -41,6 +29,7 @@ export class DbMaintenanceComponent implements OnInit {
 		this.replicationStatus = 'Database restoring is started...';
 		this._dbMaintService.doRestore()
 			.then(() => this.replicationStatus = 'Database restoring is completed.')
+			.then(() => this._electronService.ipcRenderer.send('reload-app'))
 			.catch(e => this.replicationStatus = 'Database restoring error:' + e);
 	}
 
@@ -48,6 +37,7 @@ export class DbMaintenanceComponent implements OnInit {
 		this.replicationStatus = 'Database clearing is started...';
 		this._dbMaintService.doClear()
 			.then(() => this.replicationStatus = 'Database clearing is completed.')
+			.then(() => this._electronService.ipcRenderer.send('reload-app'))
 			.catch(e => this.replicationStatus = 'Database clearing error:' + e);
 	}
 }

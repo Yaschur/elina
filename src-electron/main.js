@@ -37,11 +37,7 @@ function createWindow() {
 	mainWindow.setMenu(null);
 
 	// and load the index.html of the app.
-	mainWindow.loadURL(url.format({
-		pathname: path.join(__dirname, 'clt/index.html'),
-		protocol: 'file:',
-		slashes: true
-	}));
+	loadWindow();
 
 	// Open the DevTools.
 	globalShortcut.register('Ctrl+Shift+D', () => mainWindow.toggleDevTools());
@@ -53,6 +49,16 @@ function createWindow() {
 		// when you should delete the corresponding element.
 		mainWindow = null;
 	});
+}
+
+function loadWindow() {
+	if (mainWindow) {
+		mainWindow.loadURL(url.format({
+			pathname: path.join(__dirname, 'clt/index.html'),
+			protocol: 'file:',
+			slashes: true
+		}));
+	}
 }
 
 // This method will be called when Electron has finished
@@ -87,3 +93,5 @@ ipcMain.on('load-config', (event, content) => {
 	}
 	event.sender.send('config-loaded', ret);
 });
+
+ipcMain.on('reload-app', () => loadWindow());
