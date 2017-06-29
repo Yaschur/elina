@@ -9,6 +9,11 @@ PouchDB.plugin(PouchDbFind);
 PouchDB.plugin(PouchDbUpsert);
 PouchDB.debug.disable();
 
+interface VersionInfo {
+	readonly dbVersion: number;
+}
+const VersionInfoId = 'version_info_single';
+
 @Injectable()
 export class DbMaintService {
 
@@ -71,7 +76,7 @@ export class DbMaintService {
 		// let limit = 1000
 		const db = await this._db;
 		const content = (await db.allDocs({ include_docs: true })).rows
-			.filter(item => item.doc.type)
+			.filter(item => item.doc.type || item.doc._id === VersionInfoId)
 			.map(item => {
 				delete item.doc._rev;
 				return item.doc;
@@ -93,5 +98,28 @@ export class DbMaintService {
 		await trgDb.destroy();
 		trgDb = new PouchDB(this._config.database.nameOrUrl);
 		this._db = DbMaintService.init(trgDb);
+	}
+
+	async getVersion(): Promise<VersionInfo> {
+		const trgDb = await this._db;
+		try {
+			return await trgDb.get(VersionInfoId);
+		} catch (e) {
+			console.log(e);
+			return { dbVersion: 0 };
+		}
+	}
+
+	async setVersion(versionInfo: VersionInfo): Promise<void> {
+		const trgDb = await this._db;
+		const itemToStore = <any>Object.assign({}, versionInfo);
+		try {
+			await trgDb.upsert(VersionInfoId, doc => {
+				itemToStore._rev = doc._rev;
+				itemToStore._id = doc._id;
+			});
+		} catch (e) {
+			console.log('can\'t set version info: ' + e);
+		}
 	}
 }
