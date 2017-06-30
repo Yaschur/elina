@@ -51,12 +51,18 @@ export class StoreService {
 	): Promise<any[]> {
 		try {
 			const typeFilter = { type: { $eq: type } };
-			const selector = {};
-			Object.assign(selector, typeFilter, filter);
+			const selector = {
+				$and: [
+					typeFilter
+				]
+			};
+			// Object.assign(selector, typeFilter, filter);
+			selector.$and.push(filter);
 			const query: any = {};
 			query.selector = selector;
+			query.sort = ['type'];
 			if (sort) {
-				query.sort = sort;
+				query.sort = query.sort.concat(sort);
 			}
 			if (skip) {
 				query.skip = skip;

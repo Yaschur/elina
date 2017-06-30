@@ -19,7 +19,7 @@ export class DbMaintService {
 
 	private static indexes = [
 		{ index: { fields: ['type'] } },
-		{ index: { fields: ['name'] } },
+		// { index: { fields: ['name'] } },
 		{ index: { fields: ['type', 'name'] } }
 	];
 
@@ -30,11 +30,11 @@ export class DbMaintService {
 		const promises = DbMaintService.indexes
 			.map(i => db.createIndex(i));
 		return Promise.all(promises)
-			// .then(() => DbMaintService.getVersion(db))
-			// .then(vInfo => {
-				// console.log('dbVersion: ' + vInfo.dbVersion);
-				// DbMaintService.setVersion(db, vInfo);
-			// })
+			.then(() => DbMaintService.getVersion(db))
+			.then(vInfo => {
+				console.log('dbVersion: ' + vInfo.dbVersion);
+				DbMaintService.setVersion(db, vInfo);
+			})
 			.then(() => db);
 	}
 
@@ -65,7 +65,7 @@ export class DbMaintService {
 		this._db = this._configSrv.currentConfig
 			.then(config => {
 				this._config = config;
-				return DbMaintService.init(new PouchDB(this._config.database.nameOrUrl))
+				return DbMaintService.init(new PouchDB(this._config.database.nameOrUrl));
 			})
 			.catch(e => console.log(e));
 	}
