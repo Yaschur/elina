@@ -1,6 +1,8 @@
 import { Entity } from '../../infra';
 
 export class Contact extends Entity {
+	firstName: string;
+	lastName: string;
 	name: string;
 	jobTitle: string;
 	jobResponsibilities: string[];
@@ -18,7 +20,15 @@ export class Contact extends Entity {
 			throw new Error('Name must be set');
 		}
 		super(item._id);
-		this.name = item.name;
+		if (!item.firstName && !item.lastName && item.name) {
+			const split = (<string>item.name).split(' ', 2);
+			this.firstName = split[0];
+			this.lastName = split.length > 1 ? split[1] : '';
+		} else {
+			this.firstName = item.firstName;
+			this.lastName = item.lastName;
+		}
+		this.name = this.firstName + ' ' + this.lastName;
 		this.jobTitle = item.jobTitle;
 		this.jobResponsibilities = item.jobResponsibilities || [];
 		this.buyContents = item.buyContents || [];

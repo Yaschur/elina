@@ -19,7 +19,6 @@ export class DbMaintService {
 
 	private static indexes = [
 		{ index: { fields: ['type'] } },
-		// { index: { fields: ['name'] } },
 		{ index: { fields: ['type', 'name'] } }
 	];
 
@@ -33,7 +32,7 @@ export class DbMaintService {
 			.then(() => DbMaintService.getVersion(db))
 			.then(vInfo => {
 				console.log('dbVersion: ' + vInfo.dbVersion);
-				DbMaintService.setVersion(db, vInfo);
+				// DbMaintService.setVersion(db, vInfo);
 			})
 			.then(() => db);
 	}
