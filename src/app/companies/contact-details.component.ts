@@ -73,7 +73,8 @@ export class ContactDetailsComponent implements OnInit {
 		const contact = this.domainCompany.contacts
 			.find(c => c._id === contactId);
 		this.contact.id = contact._id;
-		this.contact.name = contact.name;
+		this.contact.firstName = contact.firstName;
+		this.contact.lastName = contact.lastName;
 		this.contact.jobTitle = contact.jobTitle;
 		this.contact.phone = contact.phone;
 		this.contact.mobile = contact.mobile;
