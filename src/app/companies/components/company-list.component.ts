@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { Company } from './models/company.model';
-import { Country } from '../directories/models/country.model';
-import { DirectoryService } from '../directories/services/directory.service';
-import { CompanyRepository } from './repositories/company.repository';
+import { DirectoryService, Country } from '../../directories';
+import { Company } from '../models/company.model';
+import { CompanyRepository } from '../repositories/company.repository';
 
 import 'rxjs/add/observable/fromPromise';
 

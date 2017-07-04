@@ -5,11 +5,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
 
-import { Company } from './models/company.model';
-import { DirectoryService } from '../directories/services/directory.service';
-import { Country } from '../directories/models/country.model';
-import { Activity } from '../directories/models/activity.model';
-import { CompanyRepository } from './repositories/company.repository';
+import { DirectoryService, Country, Activity } from '../../directories';
+import { Company } from '../models/company.model';
+import { CompanyRepository } from '../repositories/company.repository';
 
 @Component({
 	selector: 'app-company-edit',

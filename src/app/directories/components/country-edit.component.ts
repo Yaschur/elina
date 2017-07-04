@@ -3,10 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Country } from './models/country.model';
+import { Country } from '../models/country.model';
 
-import { DirEntries } from './models/dir-entries.model';
-import { DirectoryService } from './services/directory.service';
+import { DirEntries } from '../models/dir-entries.model';
+import { DirectoryService } from '../services/directory.service';
 
 @Component({
 	selector: 'app-country-edit',

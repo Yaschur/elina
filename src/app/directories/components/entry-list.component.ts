@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import { DirEntries } from './models/dir-entries.model';
+import { DirEntries } from '../models/dir-entries.model';
 
-import { DirectoryService } from './services/directory.service';
+import { DirectoryService } from '../services/directory.service';
 
 @Component({
 	selector: 'app-entry-list',

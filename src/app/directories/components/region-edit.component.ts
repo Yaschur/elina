@@ -3,12 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { MetaEntry } from './models/meta-entry.model';
-import { DirEntries } from './models/dir-entries.model';
-import { Region } from './models/region.model';
-import { Country } from './models/country.model';
+import { MetaEntry } from '../models/meta-entry.model';
+import { DirEntries } from '../models/dir-entries.model';
+import { Region } from '../models/region.model';
+import { Country } from '../models/country.model';
 
-import { DirectoryService } from './services/directory.service';
+import { DirectoryService } from '../services/directory.service';
 
 @Component({
 	selector: 'app-region-edit',

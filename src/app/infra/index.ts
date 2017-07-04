@@ -18,7 +18,6 @@ export * from './entity.model';
 		NgxElectronModule,
 		InfraRoutingModule
 	],
-	exports: [],
 	declarations: [
 		DbMaintenanceComponent
 	],

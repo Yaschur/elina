@@ -5,12 +5,10 @@ import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
-import { Company } from './models/company.model';
-import { Contact } from './models/contact.model';
-import { JobResponsibility } from '../directories/models/job-responsibility.model';
-import { ContentResponsibility } from '../directories/models/content-responsibility.model';
-import { CompanyRepository } from './repositories/company.repository';
-import { DirectoryService } from '../directories/services/directory.service';
+import { Company } from '../models/company.model';
+import { Contact } from '../models/contact.model';
+import { CompanyRepository } from '../repositories/company.repository';
+import { DirectoryService, ContentResponsibility, JobResponsibility } from '../../directories';
 
 @Component({
 	selector: 'app-contact-edit',
