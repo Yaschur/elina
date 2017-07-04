@@ -16,8 +16,8 @@ export class Contact extends Entity {
 	updated: Date;
 
 	constructor(item: any) {
-		if (!item.name) {
-			throw new Error('Name must be set');
+		if (!item.name && !item.firstName && !item.lastName) {
+			throw new Error('First or last name must be set');
 		}
 		super(item._id);
 		if (!item.firstName && !item.lastName && item.name) {

@@ -58,7 +58,8 @@ export class ContactEditComponent implements OnInit {
 	onSubmit() {
 		const contact = new Contact({
 			_id: this.contact ? this.contact._id : null,
-			name: this.contactForm.get('name').value.trim(),
+			firstName: this.contactForm.get('name.first').value.trim(),
+			lastName: this.contactForm.get('name.last').value.trim(),
 			jobTitle: this.contactForm.get('jobTitle').value.trim(),
 			jobResponsibilities: this.contactForm.get('jobResponsibilities').value,
 			buyContents: this.contactForm.get('buyContents').value,
@@ -87,7 +88,11 @@ export class ContactEditComponent implements OnInit {
 
 	private createForm() {
 		this.contactForm = this._fb.group({
-			name: ['', Validators.required],
+			name: this._fb.group({
+				first: '',
+				last: ''
+			}, this.validateName),
+			// name: ['', Validators.required],
 			jobTitle: '',
 			jobResponsibilities: { value: [], disabled: false },
 			buyContents: { value: [], disabled: false },
@@ -98,12 +103,19 @@ export class ContactEditComponent implements OnInit {
 		});
 	}
 
+	private validateName(g: FormGroup) {
+		return g.get('first').value || g.get('last').value ? null : 'first or last name must be set';
+	}
+
 	private initForm() {
 		if (!this.contact) {
 			return;
 		}
 		this.contactForm.setValue({
-			name: this.contact.name,
+			name: {
+				first: this.contact.firstName,
+				last: this.contact.lastName
+			},
 			jobTitle: this.contact.jobTitle,
 			jobResponsibilities: this.contact.jobResponsibilities,
 			buyContents: this.contact.buyContents,
