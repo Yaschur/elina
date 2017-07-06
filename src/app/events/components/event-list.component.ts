@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 import { EventRepository } from '../repositories/event.repository';
+import { Event } from '../models/event.model';
 
 @Component({
 	selector: 'app-event-list',
@@ -8,7 +11,22 @@ import { EventRepository } from '../repositories/event.repository';
 })
 
 export class EventListComponent implements OnInit {
-	constructor(private _eventRepository: EventRepository) { }
+	events: Observable<Event[]>;
 
-	ngOnInit() { }
+	constructor(
+		private _eventRepository: EventRepository,
+		private _router: Router
+	) { }
+
+	ngOnInit() {
+		this.events = Observable.fromPromise(this._eventRepository.findAll());
+	}
+
+	addNew(): void {
+		this._router.navigate(['event/edit', '__new__']);
+	}
+
+	details(id): void {
+		this._router.navigate(['event/edit', id]);
+	}
 }

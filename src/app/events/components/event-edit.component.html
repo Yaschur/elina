@@ -1,0 +1,17 @@
+<form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+	<nav class="navbar navbar-default">
+		<p class="navbar-text">
+			<span class="glyphicon glyphicon-flag"></span> Event
+		</p>
+		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
+		<span class="glyphicon glyphicon-remove"></span> cancel
+	</button>
+		<button type="button" [disabled]="eventForm.pristine || eventForm.invalid" class="btn btn-default navbar-btn" (click)="onSubmit()">
+		<span class="glyphicon glyphicon-ok"></span> SAVE
+	</button>
+	</nav>
+	<div class="form-group">
+		<label for="name">Name:</label>
+		<input id="name" formControlName="name" type="text" class="form-control" placeholder="type name of event here (required)">
+	</div>
+</form>
