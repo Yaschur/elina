@@ -23,11 +23,32 @@ export class ParticipantRepository {
 		return new Participant(dbItem);
 	}
 
-	// public async findAll(): Promise<Participant[]> {
-	// 	return (await this._storeService.find(
-	// 		ParticipantRepository.entityType,
-	// 		{ name: { $gt: null } },
-	// 		['name']
-	// 	)).map(dbItem => new Participant(dbItem));
-	// }
+	public async FindByEvent(eventId: string): Promise<Participant[]> {
+		return (await this._storeService.find(
+			ParticipantRepository.entityType,
+			{ event: { $eq: eventId } },
+			[]
+		)).map(dbItem => new Participant(dbItem));
+	}
+
+	public async FindByCompany(companyId: string): Promise<Participant[]> {
+		return (await this._storeService.find(
+			ParticipantRepository.entityType,
+			{ company: { $eq: companyId } },
+			[]
+		)).map(dbItem => new Participant(dbItem));
+	}
+
+	public async FindByContact(companyId: string, contactId: string): Promise<Participant[]> {
+		return (await this._storeService.find(
+			ParticipantRepository.entityType,
+			{
+				$and: [
+					{ company: { $eq: companyId } },
+					{ contact: { $eq: contactId } }
+				]
+			},
+			[]
+		)).map(dbItem => new Participant(dbItem));
+	}
 }
