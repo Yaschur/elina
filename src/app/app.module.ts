@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 import { CompaniesModule } from './companies';
+import { EventsModule } from './events';
+import { InfraModule } from './infra';
+import { DirectoriesModule } from './directories';
 
 @NgModule({
 	declarations: [
@@ -12,7 +15,10 @@ import { CompaniesModule } from './companies';
 	],
 	imports: [
 		BrowserModule,
+		InfraModule,
+		DirectoriesModule,
 		CompaniesModule,
+		EventsModule,
 		AppRoutingModule
 	],
 	providers: [],

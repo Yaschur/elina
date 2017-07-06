@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { InfraModule } from '../infra';
-import { DirectoriesModule } from '../directories';
 import { CompaniesRoutingModule } from './companies-routing.module'
 
 import { CompanyRepository } from './repositories/company.repository';
@@ -22,8 +20,6 @@ export * from './repositories/company.repository';
 		FormsModule,
 		ReactiveFormsModule,
 		CommonModule,
-		InfraModule,
-		DirectoriesModule,
 		CompaniesRoutingModule
 	],
 	declarations: [
