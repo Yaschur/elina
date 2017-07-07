@@ -13,6 +13,7 @@ import { ContactDetailsComponent } from './components/contact-details.component'
 
 export * from './models/company.model';
 export * from './models/contact.model';
+export * from './models/participant.model';
 export * from './repositories/company.repository';
 
 @NgModule({
