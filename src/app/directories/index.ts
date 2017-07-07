@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { InfraModule } from '../infra';
-
 import { DirectoryRepository } from './repositories/directory.repository';
 import { DirectoryService } from './services/directory.service';
 import { ListHeaderComponent } from './shared/list-header.component';
@@ -27,7 +25,6 @@ export * from './services/directory.service';
 	imports: [
 		FormsModule,
 		CommonModule,
-		InfraModule,
 		DirectoriesRoutingModule
 	],
 	declarations: [
