@@ -2,11 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Company } from '../models/company.model';
-import { Contact } from '../models/contact.model';
-import { Note } from '../models/note.model';
-import { CompanyRepository } from '../repositories/company.repository';
 import { DirectoryService } from '../../directories';
+import { Company, Contact, CompanyRepository } from '../core';
+import { Note } from '../core/models/note.model';
 
 const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 

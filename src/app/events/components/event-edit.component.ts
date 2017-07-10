@@ -3,8 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 
-import { EventRepository } from '../repositories/event.repository';
-import { Event } from '../models/event.model';
+import { EventRepository, Event } from '../core';
 
 @Component({
 	selector: 'app-event-edit',

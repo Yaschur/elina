@@ -1,4 +1,4 @@
-import { Entity } from '../../infra';
+import { Entity } from '../../../infra';
 
 export class Event extends Entity {
 	name: string;

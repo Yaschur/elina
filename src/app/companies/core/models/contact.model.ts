@@ -1,4 +1,4 @@
-import { Entity } from '../../infra';
+import { Entity } from '../../../infra';
 
 export class Contact extends Entity {
 	firstName: string;

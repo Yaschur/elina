@@ -5,10 +5,8 @@ import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
-import { Company } from '../models/company.model';
-import { Contact } from '../models/contact.model';
-import { CompanyRepository } from '../repositories/company.repository';
 import { DirectoryService, ContentResponsibility, JobResponsibility } from '../../directories';
+import { Company, Contact, CompanyRepository } from '../core';
 
 @Component({
 	selector: 'app-contact-edit',

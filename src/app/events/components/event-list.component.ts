@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { EventRepository } from '../repositories/event.repository';
-import { Event } from '../models/event.model';
+import { EventRepository, Event } from '../core';
 
 @Component({
 	selector: 'app-event-list',

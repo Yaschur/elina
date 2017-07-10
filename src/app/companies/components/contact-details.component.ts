@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Company } from '../models/company.model';
-import { Contact } from '../models/contact.model';
-import { CompanyRepository } from '../repositories/company.repository';
 import { DirectoryService } from '../../directories';
+import { Company, Contact, CompanyRepository } from '../core';
 
 @Component({
 	selector: 'app-contact-details',

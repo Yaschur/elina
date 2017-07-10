@@ -1,4 +1,4 @@
-import { Entity } from '../../infra';
+import { Entity } from '../../../infra';
 import { Contact } from './contact.model';
 import { Participant } from './participant.model';
 import { Note } from './note.model';

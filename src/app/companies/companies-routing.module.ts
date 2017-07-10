@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { CompanyRepository } from './repositories/company.repository';
 import { CompanyListComponent } from './components/company-list.component';
 import { CompanyEditComponent } from './components/company-edit.component';
 import { CompanyDetailsComponent } from './components/company-details.component';

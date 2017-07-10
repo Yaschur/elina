@@ -3,8 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { DirectoryService, Country } from '../../directories';
-import { Company } from '../models/company.model';
-import { CompanyRepository } from '../repositories/company.repository';
+import { Company, CompanyRepository } from '../core';
 
 import 'rxjs/add/observable/fromPromise';
 

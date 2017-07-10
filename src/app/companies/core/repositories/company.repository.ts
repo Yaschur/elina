@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StoreService } from '../../infra';
+import { StoreService } from '../../../infra';
 import { Company } from '../models/company.model';
 
 @Injectable()
