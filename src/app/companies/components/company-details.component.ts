@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
+import { Observable } from 'rxjs/Observable';
+
 import { DirectoryService } from '../../directories';
 import { Company, Contact, CompanyRepository } from '../core';
 import { Note } from '../core/models/note.model';
@@ -15,7 +17,7 @@ const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 })
 
 export class CompanyDetailsComponent implements OnInit {
-	domainItem: Company;
+	domainItem: Observable<Company>;
 	company;
 	note;
 	indNoteToDel;
@@ -34,15 +36,12 @@ export class CompanyDetailsComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this._route.params
-			.switchMap(params => this._companyRepo.getById(params['id']))
-			.subscribe(item => {
-				this.domainItem = item;
-				this.mapCompany();
-			});
+		this.domainItem = this._route.params
+			.switchMap(params => this._companyRepo.getById(params['id']));
+		this.domainItem.subscribe(item => this.mapCompany(item));
 	}
 
-	gotoList(): void {
+	async gotoList(): void {
 		this._router.navigate(['company']);
 	}
 
@@ -96,8 +95,8 @@ export class CompanyDetailsComponent implements OnInit {
 		this.cancelNote();
 	}
 
-	private mapCompany() {
-		const company = this.domainItem;
+	private mapCompany(domain: Company) {
+		const company = domain;
 		this.company.id = company._id;
 		this.company.name = company.name;
 		this.company.description = company.description;
