@@ -17,6 +17,8 @@ const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 })
 
 export class CompanyDetailsComponent implements OnInit {
+	private _domainCompany: Company;
+
 	domainItem: Observable<Company>;
 	company;
 	note;
@@ -41,16 +43,17 @@ export class CompanyDetailsComponent implements OnInit {
 		this.domainItem.subscribe(item => this.mapCompany(item));
 	}
 
-	async gotoList(): void {
+	gotoList(): void {
 		this._router.navigate(['company']);
 	}
 
-	gotoEdit(): void {
-		this._router.navigate(['company/edit', this.domainItem._id]);
+	async gotoEdit(): Promise<void> {
+		const item = await this.domainItem;
+		this._router.navigate(['company/edit', this._domainCompany._id]);
 	}
 
 	contactDetails(contactId): void {
-		this._router.navigate(['contact/details', this.domainItem._id, contactId]);
+		this._router.navigate(['contact/details', this._domainCompany._id, contactId]);
 	}
 
 	toggleActive(): void {
@@ -60,7 +63,7 @@ export class CompanyDetailsComponent implements OnInit {
 	}
 
 	addContact(): void {
-		this._router.navigate(['contact/edit', this.domainItem._id, '__new__']);
+		this._router.navigate(['contact/edit', this._domainCompany._id, '__new__']);
 	}
 
 	addNote() {
@@ -76,8 +79,8 @@ export class CompanyDetailsComponent implements OnInit {
 	}
 	saveNote() {
 		const newNote = new Note({ text: this.note.text.trim() });
-		this.domainItem.notes.unshift(newNote);
-		this._companyRepo.store(this.domainItem)
+		this._domainCompany.notes.unshift(newNote);
+		this._companyRepo.store(this._domainCompany)
 			.then(() => this.company.notes.unshift({ created: newNote.created, text: newNote.text }))
 			.catch(e => console.log(e));
 		this.cancelNote();
@@ -88,14 +91,15 @@ export class CompanyDetailsComponent implements OnInit {
 			return;
 		}
 		const ind = this.indNoteToDel;
-		this.domainItem.notes.splice(ind, 1);
-		this._companyRepo.store(this.domainItem)
+		this._domainCompany.notes.splice(ind, 1);
+		this._companyRepo.store(this._domainCompany)
 			.then(() => this.company.notes.splice(ind, 1))
 			.catch(e => console.log(e));
 		this.cancelNote();
 	}
 
 	private mapCompany(domain: Company) {
+		this._domainCompany = domain;
 		const company = domain;
 		this.company.id = company._id;
 		this.company.name = company.name;
@@ -125,7 +129,7 @@ export class CompanyDetailsComponent implements OnInit {
 	}
 
 	private mapContacts(withFired) {
-		this.company.contacts = this.domainItem.contacts
+		this.company.contacts = this._domainCompany.contacts
 			.filter(c => withFired || c.active)
 			.map(c => new ContactListVm(c));
 	}

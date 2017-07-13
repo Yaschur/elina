@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { CompanyRepository, Company } from '../../companies/core';
 import { EventRepository, Event } from '../../events/core';
+import { Participant } from '../models/participant.model';
 
 @Component({
 	selector: 'app-participant-list',
@@ -12,18 +13,10 @@ import { EventRepository, Event } from '../../events/core';
 
 export class ParticipantListComponent implements OnInit {
 
-	private _anchorCompany: Company;
+	@Input() company: Observable<Company>
 
-	@Input()
-	set company(company: Company) {
-		this.events = Observable.fromPromise(this._eventRepo.findAll());
-		this._anchorCompany = company;
-	}
-	get company() {
-		return this._anchorCompany;
-	}
-
-	events: Observable<Event[]>;
+	// events: Observable<Event[]>;
+	participants: Observable<Participant>;
 
 	constructor(
 		private _companyRepo: CompanyRepository,
