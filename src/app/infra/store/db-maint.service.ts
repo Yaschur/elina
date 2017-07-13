@@ -22,9 +22,6 @@ export class DbMaintService {
 		{ index: { fields: ['type', 'name'] } }
 	];
 
-	private _db: Promise<PouchDB.Database<any>>;
-	private _config: Config;
-
 	private static init(db: PouchDB.Database<any>): Promise<PouchDB.Database<any>> {
 		const promises = DbMaintService.indexes
 			.map(i => db.createIndex(i));
@@ -59,6 +56,9 @@ export class DbMaintService {
 			console.log('can\'t set version info: ' + e);
 		}
 	}
+
+	private _db: Promise<PouchDB.Database<any>>;
+	private _config: Config;
 
 	constructor(private _configSrv: ConfigService) {
 		this._db = this._configSrv.currentConfig
