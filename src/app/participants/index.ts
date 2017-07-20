@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-// import { ReactiveFormsModule } from '@angular/forms';
-// import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { CompaniesCoreModule } from '../companies/core';
 import { EventsCoreModule } from '../events/core';
@@ -10,8 +10,8 @@ import { ParticipantRepository } from './repositories/participant.repository';
 
 @NgModule({
 	imports: [
-		// ReactiveFormsModule,
-		// CommonModule,
+		ReactiveFormsModule,
+		CommonModule,
 		CompaniesCoreModule,
 		EventsCoreModule
 	],
