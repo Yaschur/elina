@@ -19,6 +19,8 @@ export * from './models/content-responsibility.model';
 export * from './models/country.model';
 export * from './models/region.model';
 export * from './models/job-responsibility.model';
+export * from './models/participant-category.model';
+export * from './models/participant-status.model';
 export * from './services/directory.service';
 
 @NgModule({

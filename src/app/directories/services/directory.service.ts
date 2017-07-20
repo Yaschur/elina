@@ -10,6 +10,8 @@ import { Region } from '../models/region.model';
 import { Activity } from '../models/activity.model';
 import { ContentResponsibility } from '../models/content-responsibility.model';
 import { JobResponsibility } from '../models/job-responsibility.model';
+import { ParticipantCategory } from '../models/participant-category.model';
+import { ParticipantStatus } from '../models/participant-status.model';
 
 import { DirectoryRepository } from '../repositories/directory.repository';
 
@@ -35,6 +37,12 @@ export class DirectoryService {
 		),
 		'jobresponsibility': new DirEntries(
 			new MetaEntry('Job Responsibility', 'Job Responsibilities', JobResponsibility, 'check')
+		),
+		'participantcategory': new DirEntries(
+			new MetaEntry('Participant Category', 'Participant Categories', ParticipantCategory, 'queen')
+		),
+		'participantstatus': new DirEntries(
+			new MetaEntry('Participant Status', 'Participant Statuses', ParticipantStatus, 'list-alt')
 		)
 	};
 
