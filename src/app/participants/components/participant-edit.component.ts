@@ -32,6 +32,7 @@ export class ParticipantEditComponent implements OnInit {
 		private _partyRepo: ParticipantRepository
 	) {
 		this.company = new Company({ name: '*' });
+		this.participant = new Participant({ event: '*', company: '*', contact: '*' });
 		this.events = [];
 		this.participants = [];
 		this.createForm();

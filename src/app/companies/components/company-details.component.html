@@ -93,4 +93,11 @@
 		</table>
 	</div>
 </div>
-<app-participant-list [company]="domainItem"></app-participant-list>
+<div class="panel panel-default">
+	<div class="panel-heading">Participants
+		<button type="button" class="btn btn-link btn-xs" (click)="addParticipant()">add participant</button>
+	</div>
+	<div class="panel-body">
+		<app-participant-list [company]="domainItem"></app-participant-list>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+<form [formGroup]="participantForm">
+	<nav class="navbar navbar-default">
+		<p class="navbar-text">
+			<span class="glyphicon glyphicon-briefcase"></span> Participant
+		</p>
+	</nav>
+	<div class="form-group">
+		<label for="company">Company: {{company.name}}</label>
+	</div>
+	<div class="form-group">
+		<label for="event">Event:</label>
+		<select id="event" formControlName="event" class="form-control">
+			<option value="">[choose event]</option>
+			<option *ngFor="let item of events" [value]="item._id">{{item.name}}</option>
+		</select>
+	</div>
+</form>
