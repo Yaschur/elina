@@ -1,6 +1,5 @@
 import { Entity } from '../../../infra';
 import { Contact } from './contact.model';
-import { Participant } from './participant.model';
 import { Note } from './note.model';
 
 export class Company extends Entity {
@@ -13,7 +12,6 @@ export class Company extends Entity {
 	website: string;
 	notes: Note[];
 	contacts: Contact[];
-	participants: Participant[];
 
 	created: Date;
 	updated: Date;
@@ -35,6 +33,5 @@ export class Company extends Entity {
 
 		this.notes = (item.notes || []).map(n => new Note(n));
 		this.contacts = (item.contacts || []).map(c => new Contact(c));
-		this.participants = (item.participants || []).map(c => new Participant(c));
 	}
 }
