@@ -14,4 +14,11 @@
 			<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
+	<div class="form-group">
+		<label for="contact">Contact:</label>
+		<select id="contact" formControlName="contact" class="form-control">
+			<option value="">[choose contact]</option>
+			<option *ngFor="let item of allowedContacts | async" [value]="item._id">{{item.name}}</option>
+		</select>
+	</div>
 </form>

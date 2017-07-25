@@ -60,6 +60,19 @@ export class ParticipantRepository {
 		)).map(dbItem => new Participant(dbItem));
 	}
 
+	public async FindByCompanyAndEvent(companyId: string, eventId: string): Promise<Participant[]> {
+		return (await this._storeService.find(
+			ParticipantRepository.entityType,
+			{
+				$and: [
+					{ company: { $eq: companyId } },
+					{ event: { $eq: eventId } }
+				]
+			},
+			[]
+		)).map(dbItem => new Participant(dbItem));
+	}
+
 	public async FindByContact(companyId: string, contactId: string): Promise<Participant[]> {
 		return (await this._storeService.find(
 			ParticipantRepository.entityType,
