@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ParticipantEditComponent } from './components/participant-edit.component';
+import { ParticipantAddComponent } from './components/participant-add.component';
 
 const participantsRoutes: Routes = [
-	{ path: 'participant/edit', component: ParticipantEditComponent }
+	{ path: 'participant/add', component: ParticipantAddComponent }
 ];
 
 @NgModule({

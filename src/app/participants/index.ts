@@ -8,6 +8,7 @@ import { ParticipantsRoutingModule } from './participants-routing.module';
 
 import { ParticipantRepository } from './repositories/participant.repository';
 import { ParticipantEditComponent } from './components/participant-edit.component';
+import { ParticipantAddComponent } from './components/participant-add.component';
 // import { ParticipantListComponent } from './components/participant-list.component';
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ParticipantEditComponent } from './components/participant-edit.componen
 		ParticipantsRoutingModule
 	],
 	declarations: [
-		ParticipantEditComponent
+		ParticipantEditComponent,
+		ParticipantAddComponent
 	],
 	providers: [
 		ParticipantRepository

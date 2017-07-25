@@ -67,7 +67,7 @@ export class CompanyDetailsComponent implements OnInit {
 	}
 
 	addParticipant(): void {
-		this._router.navigate(['participant/edit', { company_id: this._domainCompany._id }]);
+		this._router.navigate(['participant/add', { company_id: this._domainCompany._id }]);
 	}
 
 	addNote() {
