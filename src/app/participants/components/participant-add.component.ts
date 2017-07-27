@@ -8,6 +8,7 @@ import 'rxjs/add/observable/of';
 
 import { Company, CompanyRepository, Contact } from '../../companies/core';
 import { EventRepository, Event } from '../../events/core';
+import { ParticipantCategory, ParticipantStatus, DirectoryService } from '../../directories';
 import { ParticipantRepository } from '../repositories/participant.repository';
 import { Participant } from '../models/participant.model';
 
@@ -22,6 +23,8 @@ export class ParticipantAddComponent implements OnInit {
 	targetCompany: Observable<Company>;
 	allEvents: Observable<Event[]>;
 	allowedContacts: Subject<Contact[]>;
+	categories: Observable<ParticipantCategory[]>;
+	statuses: Observable<ParticipantStatus[]>;
 
 	private targetCompanyId: string;
 	private targetContacts: Contact[];
@@ -31,9 +34,12 @@ export class ParticipantAddComponent implements OnInit {
 		private _fb: FormBuilder,
 		private _companyRepo: CompanyRepository,
 		private _eventRepo: EventRepository,
-		private _partyRepo: ParticipantRepository
+		private _partyRepo: ParticipantRepository,
+		private _dirSrv: DirectoryService
 	) {
 		this.allowedContacts = new Subject<Contact[]>();
+		this.categories = _dirSrv.getDir('participantcategory').data;
+		this.statuses = _dirSrv.getDir('participantstatus').data;
 		this.targetCompany = this._route.paramMap
 			.switchMap(params => this._companyRepo.getById(params.get('company_id')));
 		this.targetCompany
@@ -52,10 +58,17 @@ export class ParticipantAddComponent implements OnInit {
 	}
 
 	private createForm() {
+
 		this.participantForm = this._fb.group({
-			event: [[], Validators.required],
-			contact: [[], Validators.required]
+			event: ['', Validators.required],
+			contact: ['', Validators.required],
+			category: ['', Validators.required],
+			status: ['', Validators.required],
+
+			registrationFee: '',
+			freeNights: ''
 		});
+
 		this.participantForm.get('event').valueChanges
 			.switchMap(eventId =>
 				eventId ? this._partyRepo.FindByCompanyAndEvent(this.targetCompanyId, eventId) : Observable.of(null)

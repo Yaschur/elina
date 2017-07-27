@@ -21,4 +21,26 @@
 			<option *ngFor="let item of allowedContacts | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
+	<div class="form-group">
+		<label for="category">Category:</label>
+		<select id="category" formControlName="category" class="form-control">
+			<option value="">[choose category]</option>
+			<option *ngFor="let item of categories | async" [value]="item._id">{{item.name}}</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="status">Status:</label>
+		<select id="status" formControlName="status" class="form-control">
+			<option value="">[choose status]</option>
+			<option *ngFor="let item of statuses | async" [value]="item._id">{{item.name}}</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="registrationFee">Registration Fee:</label>
+		<input id="registrationFee" formControlName="registrationFee" type="text" class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="freeNights">Free Nights:</label>
+		<input id="freeNights" formControlName="freeNights" type="text" class="form-control">
+	</div>
 </form>
