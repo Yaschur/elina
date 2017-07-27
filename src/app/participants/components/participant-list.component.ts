@@ -18,7 +18,7 @@ export class ParticipantListComponent implements OnInit {
 
 	@Input() company: Observable<Company>;
 
-	participants: Observable<ParticipantListVM[]>;
+	participants: ParticipantListVM[];
 
 	private _targetCompanyId: string;
 	private _targetContacts: Contact[];
@@ -29,19 +29,28 @@ export class ParticipantListComponent implements OnInit {
 		private _eventRepo: EventRepository,
 		private _router: Router,
 		private _dirSrv: DirectoryService
-	) { }
+	) {
+		this.participants = [];
+	}
 
 	ngOnInit() {
-		participants = this.company
-			.switchMap(company => {
+		this.company
+			.subscribe(async company => {
 				this._targetCompanyId = company._id;
 				this._targetContacts = company.contacts;
-				return this._participantRepo.FindByCompany(company._id);
-			})
-			.switchMap(participants => {
-				const categories = this._dirSrv.getDir('participantcategory').data.
+				const categories = await this._dirSrv.getDir('participantcategory').data.toPromise();
+				const statuses = await this._dirSrv.getDir('participantstatus').data.toPromise();
+				const events = await this._eventRepo.findAll();
+				this.participants = (await this._participantRepo.FindByCompany(company._id))
+					.map(p => <ParticipantListVM>{
+						_id: p._id,
+						eventName: events.filter(e => e._id === p.event)[0].name,
+						categoryName: categories.filter(c => c._id === p.category)[0].name,
+						contactName: this._targetContacts.filter(c => c._id === p.contact)[0].name,
+						contactIsFired: !(this._targetContacts.filter(c => c._id === p.contact)[0].active),
+						statusName: statuses.filter(c => c._id === p.status)[0].name
+					});
 			});
-
 	}
 
 	addParticipant(): void {
@@ -49,7 +58,7 @@ export class ParticipantListComponent implements OnInit {
 	}
 }
 
-class ParticipantListVM {
+interface ParticipantListVM {
 	_id: string;
 	eventName: string;
 	contactName: string;

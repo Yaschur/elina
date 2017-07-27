@@ -11,9 +11,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let participant of participants | async">
-					<td>{{participant.event}}</td>
-					<td>{{participant.contact}}</td>
+				<tr *ngFor="let participant of participants">
+					<td>{{participant.eventName}}</td>
+					<td>{{participant.contactName}}</td>
 				</tr>
 			</tbody>
 		</table>
