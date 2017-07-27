@@ -65,8 +65,7 @@ export class DbMaintService {
 			.then(config => {
 				this._config = config;
 				return DbMaintService.init(new PouchDB(this._config.database.nameOrUrl));
-			})
-			.catch(e => console.log(e));
+			});
 	}
 
 	get dbInstance(): Promise<PouchDB.Database<any>> {
