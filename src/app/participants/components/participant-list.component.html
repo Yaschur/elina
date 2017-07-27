@@ -1,14 +1,21 @@
-<table class="table table-hover table-condensed">
-	<thead>
-		<tr>
-			<th>event</th>
-			<th>contact</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let participant of participants | async">
-			<td>{{participant.event}}</td>
-			<td>{{participant.contact}}</td>
-		</tr>
-	</tbody>
-</table>
+<div class="panel panel-default">
+	<div class="panel-heading">Participants
+		<button type="button" class="btn btn-link btn-xs" (click)="addParticipant()">add participant</button>
+	</div>
+	<div class="panel-body">
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr>
+					<th>event</th>
+					<th>contact</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let participant of participants | async">
+					<td>{{participant.event}}</td>
+					<td>{{participant.contact}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

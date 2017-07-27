@@ -48,7 +48,8 @@ export class ParticipantAddComponent implements OnInit {
 					this._eventRepo.findAll()
 				);
 				this.targetCompanyId = company._id;
-				this.targetContacts = company.contacts;
+				this.targetContacts = company.contacts
+					.filter(c => c.active);
 			});
 		this.createForm();
 	}
