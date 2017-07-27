@@ -11,7 +11,7 @@ export interface Config {
 		readonly backupAllowed: boolean;
 		readonly user?: string;
 		readonly password?: string;
-	}
+	};
 }
 
 @Injectable()
@@ -26,7 +26,7 @@ export class ConfigService {
 	}
 
 	get currentConfig(): Promise<Config> {
-		return this._current.toPromise();
+		return this._current.asObservable().toPromise();
 	}
 
 	public reload() {

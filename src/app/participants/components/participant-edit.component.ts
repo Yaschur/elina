@@ -44,7 +44,7 @@ export class ParticipantEditComponent implements OnInit {
 				this._partyRepo.getById(params.get('participant_id') || '__new__')
 					.then(participant => {
 						this.participant = participant;
-						return this._companyRepo.getById(participant ? participant.company : params.get('company_id'))
+						return this._companyRepo.getById(participant ? participant.company : params.get('company_id'));
 					})
 			)
 			.switchMap(company => {

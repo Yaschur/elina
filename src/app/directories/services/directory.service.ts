@@ -15,7 +15,7 @@ import { ParticipantStatus } from '../models/participant-status.model';
 
 import { DirectoryRepository } from '../repositories/directory.repository';
 
-interface DirMap { [key: string]: DirEntries; };
+interface DirMap { [key: string]: DirEntries; }
 
 @Injectable()
 export class DirectoryService {

@@ -12,7 +12,7 @@ import { RegionListComponent } from './components/region-list.component';
 import { RegionEditComponent } from './components/region-edit.component';
 import { EntryListComponent } from './components/entry-list.component';
 import { EntryEditComponent } from './components/entry-edit.component';
-import { DirectoriesRoutingModule } from './directories-routing.module'
+import { DirectoriesRoutingModule } from './directories-routing.module';
 
 export * from './models/activity.model';
 export * from './models/content-responsibility.model';

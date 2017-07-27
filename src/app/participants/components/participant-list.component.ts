@@ -15,7 +15,7 @@ import { ParticipantRepository } from '../repositories/participant.repository';
 
 export class ParticipantListComponent implements OnInit {
 
-	@Input() company: Observable<Company>
+	@Input() company: Observable<Company>;
 
 	participants: Observable<Participant[]>;
 
@@ -32,7 +32,7 @@ export class ParticipantListComponent implements OnInit {
 		this.participants = this.company
 			.switchMap(company => {
 				this.targetCompanyId = company._id;
-				return this._participantRepo.FindByCompany(company._id)
+				return this._participantRepo.FindByCompany(company._id);
 			});
 	}
 
