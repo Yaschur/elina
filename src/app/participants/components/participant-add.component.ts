@@ -57,6 +57,29 @@ export class ParticipantAddComponent implements OnInit {
 
 	}
 
+	onSubmit() {
+		const participant = new Participant({
+			event: this.participantForm.get('event').value,
+			company: this.targetCompanyId,
+			contact: this.participantForm.get('contact').value,
+			category: this.participantForm.get('category').value,
+			status: this.participantForm.get('status').value,
+			registrationFee: this.participantForm.get('registrationFee').value.trim(),
+			freeNights: this.participantForm.get('freeNights').value.trim()
+		});
+		this._partyRepo.store(participant)
+			.then(() => {
+				this.participantForm.get('event').updateValueAndValidity({ onlySelf: false, emitEvent: true });
+				this.participantForm.get('category').setValue('');
+				this.participantForm.get('status').setValue('');
+				this.participantForm.get('registrationFee').setValue('');
+				this.participantForm.get('freeNights').setValue('');
+			})
+			.catch(e => console.log(e));
+	}
+	onCancel() {
+	}
+
 	private createForm() {
 
 		this.participantForm = this._fb.group({

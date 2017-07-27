@@ -50,16 +50,14 @@ export class StoreService {
 		limit?: number
 	): Promise<any[]> {
 		try {
-			const typeFilter = { type: { $eq: type } };
-			const selector = {
-				$and: [
-					typeFilter
-				]
-			};
-			// Object.assign(selector, typeFilter, filter);
-			selector.$and.push(filter);
-			const query: any = {};
-			query.selector = selector;
+			const typeFilter = [{ type: { $eq: type } }];
+			const query: any = { selector: { $and: [] } };
+			if (filter.$and) {
+				query.selector.$and = typeFilter.concat(filter.$and);
+			} else {
+				query.selector.$and = typeFilter;
+				query.selector.$and.push(filter);
+			}
 			query.sort = ['type'];
 			if (sort) {
 				query.sort = query.sort.concat(sort);

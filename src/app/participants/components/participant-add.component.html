@@ -3,6 +3,13 @@
 		<p class="navbar-text">
 			<span class="glyphicon glyphicon-briefcase"></span> Participant
 		</p>
+		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
+			<span class="glyphicon glyphicon-remove"></span> cancel
+		</button>
+		<button type="button" [disabled]="participantForm.pristine || participantForm.invalid" class="btn btn-default navbar-btn"
+		 (click)="onSubmit()">
+			<span class="glyphicon glyphicon-ok"></span> ADD
+		</button>
 	</nav>
 	<div class="form-group">
 		<label>Company:</label> {{(targetCompany | async)?.name}}
