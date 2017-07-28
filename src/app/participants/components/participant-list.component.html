@@ -8,12 +8,19 @@
 				<tr>
 					<th>event</th>
 					<th>contact</th>
+					<th>category</th>
+					<th>status</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr *ngFor="let participant of participants">
 					<td>{{participant.eventName}}</td>
-					<td>{{participant.contactName}}</td>
+					<td>
+						{{participant.contactName}}
+						<sup *ngIf="participant.contactIsFired">fired!</sup>
+					</td>
+					<td>{{participant.categoryName}}</td>
+					<td>{{participant.statusName}}</td>
 				</tr>
 			</tbody>
 		</table>

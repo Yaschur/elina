@@ -35,20 +35,43 @@ export class ParticipantListComponent implements OnInit {
 
 	ngOnInit() {
 		this.company
-			.subscribe(async company => {
+			.subscribe(company => {
 				this._targetCompanyId = company._id;
 				this._targetContacts = company.contacts;
-				const categories = await this._dirSrv.getDir('participantcategory').data.toPromise();
-				const statuses = await this._dirSrv.getDir('participantstatus').data.toPromise();
-				const events = await this._eventRepo.findAll();
-				this.participants = (await this._participantRepo.FindByCompany(company._id))
-					.map(p => <ParticipantListVM>{
-						_id: p._id,
-						eventName: events.filter(e => e._id === p.event)[0].name,
-						categoryName: categories.filter(c => c._id === p.category)[0].name,
-						contactName: this._targetContacts.filter(c => c._id === p.contact)[0].name,
-						contactIsFired: !(this._targetContacts.filter(c => c._id === p.contact)[0].active),
-						statusName: statuses.filter(c => c._id === p.status)[0].name
+				const categoriesO = this._dirSrv.getDir('participantcategory').data;
+				const statusesO = this._dirSrv.getDir('participantstatus').data;
+				const eventsP = this._eventRepo.findAll();
+				this._participantRepo.FindByCompany(company._id)
+					.then(participants => {
+						this.participants = participants.map(p => {
+							const res = new ParticipantListVM();
+							res._id = p._id;
+							eventsP
+								.then(events => res.eventName = events.filter(e => e._id === p.event)[0].name);
+							categoriesO
+								.subscribe(categories => res.categoryName = categories.filter(c => c._id === p.category)[0].name);
+							statusesO
+								.subscribe(statuses => res.statusName = statuses.filter(s => s._id === p.status)[0].name);
+							const contact = this._targetContacts.filter(c => c._id === p.contact)[0];
+							res.contactName = contact.name;
+							res.contactIsFired = !contact.active;
+							return res;
+						});
+						// .sort((a, b) => {
+						// 	if (a.eventName > b.eventName) {
+						// 		return 1;
+						// 	}
+						// 	if (a.eventName < b.eventName) {
+						// 		return -1;
+						// 	}
+						// 	if (a.contactName > b.contactName) {
+						// 		return 1;
+						// 	}
+						// 	if (a.contactName < b.contactName) {
+						// 		return -1;
+						// 	}
+						// 	return 0;
+						// });
 					});
 			});
 	}
@@ -58,7 +81,7 @@ export class ParticipantListComponent implements OnInit {
 	}
 }
 
-interface ParticipantListVM {
+class ParticipantListVM {
 	_id: string;
 	eventName: string;
 	contactName: string;

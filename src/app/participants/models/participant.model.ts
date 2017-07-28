@@ -44,8 +44,8 @@ export class Participant extends Entity {
 		this.freeNights = item.freeNights;
 		this.arrivalDate = item.arrivalDate;
 		this.departureDate = item.departureDate;
-		this.visaRequired = item.visaRequired === undefined ? true : item.visaRequired;
-		this.participantValidated = item.participantValidated === undefined ? true : item.participantValidated;
+		this.visaRequired = item.visaRequired === undefined ? false : item.visaRequired;
+		this.participantValidated = item.participantValidated === undefined ? false : item.participantValidated;
 
 		this.created = item.created || new Date();
 		this.updated = item.updated || new Date();
