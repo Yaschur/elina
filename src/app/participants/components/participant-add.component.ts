@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
@@ -31,6 +32,7 @@ export class ParticipantAddComponent implements OnInit {
 
 	constructor(
 		private _route: ActivatedRoute,
+		private _location: Location,
 		private _fb: FormBuilder,
 		private _companyRepo: CompanyRepository,
 		private _eventRepo: EventRepository,
@@ -58,27 +60,34 @@ export class ParticipantAddComponent implements OnInit {
 
 	}
 
-	onSubmit() {
-		const participant = new Participant({
-			event: this.participantForm.get('event').value,
-			company: this.targetCompanyId,
-			contact: this.participantForm.get('contact').value,
-			category: this.participantForm.get('category').value,
-			status: this.participantForm.get('status').value,
-			registrationFee: this.participantForm.get('registrationFee').value.trim(),
-			freeNights: this.participantForm.get('freeNights').value.trim()
-		});
-		this._partyRepo.store(participant)
-			.then(() => {
-				this.participantForm.get('event').updateValueAndValidity({ onlySelf: false, emitEvent: true });
-				this.participantForm.get('category').setValue('');
-				this.participantForm.get('status').setValue('');
-				this.participantForm.get('registrationFee').setValue('');
-				this.participantForm.get('freeNights').setValue('');
-			})
-			.catch(e => console.log(e));
+	async onSubmit() {
+		try {
+			const participant = new Participant({
+				event: this.participantForm.get('event').value,
+				company: this.targetCompanyId,
+				contact: this.participantForm.get('contact').value,
+				category: this.participantForm.get('category').value,
+				status: this.participantForm.get('status').value,
+				registrationFee: this.participantForm.get('registrationFee').value.trim(),
+				freeNights: this.participantForm.get('freeNights').value.trim()
+			});
+			const exPrt = await this._partyRepo.getByAllRefIds(participant.event, participant.company, participant.contact);
+			if (exPrt) {
+				throw Error('participant already exists');
+			}
+			await this._partyRepo.store(participant);
+			this.participantForm.get('event').updateValueAndValidity({ onlySelf: false, emitEvent: true });
+			this.participantForm.get('category').setValue('');
+			this.participantForm.get('status').setValue('');
+			this.participantForm.get('registrationFee').setValue('');
+			this.participantForm.get('freeNights').setValue('');
+		} catch (e) {
+			console.log(e);
+		}
 	}
+
 	onCancel() {
+		this._location.back();
 	}
 
 	private createForm() {

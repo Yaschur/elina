@@ -39,7 +39,6 @@ export class EventEditComponent implements OnInit {
 			name: this.eventForm.get('name').value.trim()
 		});
 		this._eventRepo.store(event)
-			// .then(() => this._router.navigate(['event/details', event._id]))
 			.then(() => this._router.navigate(['event']))
 			.catch(e => console.log(e));
 	}
