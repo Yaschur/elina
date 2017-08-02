@@ -131,7 +131,18 @@ export class CompanyDetailsComponent implements OnInit {
 	private mapContacts(withFired) {
 		this.company.contacts = this._domainCompany.contacts
 			.filter(c => withFired || c.active)
-			.map(c => new ContactListVm(c));
+			.map(c => new ContactListVm(c))
+			.sort((a, b) => {
+				const aName = a.name.toUpperCase();
+				const bName = b.name.toUpperCase();
+				if (aName < bName) {
+					return -1;
+				}
+				if (aName > bName) {
+					return 1;
+				}
+				return 0;
+			});
 	}
 }
 
