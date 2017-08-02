@@ -88,13 +88,27 @@ export class ParticipantEditComponent implements OnInit {
 		}
 		this._location.back();
 	}
+	async onDelete() {
+		try {
+			this.modalRef.hide();
+			this.modalRef = undefined;
+			await this._partyRepo.remove(this.targetParticipant);
+			this._location.back();
+		} catch (e) {
+			console.log(e);
+		}
+	}
 
 	onCancel() {
 		this._location.back();
 	}
 
-	openConfirm(template: TemplateRef<any>) {
-		this.modalRef = this.modalService.show(template);
+	deleteConfirm(template: TemplateRef<any>) {
+		this.modalRef = this.modalService.show(template, { keyboard: false, backdrop: false, ignoreBackdropClick: true });
+	}
+	deleteCancel() {
+		this.modalRef.hide();
+		this.modalRef = undefined;
 	}
 
 	private createForm() {

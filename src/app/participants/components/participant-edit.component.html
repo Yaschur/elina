@@ -6,11 +6,11 @@
 		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
 			<span class="glyphicon glyphicon-remove"></span> cancel
 		</button>
-		<button type="button" [disabled]="participantForm.pristine || participantForm.invalid" class="btn btn-default navbar-btn"
+		<button type="button" [disabled]="participantForm.pristine || participantForm.invalid || modalRef" class="btn btn-default navbar-btn"
 		 (click)="onSubmit()">
 			<span class="glyphicon glyphicon-ok"></span> UPDATE
 		</button>
-		<button type="button" class="btn btn-default navbar-btn pull-right" (click)="openConfirm(template)">
+		<button type="button" [disabled]="modalRef" class="btn btn-default navbar-btn pull-right" (click)="deleteConfirm(template)">
 			<span class="glyphicon glyphicon-trash"></span> delete
 		</button>
 	</nav>
@@ -71,10 +71,12 @@
 		</label>
 	</div>
 </form>
-<template #template>
-	<div class="modal-body">
-		You are about to delete participant record from database. This can't be undone. Are you sure?
-		<button type="button" class="btn btn-info" (click)="modalRef.hide()">No, no way</button>
-		<button type="button" class="btn btn-danger" (click)="modalRef.hide()">Yes, delete</button>
+<ng-template #template>
+	<div class="modal-body" role="dialog">
+		<div class="panel panel-default">
+			<div class="panel-body">You are about to delete participant record from database. This can't be undone. Are you sure?</div>
+		</div>
+		<button type="button" class="btn btn-info" (click)="deleteCancel()">No, no way</button>
+		<button type="button" class="btn btn-danger" (click)="onDelete()">Yes, delete</button>
 	</div>
-</template>
+</ng-template>
