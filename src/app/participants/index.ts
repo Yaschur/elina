@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+import { ModalModule } from 'ngx-bootstrap';
+
 import { CompaniesCoreModule } from '../companies/core';
 import { EventsCoreModule } from '../events/core';
 import { ParticipantsRoutingModule } from './participants-routing.module';
@@ -15,6 +17,7 @@ import { ParticipantAddComponent } from './components/participant-add.component'
 	imports: [
 		ReactiveFormsModule,
 		CommonModule,
+		ModalModule.forRoot(),
 		CompaniesCoreModule,
 		EventsCoreModule,
 		ParticipantsRoutingModule

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { Company, CompanyRepository, Contact } from '../../companies/core';
 import { Event, EventRepository } from '../../events/core';
@@ -18,6 +19,7 @@ import { ParticipantRepository } from '../repositories/participant.repository';
 
 export class ParticipantEditComponent implements OnInit {
 	participantForm: FormGroup;
+	modalRef: BsModalRef;
 
 	targetParticipant: Participant;
 	targetCompany: Company;
@@ -36,7 +38,8 @@ export class ParticipantEditComponent implements OnInit {
 		private _companyRepo: CompanyRepository,
 		private _eventRepo: EventRepository,
 		private _partyRepo: ParticipantRepository,
-		private _dirSrv: DirectoryService
+		private _dirSrv: DirectoryService,
+		private modalService: BsModalService
 	) {
 		this.categories = _dirSrv.getDir('participantcategory').data;
 		this.statuses = _dirSrv.getDir('participantstatus').data;
@@ -56,19 +59,42 @@ export class ParticipantEditComponent implements OnInit {
 				this._eventRepo.getById(participant.event)
 					.then(event => this.targetEvent = event)
 					.catch(e => console.log(e));
-				this.arrivalDate = participant.arrivalDate;
-				this.departureDate = participant.departureDate;
+				this.participantForm.get('arrivalDate').setValue(participant.arrivalDate);
+				this.participantForm.get('departureDate').setValue(participant.departureDate);
 				this.participantForm.get('category').setValue(participant.category);
 				this.participantForm.get('status').setValue(participant.status);
 				this.participantForm.get('registrationFee').setValue(participant.registrationFee);
 				this.participantForm.get('freeNights').setValue(participant.freeNights);
 				this.participantForm.get('visaRequired').setValue(participant.visaRequired);
 				this.participantForm.get('participantValidated').setValue(participant.participantValidated);
+				this.targetParticipant = participant;
 			});
+	}
+
+	async onSubmit() {
+		try {
+			['category', 'status', 'registrationFee', 'freeNights', 'arrivalDate', 'departureDate', 'visaRequired', 'participantValidated']
+				.forEach(s => {
+					const field = this.participantForm.get(s);
+					if (field.dirty && !field.invalid) {
+						this.targetParticipant[s] = field.value;
+					}
+				});
+			this.targetParticipant.updated = new Date();
+
+			await this._partyRepo.store(this.targetParticipant);
+		} catch (e) {
+			console.log(e);
+		}
+		this._location.back();
 	}
 
 	onCancel() {
 		this._location.back();
+	}
+
+	openConfirm(template: TemplateRef<any>) {
+		this.modalRef = this.modalService.show(template);
 	}
 
 	private createForm() {
@@ -78,8 +104,8 @@ export class ParticipantEditComponent implements OnInit {
 
 			registrationFee: '',
 			freeNights: '',
-			// arrivalDate: '',
-			// departureDate: '',
+			arrivalDate: '',
+			departureDate: '',
 			visaRequired: false,
 			participantValidated: false
 		});
