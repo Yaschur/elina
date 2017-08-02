@@ -22,8 +22,9 @@
 				<dt>Event</dt>
 				<dd>{{targetEvent?.name}}</dd>
 				<dt>Contact</dt>
-				<dd>{{targetContact?.name}}</dd>
+				<dd>{{targetContact?.name}}<span *ngIf="targetContact && !targetContact.active" class="text-danger"> <small>(this contact was fired)</small></span></dd>
 			</dl>
+
 			<span class="text-nowrap"><small><em>created:</em> {{targetParticipant?.created | date:'dd MMM yyyy HH:mm'}}</small></span>
 			<span class="text-nowrap"><small><em>updated:</em> {{targetParticipant?.updated | date:'dd MMM yyyy HH:mm'}}</small></span>
 		</div>

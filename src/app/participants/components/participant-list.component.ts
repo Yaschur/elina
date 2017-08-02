@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { CompanyRepository, Company, Contact } from '../../companies/core';
 import { EventRepository, Event } from '../../events/core';
-import { DirectoryService } from '../../directories';
+import { DirectoryService, ParticipantCategory } from '../../directories';
 import { Participant } from '../models/participant.model';
 import { ParticipantRepository } from '../repositories/participant.repository';
 
@@ -34,49 +34,58 @@ export class ParticipantListComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		let domainParticipants: Participant[];
+		let domainEvents: Event[];
+		let domainCategories: ParticipantCategory[];
 		this.company
-			.subscribe(company => {
+			.switchMap(company => {
 				this._targetCompanyId = company._id;
 				this._targetContacts = company.contacts;
-				const categoriesO = this._dirSrv.getDir('participantcategory').data;
-				const statusesO = this._dirSrv.getDir('participantstatus').data;
-				const eventsP = this._eventRepo.findAll();
-				this._participantRepo.FindByCompany(company._id)
-					.then(participants => {
-						this.participants = participants
-							.map(p => {
-								const res = new ParticipantListVM();
-								res._id = p._id;
-								eventsP
-									.then(events => res.eventName = events.filter(e => e._id === p.event)[0].name);
-								categoriesO
-									.subscribe(categories => res.categoryName = categories.filter(c => c._id === p.category)[0].name);
-								statusesO
-									.subscribe(statuses => res.statusName = statuses.filter(s => s._id === p.status)[0].name);
-								const contact = this._targetContacts.filter(c => c._id === p.contact)[0];
-								res.contactName = contact.name;
-								res.contactIsFired = !contact.active;
-								return res;
-							});
-							// .sort((a, b) => {
-							// 	const eaName = a.eventName.toUpperCase();
-							// 	const ebName = b.eventName.toUpperCase();
-							// 	if (eaName < ebName) {
-							// 		return -1;
-							// 	}
-							// 	if (eaName > ebName) {
-							// 		return 1;
-							// 	}
-							// 	const caName = a.contactName.toUpperCase();
-							// 	const cbName = b.contactName.toUpperCase();
-							// 	if (caName < cbName) {
-							// 		return -1;
-							// 	}
-							// 	if (caName > cbName) {
-							// 		return 1;
-							// 	}
-							// 	return 0;
-							// });
+				return this._participantRepo.FindByCompany(company._id);
+			})
+			.switchMap(participants => {
+				domainParticipants = participants;
+				return this._eventRepo.findAll();
+			})
+			.switchMap(events => {
+				domainEvents = events;
+				return this._dirSrv.getDir('participantcategory').data;
+			})
+			.switchMap(cats => {
+				domainCategories = cats;
+				return this._dirSrv.getDir('participantstatus').data;
+			})
+			.subscribe(stats => {
+				this.participants = domainParticipants
+					.map(p => {
+						const res = new ParticipantListVM();
+						res._id = p._id;
+						res.eventName = domainEvents.filter(e => e._id === p.event)[0].name;
+						res.categoryName = domainCategories.filter(c => c._id === p.category)[0].name;
+						res.statusName = stats.filter(s => s._id === p.status)[0].name;
+						const contact = this._targetContacts.filter(c => c._id === p.contact)[0];
+						res.contactName = contact.name;
+						res.contactIsFired = !contact.active;
+						return res;
+					})
+					.sort((a, b) => {
+						const eaName = a.eventName.toUpperCase();
+						const ebName = b.eventName.toUpperCase();
+						if (eaName < ebName) {
+							return -1;
+						}
+						if (eaName > ebName) {
+							return 1;
+						}
+						const caName = a.contactName.toUpperCase();
+						const cbName = b.contactName.toUpperCase();
+						if (caName < cbName) {
+							return -1;
+						}
+						if (caName > cbName) {
+							return 1;
+						}
+						return 0;
 					});
 			});
 	}
