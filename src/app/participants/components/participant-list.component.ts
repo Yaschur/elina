@@ -79,6 +79,10 @@ export class ParticipantListComponent implements OnInit {
 	addParticipant(): void {
 		this._router.navigate(['participant/add', { company_id: this._targetCompanyId }]);
 	}
+
+	editParticipant(id: string): void {
+		this._router.navigate(['participant/edit', id]);
+	}
 }
 
 class ParticipantListVM {

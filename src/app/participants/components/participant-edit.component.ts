@@ -19,16 +19,15 @@ import { ParticipantRepository } from '../repositories/participant.repository';
 export class ParticipantEditComponent implements OnInit {
 	participantForm: FormGroup;
 
-	targetParticipant: Observable<Participant>;
-	targetCompany: Observable<Company>;
-	targetContact: Observable<Contact>;
+	targetParticipant: Participant;
+	targetCompany: Company;
+	targetContact: Contact;
+	targetEvent: Event;
 	categories: Observable<ParticipantCategory[]>;
 	statuses: Observable<ParticipantStatus[]>;
 
 	arrivalDate: Date;
 	departureDate: Date;
-
-	private targetParticipantId: string;
 
 	constructor(
 		private _route: ActivatedRoute,
@@ -39,12 +38,37 @@ export class ParticipantEditComponent implements OnInit {
 		private _partyRepo: ParticipantRepository,
 		private _dirSrv: DirectoryService
 	) {
-
+		this.categories = _dirSrv.getDir('participantcategory').data;
+		this.statuses = _dirSrv.getDir('participantstatus').data;
 		this.createForm();
 	}
 
 	ngOnInit() {
+		this._route.paramMap
+			.switchMap(params => this._partyRepo.getById(params.get('participant_id')))
+			.subscribe(participant => {
+				this._companyRepo.getById(participant.company)
+					.then(company => {
+						this.targetCompany = company;
+						this.targetContact = company.contacts.filter(c => c._id === participant.contact)[0];
+					})
+					.catch(e => console.log(e));
+				this._eventRepo.getById(participant.event)
+					.then(event => this.targetEvent = event)
+					.catch(e => console.log(e));
+				this.arrivalDate = participant.arrivalDate;
+				this.departureDate = participant.departureDate;
+				this.participantForm.get('category').setValue(participant.category);
+				this.participantForm.get('status').setValue(participant.status);
+				this.participantForm.get('registrationFee').setValue(participant.registrationFee);
+				this.participantForm.get('freeNights').setValue(participant.freeNights);
+				this.participantForm.get('visaRequired').setValue(participant.visaRequired);
+				this.participantForm.get('participantValidated').setValue(participant.participantValidated);
+			});
+	}
 
+	onCancel() {
+		this._location.back();
 	}
 
 	private createForm() {
