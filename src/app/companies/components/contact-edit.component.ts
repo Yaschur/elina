@@ -87,7 +87,7 @@ export class ContactEditComponent implements OnInit {
 			name: this._fb.group({
 				first: '',
 				last: ''
-			}, this.validateName),
+			}, { validator: this.validateName }),
 			// name: ['', Validators.required],
 			jobTitle: '',
 			jobResponsibilities: { value: [], disabled: false },

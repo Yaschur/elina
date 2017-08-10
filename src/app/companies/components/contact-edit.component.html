@@ -16,11 +16,11 @@
 		<p>{{company?.name}}</p>
 	</div>
 	<div formGroupName="name">
-		<div class="form-group">
+		<div class="form-group" [ngClass]="{'has-error': contactForm.get('name').dirty && contactForm.get('name').invalid}">
 			<label for="first">First Name:</label>
 			<input id="first" name="first" formControlName="first" type="text" class="form-control" placeholder="type first name of contact here (required or last name)">
 		</div>
-		<div class="form-group">
+		<div class="form-group" [ngClass]="{'has-error': contactForm.get('name').dirty && contactForm.get('name').invalid}">
 			<label for="last">Last Name:</label>
 			<input id="last" name="last" formControlName="last" type="text" class="form-control" placeholder="type last name of contact here (required or first name)">
 		</div>

@@ -32,14 +32,12 @@
 	<div class="form-group">
 		<label for="category">Category:</label>
 		<select id="category" formControlName="category" class="form-control">
-			<option value="">[choose category]</option>
 			<option *ngFor="let item of categories | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
 	<div class="form-group">
 		<label for="status">Status:</label>
 		<select id="status" formControlName="status" class="form-control">
-			<option value="">[choose status]</option>
 			<option *ngFor="let item of statuses | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
@@ -78,7 +76,8 @@
 	<div class="modal-body" role="dialog">
 		<div class="panel panel-default">
 			<div class="panel-body">You are about to delete participant record from database. This can't be undone. Are you
-				sure?</div>
+				sure?
+			</div>
 		</div>
 		<button type="button" class="btn btn-info" (click)="deleteCancel()">No, no way</button>
 		<button type="button" class="btn btn-danger" (click)="onDelete()">Yes, delete</button>

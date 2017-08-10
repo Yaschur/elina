@@ -14,28 +14,28 @@
 	<div class="form-group">
 		<label>Company:</label> {{(targetCompany | async)?.name}}
 	</div>
-	<div class="form-group">
+	<div class="form-group" [ngClass]="{'has-error': participantForm.get('event').dirty && participantForm.get('event').invalid}">
 		<label for="event">Event:</label>
 		<select id="event" formControlName="event" class="form-control">
 			<option value="">[choose event]</option>
 			<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
-	<div class="form-group">
+	<div class="form-group" [ngClass]="{'has-error': participantForm.get('contact').dirty && participantForm.get('contact').invalid}">
 		<label for="contact">Contact:</label>
 		<select id="contact" formControlName="contact" class="form-control">
 			<option value="">[choose contact]</option>
 			<option *ngFor="let item of allowedContacts | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
-	<div class="form-group">
+	<div class="form-group" [ngClass]="{'has-error': participantForm.get('category').dirty && participantForm.get('category').invalid}">
 		<label for="category">Category:</label>
 		<select id="category" formControlName="category" class="form-control">
 			<option value="">[choose category]</option>
 			<option *ngFor="let item of categories | async" [value]="item._id">{{item.name}}</option>
 		</select>
 	</div>
-	<div class="form-group">
+	<div class="form-group" [ngClass]="{'has-error': participantForm.get('status').dirty && participantForm.get('status').invalid}">
 		<label for="status">Status:</label>
 		<select id="status" formControlName="status" class="form-control">
 			<option value="">[choose status]</option>

@@ -12,7 +12,7 @@
 	</button>
 	</nav>
 
-	<div class="form-group">
+	<div class="form-group" [ngClass]="{'has-error': companyForm.get('name').dirty && companyForm.get('name').invalid}">
 		<label for="name">Name:</label>
 		<input id="name" formControlName="name" type="text" class="form-control" placeholder="type name of company here (required)">
 	</div>
