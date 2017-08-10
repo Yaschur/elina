@@ -17,6 +17,10 @@
 		<!--<button type="button" class="btn btn-link btn-xs pull-right" (click)="gotoEdit()">move</button>-->
 	</div>
 	<div class="panel-body">
+		<dl class="dl-horizontal">
+			<dt>Company</dt>
+			<dd>{{domainCompany?.name}}</dd>
+		</dl>
 		<div *ngIf="!contact.active" class="panel-heading bg-danger">this contact was fired!</div>
 		<dl class="dl-horizontal">
 			<dt>First name</dt>

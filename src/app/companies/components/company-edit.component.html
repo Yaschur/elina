@@ -6,7 +6,8 @@
 		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
 		<span class="glyphicon glyphicon-remove"></span> cancel
 	</button>
-		<button type="button" [disabled]="companyForm.pristine || companyForm.invalid" class="btn btn-default navbar-btn" (click)="onSubmit()">
+		<button type="button" [disabled]="companyForm.pristine || companyForm.invalid" class="btn btn-default navbar-btn"
+		 (click)="onSubmit()">
 		<span class="glyphicon glyphicon-ok"></span> SAVE
 	</button>
 	</nav>
