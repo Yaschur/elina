@@ -12,6 +12,7 @@ import { ContentResponsibility } from '../models/content-responsibility.model';
 import { JobResponsibility } from '../models/job-responsibility.model';
 import { ParticipantCategory } from '../models/participant-category.model';
 import { ParticipantStatus } from '../models/participant-status.model';
+import { AddInfo } from '../models/add-info.model';
 
 import { DirectoryRepository } from '../repositories/directory.repository';
 
@@ -43,6 +44,9 @@ export class DirectoryService {
 		),
 		'participantstatus': new DirEntries(
 			new MetaEntry('Participant Status', 'Participant Statuses', ParticipantStatus, 'list-alt')
+		),
+		'addinfo': new DirEntries(
+			new MetaEntry('Additional Information', 'Additional Infos', AddInfo, 'certificate')
 		)
 	};
 

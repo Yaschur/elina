@@ -8,6 +8,7 @@ export class Contact extends Entity {
 	jobResponsibilities: string[];
 	buyContents: string[];
 	sellContents: string[];
+	addInfos: string[];
 	phone: string;
 	mobile: string;
 	email: string;
@@ -33,6 +34,7 @@ export class Contact extends Entity {
 		this.jobResponsibilities = item.jobResponsibilities || [];
 		this.buyContents = item.buyContents || [];
 		this.sellContents = item.sellContents || [];
+		this.addInfos = item.addInfos || [];
 		this.phone = item.phone;
 		this.mobile = item.mobile;
 		this.email = item.email;

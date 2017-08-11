@@ -48,6 +48,12 @@
 		</select>
 	</div>
 	<div class="form-group">
+		<label for="addInfos">Additional Information:</label> <small>use Ctrl-click for multiple selection or deselection</small>
+		<select multiple id="addInfos" formControlName="addInfos" class="form-control">
+				<option *ngFor="let item of addInfos | async" [value]="item._id">{{item.name}}</option>
+		</select>
+	</div>
+	<div class="form-group">
 		<label for="phone">Phone number:</label>
 		<input id="phone" formControlName="phone" type="tel" class="form-control">
 	</div>
