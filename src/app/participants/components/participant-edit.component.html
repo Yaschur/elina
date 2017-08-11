@@ -4,7 +4,7 @@
 			<span class="glyphicon glyphicon-briefcase"></span> Participant
 		</p>
 		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
-			<span class="glyphicon glyphicon-remove"></span> cancel
+			<span class="glyphicon glyphicon-arrow-left"></span> close
 		</button>
 		<button type="button" [disabled]="participantForm.pristine || participantForm.invalid || modalRef"
 		 class="btn btn-default navbar-btn" (click)="onSubmit()">
@@ -23,8 +23,7 @@
 				<dd><a routerLink="/event/edit/{{targetEvent?._id}}">{{targetEvent?.name}}</a></dd>
 				<dt>Contact</dt>
 				<dd><a routerLink="/contact/details/{{targetCompany?._id}}/{{targetContact?._id}}">{{targetContact?.name}}</a>
-					<span
-					 *ngIf="targetContact && !targetContact.active" class="text-danger"> <small>(this contact was fired)</small></span>
+					<span *ngIf="targetContact && !targetContact.active" class="text-danger"> <small>(this contact was fired)</small></span>
 				</dd>
 			</dl>
 
