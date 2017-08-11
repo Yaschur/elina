@@ -12,7 +12,7 @@
 		</button>
 	</nav>
 	<div class="form-group">
-		<label>Company:</label> {{(targetCompany | async)?.name}}
+		<label>Company:</label> <a routerLink="/company/details/{{(targetCompany | async)?._id}}">{{(targetCompany | async)?.name}}</a>
 	</div>
 	<div class="form-group" [ngClass]="{'has-error': participantForm.get('event').dirty && participantForm.get('event').invalid}">
 		<label for="event">Event:</label>
@@ -44,7 +44,8 @@
 	</div>
 	<div class="form-group">
 		<label for="registrationFee">Registration Fee:</label>
-		<input id="registrationFee" formControlName="registrationFee" type="text" class="form-control" />
+		<input id="registrationFee" formControlName="registrationFee" type="text" class="form-control"
+		/>
 	</div>
 	<div class="form-group">
 		<label for="freeNights">Free Nights:</label>

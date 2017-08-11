@@ -13,7 +13,7 @@
 	</nav>
 	<div class="form-group">
 		<label>Company:</label>
-		<p>{{company?.name}}</p>
+		<p><a routerLink="/company/details/{{company?._id}}">{{company?.name}}</a></p>
 	</div>
 	<div formGroupName="name">
 		<div class="form-group" [ngClass]="{'has-error': contactForm.get('name').dirty && contactForm.get('name').invalid}">

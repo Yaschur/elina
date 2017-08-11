@@ -18,11 +18,14 @@
 		<div class="panel-body">
 			<dl class="dl-horizontal">
 				<dt>Company</dt>
-				<dd>{{targetCompany?.name}}</dd>
+				<dd><a routerLink="/company/details/{{targetCompany?._id}}">{{targetCompany?.name}}</a></dd>
 				<dt>Event</dt>
-				<dd>{{targetEvent?.name}}</dd>
+				<dd><a routerLink="/event/edit/{{targetEvent?._id}}">{{targetEvent?.name}}</a></dd>
 				<dt>Contact</dt>
-				<dd>{{targetContact?.name}}<span *ngIf="targetContact && !targetContact.active" class="text-danger"> <small>(this contact was fired)</small></span></dd>
+				<dd><a routerLink="/contact/details/{{targetCompany?._id}}/{{targetContact?._id}}">{{targetContact?.name}}</a>
+					<span
+					 *ngIf="targetContact && !targetContact.active" class="text-danger"> <small>(this contact was fired)</small></span>
+				</dd>
 			</dl>
 
 			<span class="text-nowrap"><small><em>created:</em> {{targetParticipant?.created | date:'dd MMM yyyy HH:mm'}}</small></span>
