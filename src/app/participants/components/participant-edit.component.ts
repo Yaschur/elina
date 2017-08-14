@@ -39,7 +39,7 @@ export class ParticipantEditComponent implements OnInit {
 		private _eventRepo: EventRepository,
 		private _partyRepo: ParticipantRepository,
 		private _dirSrv: DirectoryService,
-		private modalService: BsModalService
+		private _modalService: BsModalService
 	) {
 		this.categories = _dirSrv.getDir('participantcategory').data;
 		this.statuses = _dirSrv.getDir('participantstatus').data;
@@ -104,7 +104,7 @@ export class ParticipantEditComponent implements OnInit {
 	}
 
 	deleteConfirm(template: TemplateRef<any>) {
-		this.modalRef = this.modalService.show(template, { keyboard: false, backdrop: false, ignoreBackdropClick: true });
+		this.modalRef = this._modalService.show(template, { keyboard: false, backdrop: false, ignoreBackdropClick: true });
 	}
 	deleteCancel() {
 		this.modalRef.hide();

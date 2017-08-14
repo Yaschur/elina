@@ -1,4 +1,5 @@
-<app-edit-header glyphTag="{{dirEntries.meta.glyphTag}}" label="{{id ? id : 'new'}}" (onSubmit)="submit($event)"></app-edit-header>
+<app-edit-header glyphTag="{{dirEntries.meta.glyphTag}}" label="{{id ? id : 'new'}}" (onSubmit)="submit($event)"
+ (onDelete)="delete()"></app-edit-header>
 <form>
 	<div class="form-group">
 		<label for="name">{{dirEntries.meta.singularTitle}} name</label>

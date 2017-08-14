@@ -50,6 +50,11 @@ export class CountryEditComponent implements OnInit {
 		this._location.back();
 	}
 
+	delete() {
+		this._dirSrv.removeEntry('country', new Country({ _id: this._origId }));
+		this._location.back();
+	}
+
 	private save(): void {
 		const country = new Country({ _id: this.code, name: this.name });
 		if (this._origId && this._origId !== this.code) {
