@@ -1,5 +1,8 @@
 {
-  "name": "elina",
-  "version": "0.5.1",
-  "main": "main.js"
+	"name": "elina",
+	"version": "0.5.1",
+	"main": "main.js",
+	"dependencies": {
+		"electron-context-menu": "^0.9.1"
+	}
 }
