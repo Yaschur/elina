@@ -3,16 +3,12 @@
   "version": "0.5.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
     "lint": "ng lint",
-    "build-angular-copy-electron": "rm -rf dist && ng build --base-href . && cp -a src-electron/* dist",
-    "build-electron": "npm run build-angular-copy-electron && cd dist && npm install",
-    "electron": "npm run build-angular-copy-electron && electron dist",
-    "bbb1": "rm -rf dist && ng build --base-href . -op dist/temp/clt && cp -a src-electron/* dist/temp",
-    "bbb2": "npm run bbb1 && cd dist/temp && npm install",
-    "bbb": "npm run bbb2 && electron-packager dist/temp elina --platform win32 --arch ia32 --out dist/",
-    "iii": "electron-installer-windows --src dist/elina-win32-ia32/ --dest dist/installers/"
+    "build-angular": "rm -rf dist && ng build --base-href .",
+    "copy-electron": "cp -a src-electron/* dist/raw && cp -a src-distro/* dist/raw",
+    "build-electron": "npm run build-angular && npm run copy-electron",
+    "electron": "npm run build-electron && electron dist/raw",
+    "pack-and-setup": "npm run build-electron && cd dist/raw && npm run exe32 && npm run set32"
   },
   "dependencies": {
     "@angular/common": "^4.3.4",
@@ -43,8 +39,6 @@
     "codelyzer": "^3.1.2",
     "electron": "^1.7.5",
     "electron-context-menu": "^0.9.1",
-    "electron-installer-windows": "^0.2.0",
-    "electron-packager": "^8.7.2",
     "ts-node": "^3.3.0",
     "tslint": "^5.6.0",
     "typescript": "^2.4.2"

@@ -10,7 +10,11 @@ const configFilePath = path.join(
 );
 const oldConfigFilePath = path.join(__dirname, configFileName);
 
-require('electron-context-menu')({ showInspectElement: false });
+try {
+	require('electron-context-menu')({ showInspectElement: false });
+} catch (e) {
+	log.console('context menu is not installed');
+}
 
 let mainWindow = null;
 
