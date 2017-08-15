@@ -11,9 +11,21 @@ const configFilePath = path.join(
 const oldConfigFilePath = path.join(__dirname, configFileName);
 
 try {
+	const args = require('./args')
+	const squirrel = require('./squirrel')
+
+	const cmd = args.parseArguments(app, process.argv.slice(1)).squirrelCommand
+	if (squirrel.handleCommand(app, cmd)) {
+		return;
+	}
+} catch (e) {
+	console.log(e);
+}
+
+try {
 	require('electron-context-menu')({ showInspectElement: false });
 } catch (e) {
-	log.console('context menu is not installed');
+	console.log(e);
 }
 
 let mainWindow = null;
