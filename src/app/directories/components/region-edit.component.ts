@@ -70,6 +70,11 @@ export class RegionEditComponent implements OnInit {
 		this._location.back();
 	}
 
+	delete() {
+		this._dirSrv.removeEntry('region', new Region({ _id: this.id }));
+		this._location.back();
+	}
+
 	private save(): void {
 		const region = new Region({
 			_id: this.id,

@@ -4,14 +4,15 @@
 			<span class="glyphicon glyphicon-home"></span> Company
 		</p>
 		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
-		<span class="glyphicon glyphicon-remove"></span> cancel
+		<span class="glyphicon glyphicon-arrow-left"></span> close
 	</button>
-		<button type="button" [disabled]="companyForm.pristine || companyForm.invalid" class="btn btn-default navbar-btn" (click)="onSubmit()">
+		<button type="button" [disabled]="companyForm.pristine || companyForm.invalid" class="btn btn-default navbar-btn"
+		 (click)="onSubmit()">
 		<span class="glyphicon glyphicon-ok"></span> SAVE
 	</button>
 	</nav>
 
-	<div class="form-group">
+	<div class="form-group" [ngClass]="{'has-error': companyForm.get('name').dirty && companyForm.get('name').invalid}">
 		<label for="name">Name:</label>
 		<input id="name" formControlName="name" type="text" class="form-control" placeholder="type name of company here (required)">
 	</div>

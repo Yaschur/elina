@@ -49,6 +49,11 @@ export class EntryEditComponent implements OnInit {
 		this._location.back();
 	}
 
+	delete() {
+		this._dirSrv.removeEntry(this._entryKey, new this.dirEntries.meta.entryCtor({ _id: this.id, name: this.name }));
+		this._location.back();
+	}
+
 	private save(): void {
 		if (!this.name.trim()) {
 			return;

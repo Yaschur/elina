@@ -14,9 +14,12 @@
 			<span class="glyphicon glyphicon-{{hiringGlyph}}"></span>
 			{{hiringSign}}
 		</button>
-		<!--<button type="button" class="btn btn-link btn-xs pull-right" (click)="gotoEdit()">move</button>-->
 	</div>
 	<div class="panel-body">
+		<dl class="dl-horizontal">
+			<dt>Company</dt>
+			<dd><a routerLink="/company/details/{{domainCompany?._id}}">{{domainCompany?.name}}</a></dd>
+		</dl>
 		<div *ngIf="!contact.active" class="panel-heading bg-danger">this contact was fired!</div>
 		<dl class="dl-horizontal">
 			<dt>First name</dt>
@@ -31,6 +34,8 @@
 			<dd>{{contact.buyContents}}</dd>
 			<dt>SELL content responsibilities</dt>
 			<dd>{{contact.sellContents}}</dd>
+			<dt>Additional information</dt>
+			<dd>{{contact.addInfos}}</dd>
 			<dt>Phone</dt>
 			<dd>{{contact.phone}}</dd>
 			<dt>Mobile</dt>

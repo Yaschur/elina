@@ -42,7 +42,7 @@
 	<div class="panel-body">
 		<div class="form-group" *ngIf="note">
 			<textarea [(ngModel)]="note.text" name="note.text" id="note.text" rows="3" class="form-control"></textarea>
-			<button type="button" class="btn btn-default btn-sm" (click)="cancelNote()"><span class="glyphicon glyphicon-remove"></span> cancel</button>
+			<button type="button" class="btn btn-default btn-sm" (click)="cancelNote()"><span class="glyphicon glyphicon-arrow-left"></span> close</button>
 			<button type="button" class="btn btn-default btn-sm" (click)="saveNote()"><span class="glyphicon glyphicon-ok"></span> SAVE</button>
 		</div>
 		<dl>

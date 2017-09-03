@@ -3,9 +3,21 @@
 		<span class="glyphicon glyphicon-{{glyphTag}}"></span> {{label}}
 	</p>
 	<button type="button" class="btn btn-default navbar-btn" (click)="submit(false)">
-		<span class="glyphicon glyphicon-remove"></span> cancel
+		<span class="glyphicon glyphicon-arrow-left"></span> close
 	</button>
 	<button type="button" class="btn btn-default navbar-btn" (click)="submit(true)">
 		<span class="glyphicon glyphicon-ok"></span> SAVE
 	</button>
+	<button type="button" *ngIf="label !== 'new'" [disabled]="modalRef" class="btn btn-default navbar-btn pull-right" (click)="deleteConfirmation(template)">
+		<span class="glyphicon glyphicon-trash"></span> delete
+	</button>
 </nav>
+<ng-template #template>
+	<div class="modal-body" role="dialog">
+		<div class="panel panel-default">
+			<div class="panel-body">You are about to delete record from database. This can't be undone. Are you sure?</div>
+		</div>
+		<button type="button" class="btn btn-info" (click)="deleteCancelled()">No, no way</button>
+		<button type="button" class="btn btn-danger" (click)="deleteConfirmed()">Yes, delete</button>
+	</div>
+</ng-template>

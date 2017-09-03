@@ -1,0 +1,23 @@
+{
+	"name": "elina",
+	"productName": "elina",
+	"version": "0.5.2",
+	"description": "elina database application",
+	"author": {
+		"name": "Igor Trishin"
+	},
+	"main": "main.js",
+	"scripts": {
+		"exe32": "npm install && electron-packager . elina --platform win32 --arch ia32 --win32metadata.ProductName=\"elina\" --win32metadata.CompanyName=\"Igor Trishin\" --out ../",
+		"set32": "electron-installer-windows --src ../elina-win32-ia32/ --dest ../installers/"
+	},
+	"dependencies": {
+		"electron-context-menu": "^0.9.1",
+		"fs-plus": "^3.0.1",
+		"yargs": "^8.0.2"
+	},
+	"devDependencies": {
+		"electron-installer-windows": "^0.2.0",
+		"electron-packager": "^9.0.0"
+	}
+}

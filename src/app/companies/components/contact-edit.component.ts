@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
-import { DirectoryService, ContentResponsibility, JobResponsibility } from '../../directories';
+import { DirectoryService, ContentResponsibility, JobResponsibility, AddInfo } from '../../directories';
 import { Company, Contact, CompanyRepository } from '../core';
 
 @Component({
@@ -19,6 +19,7 @@ export class ContactEditComponent implements OnInit {
 
 	jobResponsibilities: Observable<JobResponsibility[]>;
 	contentResponsibilities: Observable<ContentResponsibility[]>;
+	addInfos: Observable<AddInfo[]>;
 
 	contactForm: FormGroup;
 
@@ -32,6 +33,7 @@ export class ContactEditComponent implements OnInit {
 	) {
 		this.jobResponsibilities = this._dirSrv.getDir('jobresponsibility').data;
 		this.contentResponsibilities = this._dirSrv.getDir('contentresponsibility').data;
+		this.addInfos = this._dirSrv.getDir('addinfo').data;
 		this.createForm();
 	}
 
@@ -60,6 +62,7 @@ export class ContactEditComponent implements OnInit {
 			jobResponsibilities: this.contactForm.get('jobResponsibilities').value,
 			buyContents: this.contactForm.get('buyContents').value,
 			sellContents: this.contactForm.get('sellContents').value,
+			addInfos: this.contactForm.get('addInfos').value,
 			phone: this.contactForm.get('phone').value.trim(),
 			mobile: this.contactForm.get('mobile').value.trim(),
 			email: this.contactForm.get('email').value.trim(),
@@ -87,12 +90,13 @@ export class ContactEditComponent implements OnInit {
 			name: this._fb.group({
 				first: '',
 				last: ''
-			}, this.validateName),
+			}, { validator: this.validateName }),
 			// name: ['', Validators.required],
 			jobTitle: '',
 			jobResponsibilities: { value: [], disabled: false },
 			buyContents: { value: [], disabled: false },
 			sellContents: { value: [], disabled: false },
+			addInfos: { value: [], disabled: false },
 			phone: '',
 			mobile: '',
 			email: ''
@@ -116,6 +120,7 @@ export class ContactEditComponent implements OnInit {
 			jobResponsibilities: this.contact.jobResponsibilities,
 			buyContents: this.contact.buyContents,
 			sellContents: this.contact.sellContents,
+			addInfos: this.contact.addInfos,
 			phone: this.contact.phone,
 			mobile: this.contact.mobile,
 			email: this.contact.email

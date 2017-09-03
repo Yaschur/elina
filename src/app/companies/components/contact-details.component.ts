@@ -99,6 +99,13 @@ export class ContactDetailsComponent implements OnInit {
 					.map(a => a.name)
 					.join(', ');
 			});
+		this._dirSrv.getDir('addinfo').data
+			.subscribe(crs => {
+				this.contact.addInfos = crs
+					.filter(a => contact.addInfos.includes(a._id))
+					.map(a => a.name)
+					.join(', ');
+			});
 	}
 
 	private setHiringSign() {

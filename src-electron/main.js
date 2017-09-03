@@ -9,11 +9,24 @@ const configFilePath = path.join(
 	configFileName
 );
 const oldConfigFilePath = path.join(__dirname, configFileName);
-// const dbBackupPath = path.join(__dirname, 'dbBackups');
 
-// if (!fs.existsSync(dbBackupPath)) {
-// 	fs.mkdirSync(dbBackupPath);
-// }
+try {
+	const args = require('./args')
+	const squirrel = require('./squirrel')
+
+	const cmd = args.parseArguments(app, process.argv.slice(1)).squirrelCommand
+	if (squirrel.handleCommand(app, cmd)) {
+		return;
+	}
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	require('electron-context-menu')({ showInspectElement: false });
+} catch (e) {
+	console.log(e);
+}
 
 let mainWindow = null;
 
@@ -116,7 +129,7 @@ ipcMain.on('load-file', event => {
 		fs.readFile(fileName[0], (err, data) => {
 			if (err) {
 				event.sender.send('file-loaded', '');
-			}	else {
+			} else {
 				event.sender.send('file-loaded', data);
 			}
 		})

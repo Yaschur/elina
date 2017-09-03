@@ -1,8 +1,10 @@
-<app-edit-header glyphTag="{{meta.glyphTag}}" label="{{id ? id : 'new'}}" (onSubmit)="submit($event)"></app-edit-header>
+<app-edit-header glyphTag="{{meta.glyphTag}}" label="{{id ? id : 'new'}}" (onSubmit)="submit($event)"
+ (onDelete)="delete()"></app-edit-header>
 <form>
 	<div class="form-group">
 		<label for="name">{{meta.singularTitle}} name</label>
-		<input [(ngModel)]="name" type="text" name="name" id="name" required="required" class="form-control" placeholder="type name of {{meta.singularTitle.toLowerCase()}} here">
+		<input [(ngModel)]="name" type="text" name="name" id="name" required="required" class="form-control"
+		 placeholder="type name of {{meta.singularTitle.toLowerCase()}} here">
 	</div>
 </form>
 <div class="row">
