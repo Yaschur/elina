@@ -24,7 +24,7 @@ export class CompanyListComponent implements OnInit {
 	ngOnInit() {
 		this.companies = this._dirSrv.getDir('country').data
 			.switchMap(async countries => {
-				const companies = await this._companyRepo.findAll();
+				const companies = await this._companyRepo.findByName('comp');
 				return companies.map(c => new CompanyListVm(c, countries));
 			});
 	}
