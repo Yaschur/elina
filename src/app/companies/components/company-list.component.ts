@@ -46,11 +46,13 @@ export class CompanyListComponent implements OnInit {
 		this._router.navigate(['company/details', id]);
 	}
 
-	onSearch() {
-		this.search = this.search.trim();
+	onSearch(term: string) {
+		this.search = term.trim();
+		const navArray: Array<any> = ['company'];
 		if (this.search) {
-			this._router.navigate(['company', { 'search': this.search }]);
+			navArray.push({ 'search': this.search });
 		}
+		this._router.navigate(navArray);
 	}
 }
 
