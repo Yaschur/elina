@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { DirectoryService, Country } from '../../directories';
@@ -15,16 +15,25 @@ const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 })
 export class CompanyListComponent implements OnInit {
 	companies: Observable<CompanyListVm[]>;
+	search = '';
 
 	constructor(
 		private _companyRepo: CompanyRepository,
 		private _dirSrv: DirectoryService,
-		private _router: Router) { }
+		private _router: Router,
+		private _route: ActivatedRoute
+	) { }
 
 	ngOnInit() {
-		this.companies = this._dirSrv.getDir('country').data
+		this.companies = this._route.paramMap
+			.switchMap(params => {
+				if (params.has('search')) {
+					this.search = params.get('search');
+				}
+				return this._dirSrv.getDir('country').data;
+			})
 			.switchMap(async countries => {
-				const companies = await this._companyRepo.findAll();
+				const companies = await (this.search ? this._companyRepo.findByName(this.search) : this._companyRepo.findAll());
 				return companies.map(c => new CompanyListVm(c, countries));
 			});
 	}
@@ -35,6 +44,13 @@ export class CompanyListComponent implements OnInit {
 
 	gotoDetails(id): void {
 		this._router.navigate(['company/details', id]);
+	}
+
+	onSearch() {
+		this.search = this.search.trim();
+		if (this.search) {
+			this._router.navigate(['company', { 'search': this.search }]);
+		}
 	}
 }
 

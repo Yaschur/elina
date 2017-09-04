@@ -11,9 +11,9 @@
 	</ul>
 	<form class="navbar-form navbar-left">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="search">
+			<input [(value)]="search" type="text" class="form-control" placeholder="search">
 		</div>
-		<button type="button" class="btn btn-default">find</button>
+		<button (click)="onSearch()" type="button" class="btn btn-default">find</button>
 	</form>
 </nav>
 <table class="table table-hover table-condensed">
