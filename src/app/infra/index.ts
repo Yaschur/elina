@@ -5,11 +5,13 @@ import { InfraRoutingModule } from './infra-routing.module';
 
 import { DbMaintService } from './store/db-maint.service';
 import { StoreService } from './store/store.service';
+import { XlsxService } from './xlsx/xlsx.service';
 import { ConfigService } from './config.service';
 
 import { DbMaintenanceComponent } from './maintenance/db-maintenance.component';
 
 export * from './store/store.service';
+export * from './xlsx/xlsx.service';
 export * from './config.service';
 export * from './entity.model';
 
@@ -24,7 +26,8 @@ export * from './entity.model';
 	providers: [
 		ConfigService,
 		DbMaintService,
-		StoreService
+		StoreService,
+		XlsxService
 	],
 })
 export class InfraModule { }

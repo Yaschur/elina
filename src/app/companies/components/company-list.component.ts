@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { DirectoryService, Country } from '../../directories';
+import { XlsxService } from '../../infra';
 import { Company, CompanyRepository } from '../core';
 
 import 'rxjs/add/observable/fromPromise';
@@ -20,6 +21,7 @@ export class CompanyListComponent implements OnInit {
 	constructor(
 		private _companyRepo: CompanyRepository,
 		private _dirSrv: DirectoryService,
+		private _xlsxSrv: XlsxService,
 		private _router: Router,
 		private _route: ActivatedRoute
 	) { }
@@ -53,6 +55,11 @@ export class CompanyListComponent implements OnInit {
 			navArray.push({ 'search': this.search });
 		}
 		this._router.navigate(navArray);
+	}
+
+	async onXlsx() {
+		const companies = await (this.search ? this._companyRepo.findByName(this.search) : this._companyRepo.findAll());
+		this._xlsxSrv.exportToXlsx(companies, 'companies.xlsx', 'Companies Sheet');
 	}
 }
 
