@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import * as XLSX from 'xlsx';
-import * as Blob from 'blob';
 import { saveAs } from 'file-saver';
 
 @Injectable()
