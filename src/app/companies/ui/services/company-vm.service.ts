@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { DirectoryService, Country, Activity } from '../../../directories';
+import { DirectoryService, Country, Activity, AddInfo, ContentResponsibility, JobResponsibility } from '../../../directories';
 import { Company, Contact } from '../../core';
 import { CompanyBaseVm } from '../models/company-base-vm.model';
 import { CompanyDetailVm } from '../models/company-detail-vm.model';
 import { ContactBaseVm } from '../models/contact-base-vm.model';
+import { ContactDetailVm } from '../models/contact-detail-vm.model';
 
 const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 
@@ -12,6 +13,9 @@ const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 export class CompanyVmService {
 	private countries: Country[] = [];
 	private activities: Activity[] = [];
+	private addinfos: AddInfo[] = [];
+	private contentresponsibilities: ContentResponsibility[] = [];
+	private jobresponsibilities: JobResponsibility[] = [];
 
 	constructor(
 		private _dirSrv: DirectoryService
@@ -20,6 +24,12 @@ export class CompanyVmService {
 			.subscribe(items => this.countries = items);
 		this._dirSrv.getDir('activity').data
 			.subscribe(items => this.activities = items);
+		this._dirSrv.getDir('addinfo').data
+			.subscribe(items => this.addinfos = items);
+		this._dirSrv.getDir('contentresponsibility').data
+			.subscribe(items => this.contentresponsibilities = items);
+		this._dirSrv.getDir('jobresponsibility').data
+			.subscribe(items => this.jobresponsibilities = items);
 	}
 
 	mapToCompanyBaseVm(company: Company): CompanyBaseVm {
@@ -61,6 +71,30 @@ export class CompanyVmService {
 		r.isNew = contact.active && new Date().getTime() - new Date(contact.created).getTime() < NEWPERIOD;
 		r.jobTitle = contact.jobTitle;
 		r.name = contact.name;
+		return r;
+	}
+
+	mapToContactDetailVm(contact: Contact): ContactDetailVm {
+		const r = <ContactDetailVm>this.mapToContactBaseVm(contact);
+		r.addInfos = this.addinfos.filter(a => contact.addInfos.includes(a._id))
+			.map(a => a.name)
+			.join(', ');
+		r.buyContents = this.contentresponsibilities.filter(a => contact.buyContents.includes(a._id))
+			.map(a => a.name)
+			.join(', ');
+		r.created = contact.created;
+		r.email = contact.email;
+		r.firstName = contact.firstName;
+		r.jobResponsibilities = this.jobresponsibilities.filter(a => contact.jobResponsibilities.includes(a._id))
+			.map(a => a.name)
+			.join(', ');
+		r.lastName = contact.lastName;
+		r.mobile = contact.mobile;
+		r.phone = contact.phone;
+		r.sellContents = this.contentresponsibilities.filter(a => contact.sellContents.includes(a._id))
+			.map(a => a.name)
+			.join(', ');
+		r.updated = contact.updated;
 		return r;
 	}
 

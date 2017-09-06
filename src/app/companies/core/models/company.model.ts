@@ -34,4 +34,13 @@ export class Company extends Entity {
 		this.notes = (item.notes || []).map(n => new Note(n));
 		this.contacts = (item.contacts || []).map(c => new Contact(c));
 	}
+
+	getContactById(id: string): Contact {
+		const contInd = this.contacts
+			.findIndex(c => c._id === id);
+		if (contInd < 0) {
+			return null;
+		}
+		return this.contacts[contInd];
+	}
 }

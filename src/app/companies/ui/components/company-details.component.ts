@@ -18,7 +18,7 @@ import { ContactBaseVm } from '../models/contact-base-vm.model';
 
 export class CompanyDetailsComponent implements OnInit {
 	domainItem: Observable<Company>;
-	company: CompanyDetailVm = <CompanyDetailVm>{};
+	company: CompanyDetailVm = new CompanyDetailVm();
 	contacts: ContactBaseVm[] = [];
 	note;
 	indNoteToDel;
