@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { DirectoryService, Country } from '../../directories';
-import { XlsxService } from '../../infra';
-import { Company, CompanyRepository } from '../core';
+import { DirectoryService, Country } from '../../../directories';
+import { XlsxService } from '../../../infra';
+import { Company, CompanyRepository } from '../../core';
 
 import 'rxjs/add/observable/fromPromise';
 

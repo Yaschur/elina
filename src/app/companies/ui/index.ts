@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { ParticipantModule } from '../participants';
-import { ParticipantListComponent } from '../participants/components/participant-list.component';
-import { CompaniesCoreModule } from './core';
+import { ParticipantModule } from '../../participants';
+import { ParticipantListComponent } from '../../participants/components/participant-list.component';
+import { CompaniesCoreModule } from '../core';
 import { CompaniesRoutingModule } from './companies-routing.module';
 
 import { CompanyListComponent } from './components/company-list.component';

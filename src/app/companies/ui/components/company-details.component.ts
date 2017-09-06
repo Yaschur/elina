@@ -4,9 +4,9 @@ import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
-import { DirectoryService } from '../../directories';
-import { Company, Contact, CompanyRepository } from '../core';
-import { Note } from '../core/models/note.model';
+import { DirectoryService } from '../../../directories';
+import { Company, Contact, CompanyRepository } from '../../core';
+import { Note } from '../../core/models/note.model';
 
 const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 

@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BackForwardComponent } from './shared/back-forward.component';
-import { CompaniesModule } from './companies';
+import { CompaniesModule } from './companies/ui';
 import { EventsModule } from './events';
 import { InfraModule } from './infra';
 import { DirectoriesModule } from './directories';
