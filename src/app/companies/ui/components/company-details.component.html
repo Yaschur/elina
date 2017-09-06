@@ -49,7 +49,8 @@
 			<ng-template ngFor let-note [ngForOf]="company.notes" let-i="index">
 				<dt class="note">
 					<small><em>{{note.created | date:'short'}}</em></small>
-					<button *ngIf="indNoteToDel === -1" type="button" title="delete note below" class="btn btn-default btn-xs" (click)="removeNote(i)"><span class="glyphicon glyphicon-trash"></span></button>
+					<button *ngIf="indNoteToDel === -1" type="button" title="delete note below" class="btn btn-default btn-xs"
+					 (click)="removeNote(i)"><span class="glyphicon glyphicon-trash"></span></button>
 					<span *ngIf="indNoteToDel === i">delete note?
 					<button type="button" title="cancel deletion" class="btn btn-default btn-xs" (click)="cancelNote()"><span class="glyphicon glyphicon-remove"></span></button>
 					<button type="button" title="confirm deletion" class="btn btn-default btn-xs" (click)="removeNote(i)"><span class="glyphicon glyphicon-ok"></span></button>
@@ -81,7 +82,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let contact of company.contacts" (click)="contactDetails(contact.id)">
+				<tr *ngFor="let contact of contacts" (click)="contactDetails(contact.id)">
 					<td>
 						{{contact.name}}
 						<sup *ngIf="contact.isNew"><mark>new</mark></sup>

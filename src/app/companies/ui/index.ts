@@ -7,6 +7,7 @@ import { ParticipantListComponent } from '../../participants/components/particip
 import { CompaniesCoreModule } from '../core';
 import { CompaniesRoutingModule } from './companies-routing.module';
 
+import { CompanyVmService } from './services/company-vm.service';
 import { CompanyListComponent } from './components/company-list.component';
 import { CompanyEditComponent } from './components/company-edit.component';
 import { CompanyDetailsComponent } from './components/company-details.component';
@@ -29,6 +30,9 @@ import { ContactDetailsComponent } from './components/contact-details.component'
 		ContactEditComponent,
 		ContactDetailsComponent,
 		ParticipantListComponent
+	],
+	providers: [
+		CompanyVmService
 	]
 })
 export class CompaniesModule { }
