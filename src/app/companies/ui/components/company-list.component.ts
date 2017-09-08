@@ -55,6 +55,6 @@ export class CompanyListComponent implements OnInit {
 
 	async onXlsx() {
 		const companies = await (this.search ? this._companyRepo.findByName(this.search) : this._companyRepo.findAll());
-		this._xlsxSrv.exportToXlsx(companies, 'companies.xlsx', 'Companies Sheet');
+		await this._xlsxSrv.exportToXlsx(companies, 'companies.xlsx', 'Companies Sheet');
 	}
 }
