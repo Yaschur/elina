@@ -8,16 +8,16 @@ export class XlsxService {
 
 	constructor() { }
 
-	async exportToXlsx<T>(data: T[], filename: string, sheetName: string): Promise<void> {
+	async exportToXlsx<T>(data: T[], filename: string, sheetName: string, headers: { key: string, name: string }[]): Promise<void> {
 		const wbook = await XlsxPopulate.fromBlankAsync();
 		const wsheet = wbook.sheet(0);
 		wsheet.name(sheetName);
-		const keys = Object.keys(data[0]);
-		keys.forEach((key, ind) => wsheet.cell(1, ind + 1).value(key));
+		// const keys = Object.keys(data[0]);
+		headers.forEach((header, ind) => wsheet.cell(1, ind + 1).value(header.name));
 		wsheet.row(1).style({ bold: true, horizontalAlignment: 'center' });
 		data.forEach((item, r) =>
-			keys.forEach((key, ind) =>
-				wsheet.cell(r + 2, ind + 1).value(item[key].toString())
+			headers.forEach((header, ind) =>
+				wsheet.cell(r + 2, ind + 1).value(item[header.key].toString())
 			)
 		);
 

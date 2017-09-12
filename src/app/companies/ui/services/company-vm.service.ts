@@ -46,7 +46,7 @@ export class CompanyVmService {
 		return r;
 	}
 
-	mapToCompanyDetailVm(company: Company): CompanyDetailVm {
+	mapToCompanyDetailsVm(company: Company): CompanyDetailVm {
 		const r = <CompanyDetailVm>this.mapToCompanyBaseVm(company);
 		r.activities = this.activities.filter(a => company.activities.includes(a._id))
 			.map(a => a.name)
@@ -74,7 +74,7 @@ export class CompanyVmService {
 		return r;
 	}
 
-	mapToContactDetailVm(contact: Contact): ContactDetailVm {
+	mapToContactDetailsVm(contact: Contact): ContactDetailVm {
 		const r = <ContactDetailVm>this.mapToContactBaseVm(contact);
 		r.addInfos = this.addinfos.filter(a => contact.addInfos.includes(a._id))
 			.map(a => a.name)

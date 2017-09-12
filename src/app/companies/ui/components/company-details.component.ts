@@ -41,7 +41,7 @@ export class CompanyDetailsComponent implements OnInit {
 		this.domainItem
 			.subscribe(item => {
 				if (item) {
-					this.company = this._vmSrv.mapToCompanyDetailVm(item);
+					this.company = this._vmSrv.mapToCompanyDetailsVm(item);
 					this.contacts = this.company.contacts.filter(c => c.active);
 				}
 			});

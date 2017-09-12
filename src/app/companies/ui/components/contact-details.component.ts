@@ -28,7 +28,7 @@ export class ContactDetailsComponent implements OnInit {
 			.subscribe(async params => {
 				this.domainCompany = await this._companyRepo.getById(params['company_id']);
 				const dContact = this.domainCompany.getContactById(params['contact_id']);
-				this.contact = this._vmSrv.mapToContactDetailVm(dContact);
+				this.contact = this._vmSrv.mapToContactDetailsVm(dContact);
 				this.setHiringSign();
 			});
 	}
