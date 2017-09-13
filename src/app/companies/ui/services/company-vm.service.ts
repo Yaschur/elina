@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import { DirectoryService, Country, Activity, AddInfo, ContentResponsibility, JobResponsibility } from '../../../directories';
 import { Company, Contact } from '../../core';
 import { CompanyBaseVm } from '../models/company-base-vm.model';
-import { CompanyDetailVm } from '../models/company-detail-vm.model';
+import { CompanyDetailsVm } from '../models/company-details-vm.model';
 import { ContactBaseVm } from '../models/contact-base-vm.model';
 import { ContactDetailVm } from '../models/contact-detail-vm.model';
+import { CompanyListVm } from '../models/company-list-vm.model';
 
 const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 
@@ -36,18 +37,23 @@ export class CompanyVmService {
 		const r = new CompanyBaseVm();
 		r.id = company._id;
 		r.city = company.city;
-		r.activitiesNum = company.activities.length;
-		r.contactsNum = company.contacts
-			.filter(c => c.active)
-			.length;
 		r.country = (this.countries.find(c => c._id === company.country) || { name: '' }).name;
 		r.isNew = new Date().getTime() - new Date(company.created).getTime() < NEWPERIOD;
 		r.name = company.name;
 		return r;
 	}
 
-	mapToCompanyDetailsVm(company: Company): CompanyDetailVm {
-		const r = <CompanyDetailVm>this.mapToCompanyBaseVm(company);
+	mapToCompanyListVm(company: Company): CompanyListVm {
+		const r = <CompanyListVm>this.mapToCompanyBaseVm(company);
+		r.activitiesNum = company.activities.length;
+		r.contactsNum = company.contacts
+			.filter(c => c.active)
+			.length;
+		return r;
+	}
+
+	mapToCompanyDetailsVm(company: Company): CompanyDetailsVm {
+		const r = <CompanyDetailsVm>this.mapToCompanyBaseVm(company);
 		r.activities = this.activities.filter(a => company.activities.includes(a._id))
 			.map(a => a.name)
 			.join(', ');

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Company, CompanyRepository } from '../../core';
 import { Note } from '../../core/models/note.model';
 import { CompanyVmService } from '../services/company-vm.service';
-import { CompanyDetailVm } from '../models/company-detail-vm.model';
+import { CompanyDetailsVm } from '../models/company-details-vm.model';
 import { ContactBaseVm } from '../models/contact-base-vm.model';
 
 @Component({
@@ -18,7 +18,7 @@ import { ContactBaseVm } from '../models/contact-base-vm.model';
 
 export class CompanyDetailsComponent implements OnInit {
 	domainItem: Observable<Company>;
-	company: CompanyDetailVm = new CompanyDetailVm();
+	company: CompanyDetailsVm = new CompanyDetailsVm();
 	contacts: ContactBaseVm[] = [];
 	note;
 	indNoteToDel;

@@ -1,7 +1,7 @@
 import { CompanyBaseVm } from './company-base-vm.model';
 import { ContactBaseVm } from './contact-base-vm.model';
 
-export class CompanyDetailVm extends CompanyBaseVm {
+export class CompanyDetailsVm extends CompanyBaseVm {
 	description: string;
 	website: string;
 	phone: string;

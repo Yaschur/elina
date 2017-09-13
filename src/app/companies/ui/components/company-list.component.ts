@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { XlsxService } from '../../../infra';
 import { Company, CompanyRepository } from '../../core';
 import { CompanyVmService } from '../services/company-vm.service';
-import { CompanyBaseVm } from '../models/company-base-vm.model';
+import { CompanyListVm } from '../models/company-list-vm.model';
 
 import 'rxjs/add/observable/fromPromise';
 
@@ -14,7 +14,7 @@ import 'rxjs/add/observable/fromPromise';
 	templateUrl: 'company-list.component.html'
 })
 export class CompanyListComponent implements OnInit {
-	companies: Observable<CompanyBaseVm[]>;
+	companies: Observable<CompanyListVm[]>;
 	search = '';
 
 	constructor(
@@ -32,7 +32,7 @@ export class CompanyListComponent implements OnInit {
 					this.search = params.get('search');
 				}
 				const companies = await (this.search ? this._companyRepo.findByName(this.search) : this._companyRepo.findAll());
-				return companies.map(c => this._vmSrv.mapToCompanyBaseVm(c));
+				return companies.map(c => this._vmSrv.mapToCompanyListVm(c));
 			});
 	}
 

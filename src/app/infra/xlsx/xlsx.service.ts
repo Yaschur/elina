@@ -8,7 +8,12 @@ export class XlsxService {
 
 	constructor() { }
 
-	async exportToXlsx<T>(data: T[], filename: string, sheetName: string, headers: { key: string, name: string }[]): Promise<void> {
+	async exportToXlsx<T>(
+		data: T[],
+		filename: string,
+		sheetName: string,
+		headers: { key: string, name: string }[]
+	): Promise<void> {
 		const wbook = await XlsxPopulate.fromBlankAsync();
 		const wsheet = wbook.sheet(0);
 		wsheet.name(sheetName);
