@@ -60,20 +60,7 @@ export class CompanyListComponent implements OnInit {
 			companies,
 			'companies.xlsx',
 			'Companies',
-			[
-				{ key: 'id', name: 'id' },
-				{ key: 'name', name: 'name' },
-				{ key: 'country', name: 'country' },
-				{ key: 'city', name: 'city' },
-				{ key: 'description', name: 'description' },
-				{ key: 'contactsNum', name: 'number of contacts' },
-				{ key: 'activities', name: 'activities' },
-				{ key: 'phone', name: 'phone' },
-				{ key: 'website', name: 'website' },
-				{ key: 'isNew', name: 'is new' },
-				{ key: 'created', name: 'created' },
-				{ key: 'updated', name: 'updated' }
-			]
+			['id', 'name', 'country', 'city', 'description', 'activities', 'phone', 'website', 'isNew', 'created', 'updated']
 		);
 	}
 }
