@@ -34,11 +34,7 @@ export class CompanyListComponent implements OnInit {
 			.then(cs => this.companies.next(cs));
 		this.searchTerms
 			.debounceTime(500)
-			.distinctUntilChanged((x, y) => {
-				console.log(x);
-				console.log(y);
-				return x.trim().toUpperCase() === y.trim().toUpperCase();
-			})
+			.distinctUntilChanged((x, y) => x.trim().toUpperCase() === y.trim().toUpperCase())
 			.subscribe(async term => {
 				const search = term.trim();
 				const cs = await (search ? this._companyRepo.findByName(search) : this._companyRepo.findAll());
