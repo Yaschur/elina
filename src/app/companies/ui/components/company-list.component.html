@@ -27,7 +27,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let company of companies | async" (click)="gotoDetails(company.id)">
+		<tr *ngFor="let company of companyList | async" (click)="gotoDetails(company.id)">
 			<td>
 				{{company.name}}
 				<sup *ngIf="company.isNew"><mark>new</mark></sup>

@@ -6,6 +6,7 @@ import { XlsxService } from '../../../infra';
 import { Company, CompanyRepository } from '../../core';
 import { CompanyVmService } from '../services/company-vm.service';
 import { CompanyListVm } from '../models/company-list-vm.model';
+import { CompanyDetailsVm } from '../models/company-details-vm.model';
 
 import 'rxjs/add/observable/fromPromise';
 
@@ -14,7 +15,9 @@ import 'rxjs/add/observable/fromPromise';
 	templateUrl: 'company-list.component.html'
 })
 export class CompanyListComponent implements OnInit {
-	companies: Observable<CompanyListVm[]>;
+	companies: Observable<Company[]>;
+	companyList: Observable<CompanyListVm[]>;
+	companyExport: Observable<CompanyDetailsVm[]>;
 	search = '';
 
 	constructor(
@@ -31,9 +34,10 @@ export class CompanyListComponent implements OnInit {
 				if (params.has('search')) {
 					this.search = params.get('search');
 				}
-				const companies = await (this.search ? this._companyRepo.findByName(this.search) : this._companyRepo.findAll());
-				return companies.map(c => this._vmSrv.mapToCompanyListVm(c));
+				return this.search ? this._companyRepo.findByName(this.search) : this._companyRepo.findAll();
 			});
+		this.companyList = this.companies.map(cs => cs.map(c => this._vmSrv.mapToCompanyListVm(c)));
+		this.companyExport = this.companies.map(cs => cs.map(c => this._vmSrv.mapToCompanyDetailsVm(c)));
 	}
 
 	gotoNew(): void {
@@ -53,14 +57,16 @@ export class CompanyListComponent implements OnInit {
 		this._router.navigate(navArray);
 	}
 
-	async onXlsx() {
-		const companies = (await (this.search ? this._companyRepo.findByName(this.search) : this._companyRepo.findAll()))
-			.map(c => this._vmSrv.mapToCompanyDetailsVm(c));
-		await this._xlsxSrv.exportToXlsx(
-			companies,
-			'companies.xlsx',
-			'Companies',
-			['id', 'name', 'country', 'city', 'description', 'activities', 'phone', 'website', 'isNew', 'created', 'updated']
-		);
+	onXlsx(): void {
+		const subs = this.companies.map(cs => cs.map(c => this._vmSrv.mapToCompanyDetailsVm(c)))
+			.subscribe(cs => {
+				this._xlsxSrv.exportToXlsx(
+					cs,
+					'companies.xlsx',
+					'Companies',
+					['id', 'name', 'country', 'city', 'description', 'activities', 'phone', 'website', 'isNew', 'created', 'updated']
+				);
+				subs.unsubscribe();
+			});
 	}
 }
