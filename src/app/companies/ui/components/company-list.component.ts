@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { XlsxService } from '../../../infra';
 import { Company, CompanyRepository } from '../../core';
@@ -8,17 +11,15 @@ import { CompanyVmService } from '../services/company-vm.service';
 import { CompanyListVm } from '../models/company-list-vm.model';
 import { CompanyDetailsVm } from '../models/company-details-vm.model';
 
-import 'rxjs/add/observable/fromPromise';
-
 @Component({
 	selector: 'app-company-list',
 	templateUrl: 'company-list.component.html'
 })
 export class CompanyListComponent implements OnInit {
-	companies: Observable<Company[]>;
+	private companies: BehaviorSubject<Company[]> = new BehaviorSubject<Company[]>([]);
+	private searchTerms: Subject<string> = new Subject<string>();
+
 	companyList: Observable<CompanyListVm[]>;
-	companyExport: Observable<CompanyDetailsVm[]>;
-	search = '';
 
 	constructor(
 		private _companyRepo: CompanyRepository,
@@ -29,15 +30,21 @@ export class CompanyListComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.companies = this._route.paramMap
-			.switchMap(async params => {
-				if (params.has('search')) {
-					this.search = params.get('search');
-				}
-				return this.search ? this._companyRepo.findByName(this.search) : this._companyRepo.findAll();
+		this._companyRepo.findAll()
+			.then(cs => this.companies.next(cs));
+		this.searchTerms
+			.debounceTime(500)
+			.distinctUntilChanged((x, y) => {
+				console.log(x);
+				console.log(y);
+				return x.trim().toUpperCase() === y.trim().toUpperCase();
+			})
+			.subscribe(async term => {
+				const search = term.trim();
+				const cs = await (search ? this._companyRepo.findByName(search) : this._companyRepo.findAll());
+				this.companies.next(cs);
 			});
 		this.companyList = this.companies.map(cs => cs.map(c => this._vmSrv.mapToCompanyListVm(c)));
-		this.companyExport = this.companies.map(cs => cs.map(c => this._vmSrv.mapToCompanyDetailsVm(c)));
 	}
 
 	gotoNew(): void {
@@ -48,17 +55,13 @@ export class CompanyListComponent implements OnInit {
 		this._router.navigate(['company/details', id]);
 	}
 
-	onSearch(term: string) {
-		this.search = term.trim();
-		const navArray: Array<any> = ['company'];
-		if (this.search) {
-			navArray.push({ 'search': this.search });
-		}
-		this._router.navigate(navArray);
+	search(term: string): void {
+		this.searchTerms.next(term);
 	}
 
 	onXlsx(): void {
-		const subs = this.companies.map(cs => cs.map(c => this._vmSrv.mapToCompanyDetailsVm(c)))
+		const subs = this.companies
+			.map(cs => cs.map(c => this._vmSrv.mapToCompanyDetailsVm(c)))
 			.subscribe(cs => {
 				this._xlsxSrv.exportToXlsx(
 					cs,
@@ -66,7 +69,7 @@ export class CompanyListComponent implements OnInit {
 					'Companies',
 					['id', 'name', 'country', 'city', 'description', 'activities', 'phone', 'website', 'isNew', 'created', 'updated']
 				);
-				subs.unsubscribe();
 			});
+		subs.unsubscribe();
 	}
 }

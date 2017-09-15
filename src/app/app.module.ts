@@ -10,6 +10,10 @@ import { EventsModule } from './events';
 import { InfraModule } from './infra';
 import { DirectoriesModule } from './directories';
 
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+
 @NgModule({
 	declarations: [
 		BackForwardComponent,

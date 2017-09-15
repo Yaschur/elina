@@ -11,9 +11,8 @@
 	</ul>
 	<form class="navbar-form navbar-left">
 		<div class="form-group">
-			<input #searchBox type="text" value="{{search}}" class="form-control" placeholder="search">
+			<input #searchBox id="search-box" (keyup)="search(searchBox.value)" class="form-control" placeholder="quick search">
 		</div>
-		<button (click)="onSearch(searchBox.value)" type="button" class="btn btn-default">find</button>
 		<button (click)="onXlsx()" type="button" class="btn btn-default">to xlsx</button>
 	</form>
 </nav>
