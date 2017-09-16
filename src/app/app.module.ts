@@ -9,6 +9,7 @@ import { CompaniesModule } from './companies/ui';
 import { EventsModule } from './events';
 import { InfraModule } from './infra';
 import { DirectoriesModule } from './directories';
+import { SearchModule } from './search';
 
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/debounceTime';
@@ -25,6 +26,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 		DirectoriesModule,
 		CompaniesModule,
 		EventsModule,
+		SearchModule,
 		AppRoutingModule
 	],
 	providers: [],
