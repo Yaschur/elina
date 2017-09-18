@@ -25,6 +25,10 @@ export class CompanyRepository {
 
 	public async findByName(term: string): Promise<Company[]> {
 		const filter = { name: { $regex: new RegExp('.*' + term + '.*', 'i') } };
+		return await this.findByFilter(filter);
+	}
+
+	public async findByFilter(filter: any): Promise<Company[]> {
 		return (await this._storeService.find(
 			CompanyRepository.entityType,
 			filter,

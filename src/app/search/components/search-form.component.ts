@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
 	selector: 'app-search-form',
@@ -6,9 +7,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchFormComponent implements OnInit {
 
-	constructor() { }
+	searchForm: FormGroup;
+
+	hasCompanyNameTerm: boolean;
+
+	constructor() {
+		this.hasCompanyNameTerm = true;
+		this.searchForm = new FormGroup({});
+	}
 
 	ngOnInit() {
+		// if (this.hasCompanyNameTerm) {
+		// 	this.searchForm.addControl(
+		// 		''
+		// 	)
+		// }
 	}
 
 }
