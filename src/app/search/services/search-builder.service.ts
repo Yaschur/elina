@@ -1,5 +1,13 @@
 export class SearchBuilder {
-	private _byNameTerm = '';
+	private _byNameTerm: string;
+
+	constructor() {
+		this.reset();
+	}
+
+	reset(): void {
+		this._byNameTerm = '';
+	}
 
 	searchByName(term: string): void {
 		this._byNameTerm = term;

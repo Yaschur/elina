@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { ModalModule } from 'ngx-bootstrap';
 
-import { CompaniesCoreModule } from '../companies/core';
+// import { CompaniesCoreModule } from '../companies/core';
 import { EventsCoreModule } from '../events/core';
 import { ParticipantsRoutingModule } from './participants-routing.module';
 
@@ -18,7 +18,7 @@ import { ParticipantAddComponent } from './components/participant-add.component'
 		ReactiveFormsModule,
 		CommonModule,
 		ModalModule.forRoot(),
-		CompaniesCoreModule,
+		// CompaniesCoreModule,
 		EventsCoreModule,
 		ParticipantsRoutingModule
 	],

@@ -54,6 +54,8 @@ export class StoreService {
 			const query: any = { selector: { $and: [] } };
 			if (filter.$and) {
 				query.selector.$and = typeFilter.concat(filter.$and);
+			} else if (Array.isArray(filter)) {
+				query.selector.$and = typeFilter.concat(filter);
 			} else {
 				query.selector.$and = typeFilter;
 				query.selector.$and.push(filter);

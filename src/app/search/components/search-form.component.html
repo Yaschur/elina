@@ -1,19 +1,51 @@
-<nav class="navbar navbar-default">
+<!-- <nav class="navbar navbar-default">
 	<p class="navbar-text">
 		<span class="glyphicon glyphicon-search"></span> Search
 	</p>
-</nav>
+</nav> -->
 <div class="panel panel-default">
 	<div class="panel-heading">Search Query Form</div>
 	<div class="panel-body">
-		<form>
-			<div class="form-group">
-				<label for="name">Company Name:</label>
-				<input id="name" type="text" class="form-control" />
+		<form [formGroup]="searchForm" class="form-horizontal">
+			<div *ngIf="hasCompanyNameTerm" class="form-group form-group-md">
+				<label class="col-md-3 control-label" for="companyName">Company name contains</label>
+				<div class="col-md-8">
+					<input id="companyName" formControlName="companyName" type="text" class="form-control" />
+				</div>
+				<!-- <div class="col-md-1">
+					<button type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-remove"></span>
+					</button>
+				</div> -->
 			</div>
-			<button type="button" class="btn btn-info">
+			<div *ngIf="participationCount > 0" class="form-group">
+				<label for="participation">Company Name:</label>
+				<input id="participation" formControlName="participation" type="text" class="form-control" />
+			</div>
+			<button type="button" class="btn btn-info" (click)="onSubmit()">
 				<span class="glyphicon glyphicon-search"></span> FIND
 			</button>
 		</form>
 	</div>
 </div>
+<table *ngIf="companies && companies.length > 0" class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th>company name</th>
+			<th>location</th>
+			<th># of activities</th>
+			<th># of contacts</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let company of companies">
+			<td>
+				{{company.name}}
+				<sup *ngIf="company.isNew"><mark>new</mark></sup>
+			</td>
+			<td scope="row">{{company.country}} {{company.city ? '(' + company.city + ')' : ''}}</td>
+			<td scope="row">{{company.activitiesNum}}</td>
+			<td scope="row">{{company.contactsNum}}</td>
+		</tr>
+	</tbody>
+</table>
