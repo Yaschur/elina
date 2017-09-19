@@ -19,11 +19,14 @@
 				</div> -->
 			</div>
 			<div *ngIf="participationCount > 0" class="form-group">
-				<label for="participation">Company Name:</label>
-				<input id="participation" formControlName="participation" type="text" class="form-control" />
+				<label for="participant">Company Name:</label>
+				<input id="participant" formControlName="participant" type="text" class="form-control" />
 			</div>
-			<button type="button" class="btn btn-info" (click)="onSubmit()">
-				<span class="glyphicon glyphicon-search"></span> FIND
+			<button type="button" class="btn btn-info" (click)="onSubmit(false)">
+				<span class="glyphicon glyphicon-search"></span> FIND COMPANIES
+			</button>
+			<button type="button" class="btn btn-info" (click)="onSubmit(true)">
+				<span class="glyphicon glyphicon-search"></span> FIND CONTACTS
 			</button>
 		</form>
 	</div>
@@ -46,6 +49,28 @@
 			<td scope="row">{{company.country}} {{company.city ? '(' + company.city + ')' : ''}}</td>
 			<td scope="row">{{company.activitiesNum}}</td>
 			<td scope="row">{{company.contactsNum}}</td>
+		</tr>
+	</tbody>
+</table>
+<table *ngIf="contacts && contacts.length > 0" class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th>contact name</th>
+			<th>job title</th>
+			<th>company name</th>
+			<th>country</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let contact of contacts">
+			<td>
+				{{contact.name}}
+				<sup *ngIf="contact.isNew"><mark>new</mark></sup>
+				<sup *ngIf="!contact.active">fired!</sup>
+			</td>
+			<td>{{contact.jobTitle}}</td>
+			<td>{{contact.companyName}}</td>
+			<td>{{contact.country}}</td>
 		</tr>
 	</tbody>
 </table>

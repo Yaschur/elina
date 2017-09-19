@@ -7,6 +7,7 @@ import { CompanyDetailsVm } from '../models/company-details-vm.model';
 import { ContactBaseVm } from '../models/contact-base-vm.model';
 import { ContactDetailVm } from '../models/contact-detail-vm.model';
 import { CompanyListVm } from '../models/company-list-vm.model';
+import { ContactCompanyBaseVm } from '../models/contact-company-base-vm';
 
 const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 
@@ -104,7 +105,18 @@ export class CompanyVmService {
 		return r;
 	}
 
-	private sortContacts(a: ContactBaseVm, b: ContactBaseVm): number {
+	flatMapToContactCompanyBaseVm(company: Company): ContactCompanyBaseVm[] {
+		const r = company.contacts.map(c => <ContactCompanyBaseVm>this.mapToContactBaseVm(c));
+		const cd = this.mapToCompanyBaseVm(company);
+		r.forEach(c => {
+			c.companyId = cd.id;
+			c.companyName = cd.name;
+			c.country = cd.country;
+		});
+		return r;
+	}
+
+	sortContacts(a: ContactBaseVm, b: ContactBaseVm): number {
 		const aName = a.name.toUpperCase();
 		const bName = b.name.toUpperCase();
 		if (aName < bName) {

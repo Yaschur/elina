@@ -5,6 +5,7 @@ import { CompanyRepository } from '../../companies/core';
 import { SearchBuilder } from '../services/search-builder.service';
 import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
 import { CompanyVmService } from '../../companies/ui/services/company-vm.service';
+import { ContactCompanyBaseVm } from '../../companies/ui/models/contact-company-base-vm';
 
 @Component({
 	selector: 'app-search-form',
@@ -18,6 +19,7 @@ export class SearchFormComponent implements OnInit {
 	participationCount: number;
 
 	companies: CompanyListVm[];
+	contacts: ContactCompanyBaseVm[];
 
 	constructor(
 		private _companyRepo: CompanyRepository,
@@ -27,6 +29,7 @@ export class SearchFormComponent implements OnInit {
 		this.hasCompanyNameTerm = true;
 		this.participationCount = 0;
 		this.companies = [];
+		this.contacts = [];
 		this.searchForm = new FormGroup({});
 	}
 
@@ -39,13 +42,23 @@ export class SearchFormComponent implements OnInit {
 		}
 	}
 
-	async onSubmit(): Promise<void> {
+	async onSubmit(showContact: boolean): Promise<void> {
 		this._searchBuilder.reset();
 		if (this.hasCompanyNameTerm) {
 			const companyNameTerm = this.searchForm.get('companyName').value.trim();
 			this._searchBuilder.searchByName(companyNameTerm);
-			this.companies = (await this._companyRepo.findByFilter(this._searchBuilder.build()))
-				.map(c => this._companyVm.mapToCompanyListVm(c));
+			const founded = await this._companyRepo.findByFilter(this._searchBuilder.build());
+			if (showContact) {
+				this.companies = [];
+				this.contacts = []
+					.concat(...founded.map(c => this._companyVm.flatMapToContactCompanyBaseVm(c)))
+					.sort(this._companyVm.sortContacts);
+				console.log(this.contacts);
+			} else {
+				this.contacts = [];
+				this.companies = founded
+					.map(c => this._companyVm.mapToCompanyListVm(c));
+			}
 		}
 	}
 }
