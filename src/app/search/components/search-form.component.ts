@@ -53,7 +53,6 @@ export class SearchFormComponent implements OnInit {
 				this.contacts = []
 					.concat(...founded.map(c => this._companyVm.flatMapToContactCompanyBaseVm(c)))
 					.sort(this._companyVm.sortContacts);
-				console.log(this.contacts);
 			} else {
 				this.contacts = [];
 				this.companies = founded
