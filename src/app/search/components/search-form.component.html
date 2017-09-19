@@ -18,6 +18,12 @@
 					</button>
 				</div> -->
 			</div>
+			<div *ngIf="hasContactNameTerm" class="form-group form-group-md">
+				<label class="col-md-3 control-label" for="contactName">Contact name contains</label>
+				<div class="col-md-8">
+					<input id="contactName" formControlName="contactName" type="text" class="form-control" />
+				</div>
+			</div>
 			<div *ngIf="participationCount > 0" class="form-group">
 				<label for="participant">Company Name:</label>
 				<input id="participant" formControlName="participant" type="text" class="form-control" />

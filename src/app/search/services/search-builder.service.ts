@@ -1,23 +1,31 @@
+import { CompanyNameSpec } from '../specs/company-name.spec';
+import { ContactNameSpec } from '../specs/contact-name.spec';
+
 export class SearchBuilder {
-	private _byNameTerm: string;
+	private _specs: Spec[];
 
 	constructor() {
 		this.reset();
 	}
 
 	reset(): void {
-		this._byNameTerm = '';
+		this._specs = [];
 	}
 
-	searchByName(term: string): void {
-		this._byNameTerm = term;
+	companyNameContains(term: string): void {
+		this._specs.push(
+			new CompanyNameSpec(term)
+		);
+	}
+	contactNameContains(term: string): void {
+		this._specs.push(
+			new ContactNameSpec(term)
+		);
 	}
 
 	build(): any {
 		const filter = [];
-		if (this._byNameTerm) {
-			filter.push({ name: { $regex: new RegExp('.*' + this._byNameTerm + '.*', 'i') } });
-		}
+		this._specs.forEach(s => filter.push(s.provideFilter()));
 		return filter;
 	}
 }
