@@ -107,14 +107,17 @@ ipcMain.on('load-config', event => {
 	event.sender.send('config-loaded', ret);
 });
 
+ipcMain.on('save-config', (event, content) => {
+	fs.writeFile(configFilePath, content, (err) => event.sender.send('config-saved', err ? err.message : ''));
+});
+
 ipcMain.on('save-file', (event, content) => {
-	let ret = '';
 	const fileName = electron.dialog.showSaveDialog({
 		filters: [{ name: 'data', extensions: ['json'] }],
 		title: 'Where to export data'
 	});
 	if (fileName) {
-		fs.writeFile(fileName, content, (err) => event.sender.send('file-saved', ret));
+		fs.writeFile(fileName, content, (err) => event.sender.send('file-saved', err ? err.message : ''));
 	} else {
 		event.sender.send('file-saved', 'cancelled by user');
 	}

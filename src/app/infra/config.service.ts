@@ -36,15 +36,37 @@ export class ConfigService {
 		this._electronService.ipcRenderer.send('load-config');
 	}
 
+	public makeDefaultConfig() {
+		const config = <Config>{
+			database: {
+				nameOrUrl: 'elina_db',
+				backupAllowed: true
+			}
+		};
+		this._electronService.ipcRenderer.send('save-config', JSON.stringify(config));
+	}
+
 	private init() {
 		if (this._electronService.isElectronApp) {
+
 			this._electronService.ipcRenderer.on('config-loaded', (event, arg) => {
 				console.log('receive config loaded: ' + arg);
+				if (!arg) {
+					this.makeDefaultConfig();
+					return;
+				}
 				if (this._current.isStopped) {
 					this._current = new AsyncSubject<Config>();
 				}
 				this._current.next(JSON.parse(arg));
 				this._current.complete();
+			});
+
+			this._electronService.ipcRenderer.on('config-saved', (event, arg) => {
+				console.log('receive config saved: ' + arg);
+				if (!arg) {
+					this.reload();
+				}
 			});
 		}
 	}
