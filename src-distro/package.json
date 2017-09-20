@@ -9,7 +9,7 @@
 	"main": "main.js",
 	"scripts": {
 		"exe32": "npm install && electron-packager . elina --platform win32 --arch ia32 --win32metadata.ProductName=\"elina\" --win32metadata.CompanyName=\"Igor Trishin\" --out ../",
-		"set32": "electron-installer-windows --src ../elina-win32-ia32/ --dest ../installers/"
+		"set32": "electron-installer-windows --src ../elina-win32-ia32/ --dest ../installers/ && mv ../installers/elina-*.exe ../installers/elina-setup.exe"
 	},
 	"dependencies": {
 		"electron-context-menu": "^0.9.1",
