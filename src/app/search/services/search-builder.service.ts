@@ -1,10 +1,15 @@
-import { CompanyNameSpec } from '../specs/company-name.spec';
-import { ContactNameSpec } from '../specs/contact-name.spec';
+import { Injectable } from '@angular/core';
 
+import { CompanyNameSpec } from '../models/company-name.spec';
+import { ContactNameSpec } from '../models/contact-name.spec';
+import { ParticipatingSpec } from '../models/participating.spec';
+import { ParticipantRepository } from '../../participants';
+
+@Injectable()
 export class SearchBuilder {
 	private _specs: Spec[];
 
-	constructor() {
+	constructor(private _participantRepository: ParticipantRepository) {
 		this.reset();
 	}
 
@@ -14,18 +19,26 @@ export class SearchBuilder {
 
 	companyNameContains(term: string): void {
 		this._specs.push(
-			new CompanyNameSpec(term)
+			(new CompanyNameSpec()).setParam(term)
 		);
 	}
 	contactNameContains(term: string): void {
 		this._specs.push(
-			new ContactNameSpec(term)
+			(new ContactNameSpec()).setParam(term)
+		);
+	}
+	participateIn(event: string) {
+		this._specs.push(
+			(new ParticipatingSpec(this._participantRepository)).setParam(event, '', '')
 		);
 	}
 
-	build(): any {
+	async build(): Promise<any> {
 		const filter = [];
-		this._specs.forEach(s => filter.push(s.provideFilter()));
+		for (let i = 0; i < this._specs.length; i++) {
+			const f = await this._specs[i].provideFilter();
+			filter.push(f);
+		}
 		return filter;
 	}
 }

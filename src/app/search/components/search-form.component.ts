@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
+import { Observable } from 'rxjs/Observable';
+
 import { CompanyRepository } from '../../companies/core';
+import { Event, EventRepository } from '../../events/core';
+
 import { SearchBuilder } from '../services/search-builder.service';
 import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
 import { CompanyVmService } from '../../companies/ui/services/company-vm.service';
@@ -15,24 +19,30 @@ export class SearchFormComponent implements OnInit {
 
 	searchForm: FormGroup;
 
+	allEvents: Observable<Event[]>;
+
 	hasCompanyNameTerm: boolean;
 	hasContactNameTerm: boolean;
-	participationCount: number;
+	participations: string[];
 
 	companies: CompanyListVm[];
 	contacts: ContactCompanyBaseVm[];
 
 	constructor(
 		private _companyRepo: CompanyRepository,
+		private _eventRepo: EventRepository,
 		private _searchBuilder: SearchBuilder,
 		private _companyVm: CompanyVmService
 	) {
 		this.hasCompanyNameTerm = true;
 		this.hasContactNameTerm = true;
-		this.participationCount = 0;
+		this.participations = ['part1'];
 		this.companies = [];
 		this.contacts = [];
 		this.searchForm = new FormGroup({});
+		this.allEvents = Observable.fromPromise(
+			this._eventRepo.findAll()
+		);
 	}
 
 	ngOnInit() {
@@ -48,6 +58,7 @@ export class SearchFormComponent implements OnInit {
 				new FormControl('')
 			);
 		}
+		this.participations.forEach(p => this.searchForm.addControl(p, new FormControl('')));
 	}
 
 	async onSubmit(showContact: boolean): Promise<void> {
@@ -60,7 +71,11 @@ export class SearchFormComponent implements OnInit {
 			const contactNameTerm = this.searchForm.get('contactName').value.trim();
 			this._searchBuilder.contactNameContains(contactNameTerm);
 		}
-		const filter = this._searchBuilder.build();
+		this.participations.forEach(p => {
+			const eventChosen = this.searchForm.get(p).value;
+			this._searchBuilder.participateIn(eventChosen);
+		});
+		const filter = await this._searchBuilder.build();
 		const founded = await this._companyRepo.findByFilter(filter);
 		if (showContact) {
 			this.companies = [];

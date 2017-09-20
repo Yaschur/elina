@@ -8,7 +8,7 @@
 	<div class="panel-body">
 		<form [formGroup]="searchForm" class="form-horizontal">
 			<div *ngIf="hasCompanyNameTerm" class="form-group form-group-md">
-				<label class="col-md-3 control-label" for="companyName">Company name contains</label>
+				<label class="col-md-3 control-label" for="companyName">company name contains</label>
 				<div class="col-md-8">
 					<input id="companyName" formControlName="companyName" type="text" class="form-control" />
 				</div>
@@ -19,15 +19,25 @@
 				</div> -->
 			</div>
 			<div *ngIf="hasContactNameTerm" class="form-group form-group-md">
-				<label class="col-md-3 control-label" for="contactName">Contact name contains</label>
+				<label class="col-md-3 control-label" for="contactName">has contact name contains</label>
 				<div class="col-md-8">
 					<input id="contactName" formControlName="contactName" type="text" class="form-control" />
 				</div>
 			</div>
-			<div *ngIf="participationCount > 0" class="form-group">
+			<div *ngFor="let part of participations" class="form-group form-group-md">
+				<label for="{{part}}" class="col-md-3 control-label">participating in</label>
+				<div class="col-md-8">
+					<select id="{{part}}" formControlName="{{part}}" class="form-control">
+						<option value="">any event</option>
+						<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
+					</select>
+				</div>
+			</div>
+
+			<!-- <div *ngIf="participationCount > 0" class="form-group">
 				<label for="participant">Company Name:</label>
 				<input id="participant" formControlName="participant" type="text" class="form-control" />
-			</div>
+			</div> -->
 			<button type="button" class="btn btn-info" (click)="onSubmit(false)">
 				<span class="glyphicon glyphicon-search"></span> FIND COMPANIES
 			</button>

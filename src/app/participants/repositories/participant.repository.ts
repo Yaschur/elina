@@ -85,4 +85,12 @@ export class ParticipantRepository {
 			[]
 		)).map(dbItem => new Participant(dbItem));
 	}
+
+	public async FindByFilter(filter: any): Promise<Participant[]> {
+		return (await this._storeService.find(
+			ParticipantRepository.entityType,
+			filter,
+			[]
+		)).map(dbItem => new Participant(dbItem));
+	}
 }
