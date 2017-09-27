@@ -9,6 +9,7 @@ import { XlsxService } from './xlsx/xlsx.service';
 import { ConfigService } from './config.service';
 
 import { DbMaintenanceComponent } from './maintenance/db-maintenance.component';
+import { ConfigComponent } from './maintenance/config.component';
 
 export * from './store/store.service';
 export * from './xlsx/xlsx.service';
@@ -21,7 +22,8 @@ export * from './entity.model';
 		InfraRoutingModule
 	],
 	declarations: [
-		DbMaintenanceComponent
+		DbMaintenanceComponent,
+		ConfigComponent
 	],
 	providers: [
 		ConfigService,
