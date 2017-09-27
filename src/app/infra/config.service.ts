@@ -52,7 +52,9 @@ export class ConfigService {
 			this._electronService.ipcRenderer.on('config-saved', (event, arg) => {
 				console.log('receive config saved: ' + arg);
 				if (!arg) {
-					this.reload();
+					// TODO: live config is not working
+					// this.reload();
+					this._electronService.ipcRenderer.send('reload-app');
 				}
 			});
 		}
