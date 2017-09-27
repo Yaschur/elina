@@ -1,13 +1,15 @@
 export class CompanyNameSpec implements Spec {
 
 	private _term: string;
+	private _remoteMode: boolean;
 
-	setParam(term: string): CompanyNameSpec {
+	setParam(term: string, remoteMode: boolean): CompanyNameSpec {
 		this._term = term;
+		this._remoteMode = remoteMode;
 		return this;
 	}
 
 	provideFilter(): Promise<any> {
-		return Promise.resolve({ name: { $regex: new RegExp('.*' + this._term + '.*', 'i') } });
+		return Promise.resolve({ name: { $regex: (this._remoteMode ? '(?i)' + this._term : new RegExp('.*' + this._term + '.*', 'i')) } });
 	}
 }

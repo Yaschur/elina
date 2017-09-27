@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { CompanyRepository } from '../../companies/core';
 import { Event, EventRepository } from '../../events/core';
+import { ConfigService } from '../../infra/index';
 
 import { SearchBuilder } from '../services/search-builder.service';
 import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
@@ -24,6 +25,7 @@ export class SearchFormComponent implements OnInit {
 	hasCompanyNameTerm: boolean;
 	hasContactNameTerm: boolean;
 	participations: string[];
+	private _remoteMode: boolean;
 
 	companies: CompanyListVm[];
 	contacts: ContactCompanyBaseVm[];
@@ -32,7 +34,8 @@ export class SearchFormComponent implements OnInit {
 		private _companyRepo: CompanyRepository,
 		private _eventRepo: EventRepository,
 		private _searchBuilder: SearchBuilder,
-		private _companyVm: CompanyVmService
+		private _companyVm: CompanyVmService,
+		private _configSrv: ConfigService
 	) {
 		this.hasCompanyNameTerm = true;
 		this.hasContactNameTerm = true;
@@ -46,6 +49,8 @@ export class SearchFormComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this._configSrv.currentConfig
+			.then(config => this._remoteMode = config.database.nameOrUrl.startsWith('http'));
 		if (this.hasCompanyNameTerm) {
 			this.searchForm.addControl(
 				'companyName',
@@ -65,11 +70,11 @@ export class SearchFormComponent implements OnInit {
 		this._searchBuilder.reset();
 		if (this.hasCompanyNameTerm) {
 			const companyNameTerm = this.searchForm.get('companyName').value.trim();
-			this._searchBuilder.companyNameContains(companyNameTerm);
+			this._searchBuilder.companyNameContains(companyNameTerm, this._remoteMode);
 		}
 		if (this.hasCompanyNameTerm) {
 			const contactNameTerm = this.searchForm.get('contactName').value.trim();
-			this._searchBuilder.contactNameContains(contactNameTerm);
+			this._searchBuilder.contactNameContains(contactNameTerm, this._remoteMode);
 		}
 		this.participations.forEach(p => {
 			const eventChosen = this.searchForm.get(p).value;

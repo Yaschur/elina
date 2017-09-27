@@ -17,14 +17,14 @@ export class SearchBuilder {
 		this._specs = [];
 	}
 
-	companyNameContains(term: string): void {
+	companyNameContains(term: string, remoteMode: boolean): void {
 		this._specs.push(
-			(new CompanyNameSpec()).setParam(term)
+			(new CompanyNameSpec()).setParam(term, remoteMode)
 		);
 	}
-	contactNameContains(term: string): void {
+	contactNameContains(term: string, remoteMode: boolean): void {
 		this._specs.push(
-			(new ContactNameSpec()).setParam(term)
+			(new ContactNameSpec()).setParam(term, remoteMode)
 		);
 	}
 	participateIn(event: string) {
