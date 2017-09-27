@@ -1,4 +1,7 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { NgxElectronModule } from 'ngx-electron';
 
 import { InfraRoutingModule } from './infra-routing.module';
@@ -18,6 +21,8 @@ export * from './entity.model';
 
 @NgModule({
 	imports: [
+		CommonModule,
+		ReactiveFormsModule,
 		NgxElectronModule,
 		InfraRoutingModule
 	],

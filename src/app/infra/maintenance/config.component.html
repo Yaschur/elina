@@ -1,5 +1,36 @@
-<nav class="navbar navbar-default">
-  <p class="navbar-text">
-    <span class="glyphicon glyphicon-cog"></span> Configuration Settings
-  </p>
-</nav>
+<form [formGroup]="configForm">
+	<nav class="navbar navbar-default">
+		<p class="navbar-text">
+			<span class="glyphicon glyphicon-cog"></span> Configuration Settings
+		</p>
+		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
+			<span class="glyphicon glyphicon-arrow-left"></span> close
+		</button>
+		<button type="button" [disabled]="configForm.pristine || configForm.invalid" class="btn btn-default navbar-btn"
+		 (click)="onSubmit()">
+				<span class="glyphicon glyphicon-ok"></span> SAVE
+		</button>
+	</nav>
+
+	<div formGroupName="database">
+		<div class="form-group" [ngClass]="{'has-error': configForm.get('database.nameOrUrl').dirty && configForm.get('database.nameOrUrl').invalid}">
+			<label for="nameOrUrl">Local name or url of database:</label>
+			<input id="nameOrUrl" formControlName="nameOrUrl" type="text" class="form-control">
+		</div>
+		<div class="form-group">
+			<label>Allow backup for database (this might be expensive if remote):</label>
+			<div class="radio">
+				<label><input id="backupAllowed" formControlName="backupAllowed" type="radio" value="yes" /> Allowed</label>
+				<label><input id="backupAllowed" formControlName="backupAllowed" type="radio" value="no" /> Not allowed</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="user">User to connect to database:</label>
+			<input id="user" formControlName="user" type="text" class="form-control">
+		</div>
+		<div class="form-group">
+			<label for="password">User to connect to database:</label>
+			<input id="password" formControlName="password" type="text" class="form-control">
+		</div>
+	</div>
+</form>

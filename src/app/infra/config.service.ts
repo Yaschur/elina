@@ -29,20 +29,7 @@ export class ConfigService {
 		return this._current.asObservable().toPromise();
 	}
 
-	public reload() {
-		if (this._current.isStopped) {
-			this._current = new AsyncSubject<Config>();
-		}
-		this._electronService.ipcRenderer.send('load-config');
-	}
-
-	public makeDefaultConfig() {
-		const config = <Config>{
-			database: {
-				nameOrUrl: 'elina_db',
-				backupAllowed: true
-			}
-		};
+	public setConfig(config: Config): void {
 		this._electronService.ipcRenderer.send('save-config', JSON.stringify(config));
 	}
 
@@ -69,5 +56,22 @@ export class ConfigService {
 				}
 			});
 		}
+	}
+
+	private reload() {
+		if (this._current.isStopped) {
+			this._current = new AsyncSubject<Config>();
+		}
+		this._electronService.ipcRenderer.send('load-config');
+	}
+
+	private makeDefaultConfig() {
+		const config = <Config>{
+			database: {
+				nameOrUrl: 'elina_db',
+				backupAllowed: true
+			}
+		};
+		this.setConfig(config);
 	}
 }
