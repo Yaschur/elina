@@ -123,9 +123,9 @@ ipcMain.on('save-file', (event, content) => {
 	}
 });
 
-ipcMain.on('load-file', event => {
+ipcMain.on('load-file', (event, extension) => {
 	const fileName = electron.dialog.showOpenDialog({
-		filters: [{ name: 'data', extensions: ['json'] }],
+		filters: [{ name: '', extensions: [extension] }],
 		title: 'Choose file to import'
 	});
 	if (fileName) {

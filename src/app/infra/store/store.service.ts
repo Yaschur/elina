@@ -8,6 +8,11 @@ export class StoreService {
 
 	constructor(private _dbService: DbMaintService) { }
 
+	async checkRemoteMode(): Promise<boolean> {
+		await this._dbService.dbInstance;
+		return this._dbService.checkRemoteMode();
+	}
+
 	public async store(type: string, item: any) {
 		try {
 			const dbItem = this.convertToDb(type, item);

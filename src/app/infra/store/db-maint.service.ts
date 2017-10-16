@@ -72,6 +72,10 @@ export class DbMaintService {
 		return this._db;
 	}
 
+	checkRemoteMode(): boolean {
+		return this._config.database.nameOrUrl.startsWith('http');
+	}
+
 	async doBackup(): Promise<void> {
 		const srcDb = await this._db;
 		if (!this._config.database.backupAllowed) {

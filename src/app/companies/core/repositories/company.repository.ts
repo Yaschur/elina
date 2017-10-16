@@ -5,6 +5,7 @@ import { Company } from '../models/company.model';
 @Injectable()
 export class CompanyRepository {
 	static entityType = 'company';
+
 	constructor(private _storeService: StoreService) { }
 
 	public async store(company: Company) {
@@ -24,7 +25,8 @@ export class CompanyRepository {
 	}
 
 	public async findByName(term: string): Promise<Company[]> {
-		const filter = { name: { $regex: new RegExp('.*' + term + '.*', 'i') } };
+		const remoteMode = await this._storeService.checkRemoteMode();
+		const filter = { name: { $regex: (remoteMode ? '(?i)' + term : new RegExp('.*' + term + '.*', 'i')) } };
 		return await this.findByFilter(filter);
 	}
 

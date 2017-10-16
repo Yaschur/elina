@@ -70,6 +70,6 @@ export class DbMaintenanceComponent {
 	}
 	import() {
 		this.transferStatus = 'File import is started...';
-		this._electronService.ipcRenderer.send('load-file');
+		this._electronService.ipcRenderer.send('load-file', 'json');
 	}
 }
