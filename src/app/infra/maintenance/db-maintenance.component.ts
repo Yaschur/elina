@@ -2,12 +2,15 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 
 import { DbMaintService } from '../store/db-maint.service';
+import { XlsxService } from '../xlsx/xlsx.service';
+
+const DB_IMPORT_KEY = 'dbImport';
+const XLSX_IMPORT_KEY = 'xlsxImport';
 
 @Component({
 	selector: 'app-db-maintenance',
 	templateUrl: './db-maintenance.component.html'
 })
-
 export class DbMaintenanceComponent {
 
 	replicationStatus = '';
@@ -16,6 +19,7 @@ export class DbMaintenanceComponent {
 	constructor(
 		private _electronService: ElectronService,
 		private _dbMaintService: DbMaintService,
+		private _xlsxService: XlsxService,
 		private _ngZone: NgZone
 	) {
 		if (this._electronService.isElectronApp) {
@@ -25,13 +29,16 @@ export class DbMaintenanceComponent {
 				this._ngZone.run(() => this.transferStatus = arg ? 'File is not saved: ' + arg : 'File is saved successfully');
 			});
 
-			this._electronService.ipcRenderer.on('file-loaded', (event, arg) => {
+			this._electronService.ipcRenderer.on('file-loaded', (event, key, data) => {
 				console.log('receive file loaded');
-				if (arg) {
-					this._dbMaintService.doImport(arg)
+				if (key === DB_IMPORT_KEY && data) {
+					this._dbMaintService.doImport(data)
 						.then(() => this._ngZone.run(() => this.replicationStatus = 'File is imported successfully'))
 						.then(() => this._electronService.ipcRenderer.send('reload-app'))
 						.catch(e => this._ngZone.run(() => this.transferStatus = 'File import failed: ' + e));
+				} else if (key === XLSX_IMPORT_KEY && data) {
+					this._xlsxService.importFromXlsx(data)
+						.then(arr => console.log(arr));
 				} else {
 					this._ngZone.run(() => this.transferStatus = 'File import failed: unknown error');
 				}
@@ -70,6 +77,10 @@ export class DbMaintenanceComponent {
 	}
 	import() {
 		this.transferStatus = 'File import is started...';
-		this._electronService.ipcRenderer.send('load-file', 'json');
+		this._electronService.ipcRenderer.send('load-file', ['json'], DB_IMPORT_KEY);
+	}
+	importX() {
+		this.transferStatus = 'File import is started...';
+		this._electronService.ipcRenderer.send('load-file', ['xlsx'], XLSX_IMPORT_KEY);
 	}
 }

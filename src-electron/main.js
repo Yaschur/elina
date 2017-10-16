@@ -123,21 +123,21 @@ ipcMain.on('save-file', (event, content) => {
 	}
 });
 
-ipcMain.on('load-file', (event, extension) => {
+ipcMain.on('load-file', (event, extensions, key) => {
 	const fileName = electron.dialog.showOpenDialog({
-		filters: [{ name: '', extensions: [extension] }],
+		filters: [{ name: '', extensions: extensions }],
 		title: 'Choose file to import'
 	});
 	if (fileName) {
 		fs.readFile(fileName[0], (err, data) => {
 			if (err) {
-				event.sender.send('file-loaded', '');
+				event.sender.send('file-loaded', key, '');
 			} else {
-				event.sender.send('file-loaded', data);
+				event.sender.send('file-loaded', key, data);
 			}
 		})
 	} else {
-		event.sender.send('file-loaded', '');
+		event.sender.send('file-loaded', key, '');
 	}
 });
 

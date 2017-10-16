@@ -48,6 +48,15 @@ export class XlsxService {
 		saveAs(blobOut, filename);
 	}
 
+	async importFromXlsx(data: any): Promise<Array<Array<string>>> {
+		const wb = await XlsxPopulate.fromDataAsync(data);
+		const arrs = wb
+			.activeSheet()
+			.usedRange()
+			.value();
+		return arrs;
+	}
+
 	private convertDate(value: Date): string {
 		return (new Date(value)).toLocaleString('en-GB');
 	}
