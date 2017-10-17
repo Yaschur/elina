@@ -1,5 +1,6 @@
-<table>
-	<tr *ngFor="let row of data">
-		<td *ngFor="let col of row">{{col}}</td>
-	</tr>
-</table>
+<p>{{(item | async)?.firstName}}
+	<br/>{{(item | async)?.lastName}}
+	<br/>{{(item | async)?.country?.name}}
+	<br/>
+	<button type="button" (click)="getNext()">next</button>
+</p>
