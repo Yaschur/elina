@@ -1,4 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { ElectronService } from 'ngx-electron';
 
 import { DbMaintService } from '../store/db-maint.service';
@@ -20,7 +22,8 @@ export class DbMaintenanceComponent {
 		private _electronService: ElectronService,
 		private _dbMaintService: DbMaintService,
 		private _xlsxService: XlsxService,
-		private _ngZone: NgZone
+		private _ngZone: NgZone,
+		private _router: Router
 	) {
 		if (this._electronService.isElectronApp) {
 
@@ -38,7 +41,7 @@ export class DbMaintenanceComponent {
 						.catch(e => this._ngZone.run(() => this.transferStatus = 'File import failed: ' + e));
 				} else if (key === XLSX_IMPORT_KEY && data) {
 					this._xlsxService.importFromXlsx(data)
-						.then(arr => console.log(arr));
+						.then(arr => this._ngZone.run(() => _router.navigate(['xupdate', { data: JSON.stringify(arr) }])));
 				} else {
 					this._ngZone.run(() => this.transferStatus = 'File import failed: unknown error');
 				}

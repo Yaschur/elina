@@ -7,12 +7,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class XupdateComponent implements OnInit {
 
+	data: string[][];
+
 	constructor(
 		private _route: ActivatedRoute
-	) { }
+	) {
+		this.data = [];
+	}
 
 	ngOnInit() {
-		// this._route.data
+		this._route.params
+			.subscribe(params => this.data = JSON.parse(params['data']));
 	}
 
 }
