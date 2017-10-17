@@ -11,15 +11,11 @@ import { Subject } from 'rxjs/Subject';
 })
 export class XupdateComponent implements OnInit {
 
-	private _data: string[][];
+	private _data: ImportedItem[];
 
-	// countryNames: string[];
-	private _nextIndex: number;
-	private _currentItem: ImportedItem;
-	private _countries: Country[];
+	private _curIndex: number;
 
 	private _item = new Subject<ImportedItem>();
-
 	item = this._item.asObservable();
 
 	constructor(
@@ -28,50 +24,46 @@ export class XupdateComponent implements OnInit {
 		private _companyRepo: CompanyRepository
 	) {
 		this._data = [];
-		this._nextIndex = 0;
-		this._currentItem = undefined;
-		this._countries = [];
-		// this.countryNames = [];
+		this._curIndex = -1;
 	}
 
 	ngOnInit() {
-		this._dirSrv.getDir('country').data
-			.subscribe(cs => this._countries = cs);
 		this._route.params
 			.subscribe(params => {
-				this._data = JSON.parse(params['data']);
-				this.getNext();
+				this._data = (<string[][]>JSON.parse(params['data']))
+					.map(d => new ImportedItem(d));
+				this.getNext()
+					.then(() => { });
 			});
 	}
 
-	getNext(): boolean {
-		this._currentItem = undefined;
-		if (this._nextIndex === this._data.length) {
+	async getNext() {
+		this._curIndex++;
+		if (this._curIndex >= this._data.length) {
 			this._item.complete();
-			return false;
+			return;
 		}
-		this._currentItem = new ImportedItem(this._data[this._nextIndex++]);
-		console.log(this._countries);
-		this._currentItem.country = this._countries
-			.find(c => c.name.trim().toLowerCase() === this._currentItem.countryName.toLowerCase());
-		this._companyRepo.findByName(this._currentItem.companyName, true)
-			.then(companies => {
-				this._currentItem.company = (companies.length === 0 ? undefined : companies[0]);
-				this._item.next(this._currentItem);
+		const curItem = this._data[this._curIndex];
+		const company = (await this._companyRepo.findByName(curItem.companyName, true))[0];
+		curItem.company = company || undefined;
+		this._dirSrv.getDir('country').data
+			.map(de => {
+				return de.find(c => c.name.trim().toLowerCase() === curItem.countryName.toLowerCase());
+			})
+			.subscribe(c => {
+				curItem.countryId = c ? c._id : undefined;
+				this._item.next(curItem);
 			});
-		return true;
 	}
 
-	private resolveCurrent(): void {
-
-
-	}
-
-	private extractCountries(): string[] {
-		return this._data
-			.map(row => (row[4] || '').trim())
-			.filter((v, i, a) => a.indexOf(v) === i)
-			.sort();
+	addCountry(code: string) {
+		const rCode = code.trim();
+		if (rCode.length < 3) {
+			return;
+		}
+		const curItem = this._data[this._curIndex];
+		this._dirSrv.storeEntry('country', new Country({ _id: rCode, name: curItem.countryName }));
+		curItem.countryId = rCode;
 	}
 }
 
@@ -85,7 +77,7 @@ class ImportedItem {
 	email: string;
 	www: string;
 
-	country: Country;
+	countryId: string;
 	company: Company;
 
 	constructor(dataRow: string[]) {
@@ -97,5 +89,12 @@ class ImportedItem {
 		this.phone = (dataRow[5] || '').toString().trim();
 		this.email = (dataRow[6] || '').toString().trim();
 		this.www = (dataRow[7] || '').toString().trim();
+	}
+
+	newCountry(): boolean {
+		return this.countryName && !this.countryId;
+	}
+	newCompany(): boolean {
+		return this.company ? true : false;
 	}
 }

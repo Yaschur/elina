@@ -1,6 +1,9 @@
-<p>{{(item | async)?.firstName}}
-	<br/>{{(item | async)?.lastName}}
-	<br/>{{(item | async)?.country?.name}}
-	<br/>
-	<button type="button" (click)="getNext()">next</button>
-</p>
+<div *ngIf="item | async as rItem">
+	<p *ngIf="rItem.newCountry()">
+		New country is found. To insert it to directory, please provide country code.
+		<b>{{rItem.countryName}}</b>:
+		<input #ccode type="text" size="3" maxlength="3" />
+		<button type="button" (click)="addCountry(ccode.value)">add country</button>
+	</p>
+	<p>{{rItem.firstName}}</p>
+</div>
