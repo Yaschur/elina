@@ -40,10 +40,10 @@ export class Participant extends Entity {
 		this.category = item.category;
 		this.status = item.status;
 
-		this.registrationFee = item.registrationFee;
-		this.freeNights = item.freeNights;
-		this.arrivalDate = item.arrivalDate;
-		this.departureDate = item.departureDate;
+		this.registrationFee = item.registrationFee || '';
+		this.freeNights = item.freeNights || '';
+		this.arrivalDate = item.arrivalDate || '';
+		this.departureDate = item.departureDate || '';
 		this.visaRequired = item.visaRequired === undefined ? false : item.visaRequired;
 		this.participantValidated = item.participantValidated === undefined ? false : item.participantValidated;
 

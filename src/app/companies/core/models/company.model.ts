@@ -22,12 +22,12 @@ export class Company extends Entity {
 		}
 		super(item._id);
 		this.name = item.name;
-		this.description = item.description;
-		this.country = item.country;
-		this.city = item.city;
+		this.description = item.description || '';
+		this.country = item.country || '';
+		this.city = item.city || '';
 		this.activities = item.activities || [];
-		this.phone = item.phone;
-		this.website = item.website;
+		this.phone = item.phone || '';
+		this.website = item.website || '';
 		this.created = item.created || new Date();
 		this.updated = item.updated || new Date();
 

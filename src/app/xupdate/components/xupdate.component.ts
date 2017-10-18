@@ -12,11 +12,10 @@ import { Subject } from 'rxjs/Subject';
 export class XupdateComponent implements OnInit {
 
 	private _data: ImportedItem[];
-
 	private _curIndex: number;
+	private _countries: Country[];
 
-	private _item = new Subject<ImportedItem>();
-	item = this._item.asObservable();
+	logs: string[];
 
 	constructor(
 		private _route: ActivatedRoute,
@@ -25,46 +24,85 @@ export class XupdateComponent implements OnInit {
 	) {
 		this._data = [];
 		this._curIndex = -1;
+		this._countries = [];
+		this.logs = [];
 	}
 
 	ngOnInit() {
+		this._dirSrv.getDir('country').data
+			.subscribe(cs => this._countries = cs);
 		this._route.params
-			.subscribe(params => {
-				this._data = (<string[][]>JSON.parse(params['data']))
-					.map(d => new ImportedItem(d));
-				this.getNext()
-					.then(() => { });
+			.map(params => <string[][]>JSON.parse(params['data']))
+			.take(1)
+			.subscribe({
+				next: ss => this._data = ss.map(s => new ImportedItem(s)),
+				complete: () => this.execute()
 			});
 	}
 
-	async getNext() {
+	private execute() {
+		let curItem: ImportedItem;
+		do {
+			curItem = this._data.pop();
+			if (!curItem) {
+				return;
+			}
+			if (!curItem.companyName || !(curItem.firstName || curItem.lastName)) {
+				continue;
+			}
+		} while (true);
+
+		// TODO: here to continue...
+		// this._companyRepo.findByName(curItem.companyName)
+		// 	.then(exstCompany => {
+		// 		if (curItem.countryName) {
+		// 			curItem.countryId = this._countries.find(c => c.name.trim().toLowerCase() === curItem.countryName.toLowerCase())
+		// 		}
+		// 	});
+		// end of TODO
+
+		// if (!item.companyName || !(item.firstName || item.lastName)) {
+		// 	return;
+		// }
+		// let company = (await this._companyRepo.findByName(item.companyName, true))[0];
+		// let country;
+		// if (!company) {
+		// 	if (item.countryName) {
+		// 		country = this._countries
+		// 			.find(c => c.name.trim().toLowerCase() === item.countryName.toLowerCase());
+		// 		if (!country) {
+		// 			this._dataToInteract.push(item);
+		// 			return;
+		// 		}
+		// 	}
+		// 	company = new Company({ name: item.companyName, country: country ? country._id : undefined });
+		// 	await this._companyRepo.store(company);
+		// 	this.logs.push('Company ' + company.name + ' is added to database');
+		// }
+	}
+
+	private getNext(): boolean {
 		this._curIndex++;
 		if (this._curIndex >= this._data.length) {
-			this._item.complete();
-			return;
+			return false;
 		}
 		const curItem = this._data[this._curIndex];
+		const country = curItem.countryName ? this._countries.find(c => c.name.trim().toLowerCase() === curItem.countryName.toLowerCase())
+			|| undefined : undefined;
 		const company = (await this._companyRepo.findByName(curItem.companyName, true))[0];
-		curItem.company = company || undefined;
-		this._dirSrv.getDir('country').data
-			.map(de => {
-				return de.find(c => c.name.trim().toLowerCase() === curItem.countryName.toLowerCase());
-			})
-			.subscribe(c => {
-				curItem.countryId = c ? c._id : undefined;
-				this._item.next(curItem);
-			});
+
+		return false;
 	}
 
-	addCountry(code: string) {
-		const rCode = code.trim();
-		if (rCode.length < 3) {
-			return;
-		}
-		const curItem = this._data[this._curIndex];
-		this._dirSrv.storeEntry('country', new Country({ _id: rCode, name: curItem.countryName }));
-		curItem.countryId = rCode;
-	}
+	// addCountry(code: string) {
+	// 	const rCode = code.trim();
+	// 	if (rCode.length < 3) {
+	// 		return;
+	// 	}
+	// 	const curItem = this._data[this._curIndex];
+	// 	this._dirSrv.storeEntry('country', new Country({ _id: rCode, name: curItem.countryName }));
+	// 	curItem.countryId = rCode;
+	// }
 }
 
 class ImportedItem {

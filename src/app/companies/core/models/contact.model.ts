@@ -30,14 +30,14 @@ export class Contact extends Entity {
 			this.lastName = item.lastName;
 		}
 		this.name = this.firstName + ' ' + this.lastName;
-		this.jobTitle = item.jobTitle;
+		this.jobTitle = item.jobTitle || '';
 		this.jobResponsibilities = item.jobResponsibilities || [];
 		this.buyContents = item.buyContents || [];
 		this.sellContents = item.sellContents || [];
 		this.addInfos = item.addInfos || [];
-		this.phone = item.phone;
-		this.mobile = item.mobile;
-		this.email = item.email;
+		this.phone = item.phone || '';
+		this.mobile = item.mobile || '';
+		this.email = item.email || '';
 		this.active = item.active === undefined ? true : item.active;
 		this.created = item.created || new Date();
 		this.updated = item.updated || new Date();

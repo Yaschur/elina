@@ -15,6 +15,7 @@ import { XupdateModule } from './xupdate';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/take';
 
 @NgModule({
 	declarations: [
