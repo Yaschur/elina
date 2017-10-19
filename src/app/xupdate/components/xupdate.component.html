@@ -1,1 +1,8 @@
+<p *ngIf="newCountry">
+	New country is found. To insert it to directory, please provide country code.
+	<b>{{newCountry}}</b>:
+	<input #countryCode size="3" maxlength="3" />
+	<button type="button" (click)="addCountry(countryCode.value); countryCode.value = '';">add country</button>
+</p>
+<hr/>
 <p *ngFor="let item of logs">{{item}}</p>

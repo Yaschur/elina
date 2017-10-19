@@ -16,6 +16,7 @@ export class XupdateComponent implements OnInit {
 	private _countries: Country[];
 
 	logs: string[];
+	newCountry: string;
 
 	constructor(
 		private _route: ActivatedRoute,
@@ -26,11 +27,10 @@ export class XupdateComponent implements OnInit {
 		this._curIndex = -1;
 		this._countries = [];
 		this.logs = [];
+		this.newCountry = undefined;
 	}
 
 	ngOnInit() {
-		// this._dirSrv.getDir('country').data
-		// 	.subscribe(cs => this._countries = cs);
 		this._route.params
 			.map(params => <string[][]>JSON.parse(params['data']))
 			.take(1)
@@ -66,36 +66,27 @@ export class XupdateComponent implements OnInit {
 	}
 
 	private execute() {
-		const newCountries = this._data.filter(item => item.newCountry());
-		const newCompanies = this._data.filter(item => item.newCompany());
-		const newContacts = this._data.filter(item => item.newContact());
-		this.logs.unshift('New countries found: ' + newCountries.length);
-		this.logs.unshift('New companies found: ' + newCompanies.length);
-		this.logs.unshift('New contacts found: ' + newContacts.length);
+		const item = this._data.find(i => i.newCountry());
+		if (item) {
+			this.newCountry = item.countryName;
+			return;
+		}
 	}
 
-	// private getNext(): boolean {
-	// 	this._curIndex++;
-	// 	if (this._curIndex >= this._data.length) {
-	// 		return false;
-	// 	}
-	// 	const curItem = this._data[this._curIndex];
-	// 	const country = curItem.countryName ? this._countries.find(c => c.name.trim().toLowerCase() === curItem.countryName.toLowerCase())
-	// 		|| undefined : undefined;
-	// 	const company = (await this._companyRepo.findByName(curItem.companyName, true))[0];
-
-	// 	return false;
-	// }
-
-	// addCountry(code: string) {
-	// 	const rCode = code.trim();
-	// 	if (rCode.length < 3) {
-	// 		return;
-	// 	}
-	// 	const curItem = this._data[this._curIndex];
-	// 	this._dirSrv.storeEntry('country', new Country({ _id: rCode, name: curItem.countryName }));
-	// 	curItem.countryId = rCode;
-	// }
+	addCountry(code: string) {
+		const rCode = code.trim();
+		const cName = this.newCountry;
+		if (rCode.length < 3) {
+			return;
+		}
+		this._dirSrv.storeEntry('country', new Country({ _id: rCode, name: cName }));
+		this.newCountry = undefined;
+		this._data
+			.filter(i => i.countryName.toLowerCase() === cName.toLowerCase())
+			.forEach(i => i.countryId = rCode);
+		this.logs.unshift(cName + ' added to countries directory');
+		this.execute();
+	}
 }
 
 class ImportedItem {
@@ -134,5 +125,14 @@ class ImportedItem {
 	}
 	newContact(): boolean {
 		return !this.contact;
+	}
+}
+
+class NewCountry {
+	name: string;
+	code: string;
+	constructor(name: string) {
+		this.name = name;
+		this.code = '';
 	}
 }
