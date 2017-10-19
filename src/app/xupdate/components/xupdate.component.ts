@@ -29,18 +29,18 @@ export class XupdateComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this._dirSrv.getDir('country').data
-			.subscribe(cs => this._countries = cs);
+		// this._dirSrv.getDir('country').data
+		// 	.subscribe(cs => this._countries = cs);
 		this._route.params
 			.map(params => <string[][]>JSON.parse(params['data']))
 			.take(1)
 			.switchMap(ss => ss.map(s => new ImportedItem(s)))
 			.filter(item => item.isValid())
 			.mergeMap(
-			item => this._dirSrv.getDir('country').data,
-			(item, cs) => {
+			item => this._dirSrv.getDir('country').data.take(1),
+			(item, cs, num) => {
 				if (item.countryName) {
-					const country = cs.find(c => c.name.trim().toLowerCase() === item.countryName);
+					const country = cs.find(c => c.name.trim().toLowerCase() === item.countryName.toLowerCase());
 					item.countryId = country ? country._id : undefined;
 				}
 				return item;
@@ -60,6 +60,7 @@ export class XupdateComponent implements OnInit {
 			})
 			.subscribe({
 				next: item => this._data.push(item),
+				error: e => console.log('error: ' + e),
 				complete: () => this.execute()
 			});
 	}
