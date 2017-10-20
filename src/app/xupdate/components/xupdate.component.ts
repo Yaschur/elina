@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+
 import { DirectoryService, Country } from '../../directories';
 import { CompanyRepository, Company, Contact } from '../../companies/core';
-import { Subject } from 'rxjs/Subject';
 
 @Component({
 	selector: 'app-xupdate',
@@ -14,6 +16,7 @@ export class XupdateComponent implements OnInit {
 	private _data: ImportedItem[];
 	private _curIndex: number;
 	private _countries: Country[];
+	private _newCountry: Subject<string>;
 
 	logs: string[];
 	newCountry: string;
@@ -27,6 +30,7 @@ export class XupdateComponent implements OnInit {
 		this._curIndex = -1;
 		this._countries = [];
 		this.logs = [];
+		this._newCountry = new Subject<string>();
 		this.newCountry = undefined;
 	}
 
@@ -63,28 +67,37 @@ export class XupdateComponent implements OnInit {
 				error: e => console.log('error: ' + e),
 				complete: () => this.execute()
 			});
+		this._newCountry
+			.subscribe(this.putNewCountry);
 	}
 
 	private execute() {
-		const item = this._data.find(i => i.newCountry());
-		if (item) {
-			this.newCountry = item.countryName;
+		const iNewCountry = this._data.find(i => i.newCountry());
+		if (iNewCountry) {
+			this._newCountry.next(iNewCountry.countryName);
 			return;
 		}
+		if (!this._newCountry.isStopped) {
+			this._newCountry.complete();
+		}
+	}
+
+	private putNewCountry(name: string) {
+		this.newCountry = name;
 	}
 
 	addCountry(code: string) {
 		const rCode = code.trim();
-		const cName = this.newCountry;
+		const name = this.newCountry;
 		if (rCode.length < 3) {
 			return;
 		}
-		this._dirSrv.storeEntry('country', new Country({ _id: rCode, name: cName }));
 		this.newCountry = undefined;
+		this._dirSrv.storeEntry('country', new Country({ _id: rCode, name: name }));
 		this._data
-			.filter(i => i.countryName.toLowerCase() === cName.toLowerCase())
+			.filter(i => i.countryName.toLowerCase() === name.toLowerCase())
 			.forEach(i => i.countryId = rCode);
-		this.logs.unshift(cName + ' added to countries directory');
+		this.logs.unshift(name + ' added to countries directory');
 		this.execute();
 	}
 }

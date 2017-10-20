@@ -72,9 +72,8 @@ export class StoreService {
 			if (skip) {
 				query.skip = skip;
 			}
-			if (limit) {
-				query.limit = limit;
-			}
+			// HACK: set explicit limit because couchdb 2.0 has default by 25
+			query.limit = limit || 10000;
 			console.log(query);
 			const db = await this._dbService.dbInstance;
 			const res = await db.find(query);
