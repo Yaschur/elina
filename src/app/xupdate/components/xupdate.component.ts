@@ -68,7 +68,7 @@ export class XupdateComponent implements OnInit {
 				complete: () => this.execute()
 			});
 		this._newCountry
-			.subscribe(this.putNewCountry);
+			.subscribe(countryName => this.putNewCountry(countryName));
 	}
 
 	private execute() {
@@ -97,7 +97,7 @@ export class XupdateComponent implements OnInit {
 		this._data
 			.filter(i => i.countryName.toLowerCase() === name.toLowerCase())
 			.forEach(i => i.countryId = rCode);
-		this.logs.unshift(name + ' added to countries directory');
+		this.logs.unshift(name + ' added to country\'s directory');
 		this.execute();
 	}
 }
