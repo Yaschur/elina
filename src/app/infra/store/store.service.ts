@@ -6,6 +6,13 @@ import { Entity } from '../entity.model';
 @Injectable()
 export class StoreService {
 
+	static Utils = {
+		escapeForRegex: function (inTerm: string) {
+			return inTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		}
+		// symsToExcape: ['(', ')', '+', '&', '|', '-', '*', '.'] // , '\\', '^', '$']
+	};
+
 	constructor(private _dbService: DbMaintService) { }
 
 	async checkRemoteMode(): Promise<boolean> {

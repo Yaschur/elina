@@ -12,11 +12,11 @@ import { CompanyRepository, Company, Contact } from '../../companies/core';
 	templateUrl: './xupdate.component.html'
 })
 export class XupdateComponent implements OnInit {
-
 	private _data: ImportedItem[];
 	private _curIndex: number;
 	private _countries: Country[];
 	private _newCountry: Subject<string>;
+	private _newCompany: Subject<ImportedItem>;
 
 	logs: string[];
 	newCountry: string;
@@ -31,6 +31,7 @@ export class XupdateComponent implements OnInit {
 		this._countries = [];
 		this.logs = [];
 		this._newCountry = new Subject<string>();
+		this._newCompany = new Subject<ImportedItem>();
 		this.newCountry = undefined;
 	}
 
@@ -69,9 +70,12 @@ export class XupdateComponent implements OnInit {
 			});
 		this._newCountry
 			.subscribe(countryName => this.putNewCountry(countryName));
+		this._newCompany
+			.subscribe(item => this.putNewCompany(item));
 	}
 
 	private execute() {
+
 		const iNewCountry = this._data.find(i => i.newCountry());
 		if (iNewCountry) {
 			this._newCountry.next(iNewCountry.countryName);
@@ -80,23 +84,50 @@ export class XupdateComponent implements OnInit {
 		if (!this._newCountry.isStopped) {
 			this._newCountry.complete();
 		}
+
+		const iNewCompany = this._data.find(i => i.newCompany());
+		if (iNewCompany) {
+			this._newCompany.next(iNewCompany);
+			return;
+		}
+		if (!this._newCompany.isStopped) {
+			this._newCompany.complete();
+		}
 	}
 
 	private putNewCountry(name: string) {
-		this.newCountry = name;
+		try {
+			const nCountry = new Country({ name: name });
+			this.addCountry(nCountry._id, nCountry.name);
+		} catch (e) {
+			this.newCountry = name;
+		}
 	}
 
-	addCountry(code: string) {
+	private putNewCompany(item: ImportedItem) {
+		const nCompany = new Company({ name: item.companyName, country: item.countryId });
+		this._companyRepo.store(nCompany)
+			.then(() => {
+				this._data
+					.filter(i => i.newCompany() && i.companyName.toLowerCase() === nCompany.name.toLowerCase())
+					.forEach(i => i.company = nCompany);
+				this.logs.unshift(nCompany.name + ' added to company\'s repository');
+				this.execute();
+			});
+	}
+
+	addCountry(code: string, aname: string) {
 		const rCode = code.trim();
-		const name = this.newCountry;
+		const name = aname || this.newCountry;
 		if (rCode.length < 3) {
 			return;
 		}
 		this.newCountry = undefined;
-		this._dirSrv.storeEntry('country', new Country({ _id: rCode, name: name }));
+		const nCountry = new Country({ _id: rCode, name: name });
+		this._dirSrv.storeEntry('country', nCountry);
 		this._data
 			.filter(i => i.countryName.toLowerCase() === name.toLowerCase())
-			.forEach(i => i.countryId = rCode);
+			.forEach(i => i.countryId = nCountry._id);
 		this.logs.unshift(name + ' added to country\'s directory');
 		this.execute();
 	}

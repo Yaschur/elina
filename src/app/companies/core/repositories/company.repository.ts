@@ -26,7 +26,7 @@ export class CompanyRepository {
 
 	public async findByName(term: string, exact: boolean = false): Promise<Company[]> {
 		const remoteMode = await this._storeService.checkRemoteMode();
-		const tTerm = exact ? '^' + term + '$' : term;
+		const tTerm = exact ? '^' + StoreService.Utils.escapeForRegex(term) + '$' : StoreService.Utils.escapeForRegex(term);
 		const filter = { name: { $regex: remoteMode ? '(?i)' + tTerm : new RegExp(tTerm, 'i') } };
 		return await this.findByFilter(filter);
 	}
@@ -46,4 +46,6 @@ export class CompanyRepository {
 			['name']
 		)).map(dbItem => new Company(dbItem));
 	}
+
+
 }
