@@ -12,6 +12,12 @@ export class CompanyRepository {
 		await this._storeService.store(CompanyRepository.entityType, company);
 	}
 
+	public async storeMany(companies: Company[]) {
+		companies.forEach(async company =>
+			await this._storeService.store(CompanyRepository.entityType, company)
+		);
+	}
+
 	public async remove(company: Company) {
 		await this._storeService.remove(CompanyRepository.entityType, company);
 	}

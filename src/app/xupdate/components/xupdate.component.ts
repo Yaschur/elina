@@ -58,19 +58,6 @@ export class XupdateComponent implements OnInit {
 				});
 				return items;
 			})
-			// .mergeMap(
-			// item => this._companyRepo.findByName(item.companyName, true),
-			// (item, comps) => {
-			// 	if (comps.length !== 0) {
-			// 		const company = comps[0];
-			// 		item.company = company;
-			// 		const contact = company.contacts.find(c =>
-			// 			c.firstName.trim().toLowerCase() === item.firstName.toLowerCase()
-			// 			&& c.lastName.trim().toLowerCase() === item.lastName.toLowerCase());
-			// 		item.contact = contact;
-			// 	}
-			// 	return item;
-			// })
 			.subscribe(items => {
 				this._data = items;
 				this.execute();
@@ -102,6 +89,27 @@ export class XupdateComponent implements OnInit {
 		if (!this._exCompany.isStopped) {
 			this._exCompany.complete();
 		}
+
+		const csToStore: Company[] = [];
+		const newContacts = this._data.filter(i => i.newContact());
+		newContacts.forEach(item => {
+			let company = csToStore.find(c => c._id === item.company._id);
+			if (!company) {
+				company = item.company;
+				csToStore.push(company);
+			}
+			item.contact = new Contact({
+				firstName: item.firstName,
+				lastName: item.lastName,
+				email: item.email,
+				jobTitle: item.jobTitle,
+				phone: item.phone
+			});
+			company.contacts.push(item.contact);
+			this.logs.unshift('Contact ' + item.contact.name + ' added to ' + item.company.name + ' company');
+		});
+		this._companyRepo.storeMany(csToStore)
+			.then(() => console.log('complete'));
 	}
 
 
@@ -116,10 +124,24 @@ export class XupdateComponent implements OnInit {
 	}
 
 	private putNewCompany(item: ImportedItem) {
-		const nCompany = new Company({ name: item.companyName, country: item.countryId });
+		const nCompany = new Company({
+			name: item.companyName,
+			country: item.countryId,
+			website: item.www,
+			contacts: [
+				new Contact({
+					firstName: item.firstName,
+					lastName: item.lastName,
+					email: item.email,
+					jobTitle: item.jobTitle,
+					phone: item.phone
+				})
+			]
+		});
 		this._companyRepo.store(nCompany)
 			.then(() => {
-				this.logs.unshift(nCompany.name + ' added to company\'s repository');
+				this.logs.unshift('Company ' + nCompany.name + ' added to company\'s repository');
+				this.logs.unshift('Contact ' + nCompany.contacts[0].name + ' added to ' + nCompany.name + ' company');
 				this.processExistingCompany(nCompany);
 			});
 	}
@@ -134,7 +156,7 @@ export class XupdateComponent implements OnInit {
 					&& c.lastName.trim().toLowerCase() === i.lastName.toLowerCase());
 				i.contact = contact;
 			});
-			this.execute();
+		this.execute();
 	}
 
 	addCountry(code: string, aname: string) {
