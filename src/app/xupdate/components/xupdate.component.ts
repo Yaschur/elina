@@ -13,10 +13,10 @@ import { CompanyRepository, Company, Contact } from '../../companies/core';
 })
 export class XupdateComponent implements OnInit {
 	private _data: ImportedItem[];
-	private _curIndex: number;
 	private _countries: Country[];
 	private _newCountry: Subject<string>;
 	private _newCompany: Subject<ImportedItem>;
+	private _exCompany: Subject<Company>;
 
 	logs: string[];
 	newCountry: string;
@@ -27,51 +27,54 @@ export class XupdateComponent implements OnInit {
 		private _companyRepo: CompanyRepository
 	) {
 		this._data = [];
-		this._curIndex = -1;
 		this._countries = [];
 		this.logs = [];
 		this._newCountry = new Subject<string>();
+		this._exCompany = new Subject<Company>();
 		this._newCompany = new Subject<ImportedItem>();
 		this.newCountry = undefined;
 	}
 
 	ngOnInit() {
-		this._route.params
-			.map(params => <string[][]>JSON.parse(params['data']))
-			.take(1)
-			.switchMap(ss => ss.map(s => new ImportedItem(s)))
-			.filter(item => item.isValid())
-			.mergeMap(
-			item => this._dirSrv.getDir('country').data.take(1),
-			(item, cs, num) => {
-				if (item.countryName) {
-					const country = cs.find(c => c.name.trim().toLowerCase() === item.countryName.toLowerCase());
-					item.countryId = country ? country._id : undefined;
-				}
-				return item;
-			})
-			.mergeMap(
-			item => this._companyRepo.findByName(item.companyName, true),
-			(item, comps) => {
-				if (comps.length !== 0) {
-					const company = comps[0];
-					item.company = company;
-					const contact = company.contacts.find(c =>
-						c.firstName.trim().toLowerCase() === item.firstName.toLowerCase()
-						&& c.lastName.trim().toLowerCase() === item.lastName.toLowerCase());
-					item.contact = contact;
-				}
-				return item;
-			})
-			.subscribe({
-				next: item => this._data.push(item),
-				error: e => console.log('error: ' + e),
-				complete: () => this.execute()
-			});
 		this._newCountry
 			.subscribe(countryName => this.putNewCountry(countryName));
+		this._exCompany
+			.subscribe(company => this.processExistingCompany(company));
 		this._newCompany
 			.subscribe(item => this.putNewCompany(item));
+		this._route.params
+			.map(params => {
+				const strs = <string[][]>JSON.parse(params['data']);
+				return strs.map(s => new ImportedItem(s)).filter(i => i.isValid());
+			})
+			.mergeMap(
+			item => this._dirSrv.getDir('country').data.take(1),
+			(items, cs, num) => {
+				items.forEach(item => {
+					if (item.countryName) {
+						const country = cs.find(c => c.name.trim().toLowerCase() === item.countryName.toLowerCase());
+						item.countryId = country ? country._id : undefined;
+					}
+				});
+				return items;
+			})
+			// .mergeMap(
+			// item => this._companyRepo.findByName(item.companyName, true),
+			// (item, comps) => {
+			// 	if (comps.length !== 0) {
+			// 		const company = comps[0];
+			// 		item.company = company;
+			// 		const contact = company.contacts.find(c =>
+			// 			c.firstName.trim().toLowerCase() === item.firstName.toLowerCase()
+			// 			&& c.lastName.trim().toLowerCase() === item.lastName.toLowerCase());
+			// 		item.contact = contact;
+			// 	}
+			// 	return item;
+			// })
+			.subscribe(items => {
+				this._data = items;
+				this.execute();
+			});
 	}
 
 	private execute() {
@@ -87,13 +90,21 @@ export class XupdateComponent implements OnInit {
 
 		const iNewCompany = this._data.find(i => i.newCompany());
 		if (iNewCompany) {
-			this._newCompany.next(iNewCompany);
+			this._companyRepo.findByName(iNewCompany.companyName, true)
+				.then(comps => {
+					comps.length > 0 ? this._exCompany.next(comps[0]) : this._newCompany.next(iNewCompany);
+				});
 			return;
 		}
 		if (!this._newCompany.isStopped) {
 			this._newCompany.complete();
 		}
+		if (!this._exCompany.isStopped) {
+			this._exCompany.complete();
+		}
 	}
+
+
 
 	private putNewCountry(name: string) {
 		try {
@@ -108,12 +119,22 @@ export class XupdateComponent implements OnInit {
 		const nCompany = new Company({ name: item.companyName, country: item.countryId });
 		this._companyRepo.store(nCompany)
 			.then(() => {
-				this._data
-					.filter(i => i.newCompany() && i.companyName.toLowerCase() === nCompany.name.toLowerCase())
-					.forEach(i => i.company = nCompany);
 				this.logs.unshift(nCompany.name + ' added to company\'s repository');
-				this.execute();
+				this.processExistingCompany(nCompany);
 			});
+	}
+
+	private processExistingCompany(company: Company) {
+		this._data
+			.filter(i => i.newCompany() && i.companyName.toLowerCase() === company.name.toLowerCase())
+			.forEach(i => {
+				i.company = company;
+				const contact = company.contacts.find(c =>
+					c.firstName.trim().toLowerCase() === i.firstName.toLowerCase()
+					&& c.lastName.trim().toLowerCase() === i.lastName.toLowerCase());
+				i.contact = contact;
+			});
+			this.execute();
 	}
 
 	addCountry(code: string, aname: string) {
