@@ -6,11 +6,10 @@ import { Entity } from '../entity.model';
 @Injectable()
 export class StoreService {
 
-	static Utils = {
+	static utils = {
 		escapeForRegex: function (inTerm: string) {
 			return inTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 		}
-		// symsToExcape: ['(', ')', '+', '&', '|', '-', '*', '.'] // , '\\', '^', '$']
 	};
 
 	constructor(private _dbService: DbMaintService) { }

@@ -17,9 +17,17 @@ export class XupdateComponent implements OnInit {
 	private _newCountry: Subject<string>;
 	private _newCompany: Subject<ImportedItem>;
 	private _exCompany: Subject<Company>;
+	private _diffItem: Subject<ImportedItem>;
 
 	logs: string[];
 	newCountry: string;
+	diffItem: {
+		type: string,
+		name: string,
+		keys: string[],
+		origs: string[],
+		updts: string[]
+	};
 
 	constructor(
 		private _route: ActivatedRoute,
@@ -32,7 +40,9 @@ export class XupdateComponent implements OnInit {
 		this._newCountry = new Subject<string>();
 		this._exCompany = new Subject<Company>();
 		this._newCompany = new Subject<ImportedItem>();
+		this._diffItem = new Subject<ImportedItem>();
 		this.newCountry = undefined;
+		this.diffItem = undefined;
 	}
 
 	ngOnInit() {
@@ -110,6 +120,33 @@ export class XupdateComponent implements OnInit {
 		});
 		this._companyRepo.storeMany(csToStore)
 			.then(() => console.log('complete'));
+
+		const iDiffItem = this._data
+			.find(item => item.diffCompany().length > 0 || item.diffContact().length > 0);
+		if (iDiffItem) {
+			const compDiff = iDiffItem.diffCompany();
+			const contDiff = iDiffItem.diffContact();
+			this.diffItem = {
+				type: compDiff.length > 0 ? 'Company' : 'Contact',
+				name: compDiff.length > 0 ? iDiffItem.company.name : iDiffItem.contact.name,
+				keys: [],
+				origs: [],
+				updts: []
+			};
+			if (compDiff.length > 0) {
+				compDiff.forEach(s => {
+					this.diffItem.keys.push(s);
+					this.diffItem.origs.push(iDiffItem.company[s]);
+					this.diffItem.updts.push(iDiffItem[s]);
+				});
+			} else {
+				compDiff.forEach(s => {
+					this.diffItem.keys.push(s);
+					this.diffItem.origs.push(iDiffItem.contact[s]);
+					this.diffItem.updts.push(iDiffItem[s]);
+				});
+			}
+		}
 	}
 
 
@@ -127,7 +164,7 @@ export class XupdateComponent implements OnInit {
 		const nCompany = new Company({
 			name: item.companyName,
 			country: item.countryId,
-			website: item.www,
+			website: item.website,
 			contacts: [
 				new Contact({
 					firstName: item.firstName,
@@ -184,7 +221,7 @@ class ImportedItem {
 	countryName: string;
 	phone: string;
 	email: string;
-	www: string;
+	website: string;
 
 	countryId: string;
 	company: Company;
@@ -198,7 +235,7 @@ class ImportedItem {
 		this.countryName = (dataRow[4] || '').toString().trim();
 		this.phone = (dataRow[5] || '').toString().trim();
 		this.email = (dataRow[6] || '').toString().trim();
-		this.www = (dataRow[7] || '').toString().trim();
+		this.website = (dataRow[7] || '').toString().trim();
 	}
 
 	isValid(): boolean {
@@ -212,6 +249,38 @@ class ImportedItem {
 	}
 	newContact(): boolean {
 		return !this.contact;
+	}
+	diffCompany(): string[] {
+		const res = [];
+		if (this.company.name !== this.companyName) {
+			res.push('name');
+		}
+		if (this.company.country !== this.countryId) {
+			res.push('country');
+		}
+		if (this.company.website !== this.website) {
+			res.push('website');
+		}
+		return res;
+	}
+	diffContact(): string[] {
+		const res = [];
+		if (this.contact.firstName !== this.firstName) {
+			res.push('firstName');
+		}
+		if (this.contact.lastName !== this.lastName) {
+			res.push('lastName');
+		}
+		if (this.contact.jobTitle !== this.jobTitle) {
+			res.push('jobTitle');
+		}
+		if (this.contact.phone !== this.phone) {
+			res.push('phone');
+		}
+		if (this.contact.email !== this.email) {
+			res.push('email');
+		}
+		return res;
 	}
 }
 

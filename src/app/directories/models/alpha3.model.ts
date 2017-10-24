@@ -236,7 +236,7 @@ export class Alpha3 {
 			countryCode: '162'
 		},
 		{
-			name: 'Cocos (Keeling) Islands',
+			name: 'Cocos Islands',
 			alpha3: 'CCK',
 			countryCode: '166'
 		},
@@ -254,11 +254,6 @@ export class Alpha3 {
 			name: 'Congo',
 			alpha3: 'COG',
 			countryCode: '178'
-		},
-		{
-			name: 'Congo (Democratic Republic of the)',
-			alpha3: 'COD',
-			countryCode: '180'
 		},
 		{
 			name: 'Cook Islands',
@@ -356,7 +351,7 @@ export class Alpha3 {
 			countryCode: '231'
 		},
 		{
-			name: 'Falkland Islands (Malvinas)',
+			name: 'Falkland Islands',
 			alpha3: 'FLK',
 			countryCode: '238'
 		},
@@ -521,7 +516,7 @@ export class Alpha3 {
 			countryCode: '360'
 		},
 		{
-			name: 'Iran (Islamic Republic of)',
+			name: 'Iran',
 			alpha3: 'IRN',
 			countryCode: '364'
 		},
@@ -721,12 +716,12 @@ export class Alpha3 {
 			countryCode: '484'
 		},
 		{
-			name: 'Micronesia (Federated States of)',
+			name: 'Micronesia',
 			alpha3: 'FSM',
 			countryCode: '583'
 		},
 		{
-			name: 'Moldova (Republic of)',
+			name: 'Moldova',
 			alpha3: 'MDA',
 			countryCode: '498'
 		},
@@ -846,7 +841,7 @@ export class Alpha3 {
 			countryCode: '585'
 		},
 		{
-			name: 'Palestine, State of',
+			name: 'Palestine',
 			alpha3: 'PSE',
 			countryCode: '275'
 		},
@@ -941,7 +936,7 @@ export class Alpha3 {
 			countryCode: '662'
 		},
 		{
-			name: 'Saint Martin (French part)',
+			name: 'Saint Martin',
 			alpha3: 'MAF',
 			countryCode: '663'
 		},
@@ -1001,7 +996,7 @@ export class Alpha3 {
 			countryCode: '702'
 		},
 		{
-			name: 'Sint Maarten (Dutch part)',
+			name: 'Sint Maarten',
 			alpha3: 'SXM',
 			countryCode: '534'
 		},
@@ -1086,7 +1081,7 @@ export class Alpha3 {
 			countryCode: '760'
 		},
 		{
-			name: 'Taiwan, Province of China',
+			name: 'Taiwan',
 			alpha3: 'TWN',
 			countryCode: '158'
 		},
@@ -1096,7 +1091,7 @@ export class Alpha3 {
 			countryCode: '762'
 		},
 		{
-			name: 'Tanzania, United Republic of',
+			name: 'Tanzania',
 			alpha3: 'TZA',
 			countryCode: '834'
 		},
@@ -1201,7 +1196,7 @@ export class Alpha3 {
 			countryCode: '548'
 		},
 		{
-			name: 'Venezuela (Bolivarian Republic of)',
+			name: 'Venezuela',
 			alpha3: 'VEN',
 			countryCode: '862'
 		},
