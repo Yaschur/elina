@@ -17,7 +17,6 @@ export class XupdateComponent implements OnInit {
 	private _newCountry: Subject<string>;
 	private _newCompany: Subject<ImportedItem>;
 	private _exCompany: Subject<Company>;
-	private _diffItem: Subject<ImportedItem>;
 
 	logs: string[];
 	newCountry: string;
@@ -26,7 +25,8 @@ export class XupdateComponent implements OnInit {
 		name: string,
 		keys: string[],
 		origs: string[],
-		updts: string[]
+		updts: string[],
+		item: ImportedItem
 	};
 
 	constructor(
@@ -40,7 +40,6 @@ export class XupdateComponent implements OnInit {
 		this._newCountry = new Subject<string>();
 		this._exCompany = new Subject<Company>();
 		this._newCompany = new Subject<ImportedItem>();
-		this._diffItem = new Subject<ImportedItem>();
 		this.newCountry = undefined;
 		this.diffItem = undefined;
 	}
@@ -63,7 +62,7 @@ export class XupdateComponent implements OnInit {
 				items.forEach(item => {
 					if (item.countryName) {
 						const country = cs.find(c => c.name.trim().toLowerCase() === item.countryName.toLowerCase());
-						item.countryId = country ? country._id : undefined;
+						item.country = country ? country._id : undefined;
 					}
 				});
 				return items;
@@ -87,7 +86,7 @@ export class XupdateComponent implements OnInit {
 
 		const iNewCompany = this._data.find(i => i.newCompany());
 		if (iNewCompany) {
-			this._companyRepo.findByName(iNewCompany.companyName, true)
+			this._companyRepo.findByName(iNewCompany.name, true)
 				.then(comps => {
 					comps.length > 0 ? this._exCompany.next(comps[0]) : this._newCompany.next(iNewCompany);
 				});
@@ -128,10 +127,11 @@ export class XupdateComponent implements OnInit {
 			const contDiff = iDiffItem.diffContact();
 			this.diffItem = {
 				type: compDiff.length > 0 ? 'Company' : 'Contact',
-				name: compDiff.length > 0 ? iDiffItem.company.name : iDiffItem.contact.name,
+				name: compDiff.length > 0 ? iDiffItem.company.name : iDiffItem.contact.name + ' (' + iDiffItem.company.name + ')',
 				keys: [],
 				origs: [],
-				updts: []
+				updts: [],
+				item: iDiffItem
 			};
 			if (compDiff.length > 0) {
 				compDiff.forEach(s => {
@@ -140,7 +140,7 @@ export class XupdateComponent implements OnInit {
 					this.diffItem.updts.push(iDiffItem[s]);
 				});
 			} else {
-				compDiff.forEach(s => {
+				contDiff.forEach(s => {
 					this.diffItem.keys.push(s);
 					this.diffItem.origs.push(iDiffItem.contact[s]);
 					this.diffItem.updts.push(iDiffItem[s]);
@@ -162,8 +162,8 @@ export class XupdateComponent implements OnInit {
 
 	private putNewCompany(item: ImportedItem) {
 		const nCompany = new Company({
-			name: item.companyName,
-			country: item.countryId,
+			name: item.name,
+			country: item.country,
 			website: item.website,
 			contacts: [
 				new Contact({
@@ -185,7 +185,7 @@ export class XupdateComponent implements OnInit {
 
 	private processExistingCompany(company: Company) {
 		this._data
-			.filter(i => i.newCompany() && i.companyName.toLowerCase() === company.name.toLowerCase())
+			.filter(i => i.newCompany() && i.name.toLowerCase() === company.name.toLowerCase())
 			.forEach(i => {
 				i.company = company;
 				const contact = company.contacts.find(c =>
@@ -207,8 +207,17 @@ export class XupdateComponent implements OnInit {
 		this._dirSrv.storeEntry('country', nCountry);
 		this._data
 			.filter(i => i.countryName.toLowerCase() === name.toLowerCase())
-			.forEach(i => i.countryId = nCountry._id);
+			.forEach(i => i.country = nCountry._id);
 		this.logs.unshift(name + ' added to country\'s directory');
+		this.execute();
+	}
+
+	updateOrSkip(skip: boolean) {
+		const ref = this.diffItem.type === 'Company' ? this.diffItem.item.company : this.diffItem.item.contact;
+		if (skip) {
+			this.diffItem.keys.forEach(k => this.diffItem.item[k] = ref[k]);
+		}
+		this.diffItem = undefined;
 		this.execute();
 	}
 }
@@ -217,13 +226,13 @@ class ImportedItem {
 	firstName: string;
 	lastName: string;
 	jobTitle: string;
-	companyName: string;
+	name: string;
 	countryName: string;
 	phone: string;
 	email: string;
 	website: string;
 
-	countryId: string;
+	country: string;
 	company: Company;
 	contact: Contact;
 
@@ -231,7 +240,7 @@ class ImportedItem {
 		this.firstName = (dataRow[0] || '').toString().trim();
 		this.lastName = (dataRow[1] || '').toString().trim();
 		this.jobTitle = (dataRow[2] || '').toString().trim();
-		this.companyName = (dataRow[3] || '').toString().trim();
+		this.name = (dataRow[3] || '').toString().trim();
 		this.countryName = (dataRow[4] || '').toString().trim();
 		this.phone = (dataRow[5] || '').toString().trim();
 		this.email = (dataRow[6] || '').toString().trim();
@@ -239,10 +248,10 @@ class ImportedItem {
 	}
 
 	isValid(): boolean {
-		return this.companyName.length !== 0 && (this.firstName.length !== 0 || this.lastName.length !== 0);
+		return this.name.length !== 0 && (this.firstName.length !== 0 || this.lastName.length !== 0);
 	}
 	newCountry(): boolean {
-		return this.countryName && !this.countryId;
+		return this.countryName && !this.country;
 	}
 	newCompany(): boolean {
 		return !this.company;
@@ -252,10 +261,10 @@ class ImportedItem {
 	}
 	diffCompany(): string[] {
 		const res = [];
-		if (this.company.name !== this.companyName) {
+		if (this.company.name !== this.name) {
 			res.push('name');
 		}
-		if (this.company.country !== this.countryId) {
+		if (this.company.country !== this.country) {
 			res.push('country');
 		}
 		if (this.company.website !== this.website) {
@@ -281,14 +290,5 @@ class ImportedItem {
 			res.push('email');
 		}
 		return res;
-	}
-}
-
-class NewCountry {
-	name: string;
-	code: string;
-	constructor(name: string) {
-		this.name = name;
-		this.code = '';
 	}
 }

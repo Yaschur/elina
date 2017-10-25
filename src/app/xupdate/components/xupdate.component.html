@@ -4,21 +4,30 @@
 	<input #countryCode size="3" maxlength="3" />
 	<button type="button" (click)="addCountry(countryCode.value); countryCode.value = '';">add country</button>
 </p>
-<table *ngIf="diffItem">
-	<tr *ngFor="let key of diffItem.keys; index as i;">
-		<th>{{key}}</th>
-		<td>{{diffItem.origs[i] || '[no value]'}}</td>
-		<td>{{diffItem.updts[i] || '[no value]'}}</td>
-	</tr>
-	<tr>
-		<th>-></th>
-		<td>
-			<button>keep</button>
-		</td>
-		<td>
-			<button>update</button>
-		</td>
-	</tr>
-</table>
+<div *ngIf="diffItem">
+	<p>Found record with different data.</p>
+	<p>Record refers to {{diffItem.type}}: {{diffItem.name}}</p>
+	<table>
+		<tr>
+			<th>fields</th>
+			<th>our values</th>
+			<th>values from file</th>
+		</tr>
+		<tr *ngFor="let key of diffItem.keys; index as i;">
+			<th>{{key}}</th>
+			<td>{{diffItem.origs[i] || '[no value]'}}</td>
+			<td>{{diffItem.updts[i] || '[no value]'}}</td>
+		</tr>
+		<tr>
+			<th>-></th>
+			<td>
+				<button type="button" (click)="updateOrSkip(true)">keep ours</button>
+			</td>
+			<td>
+				<button type="button" (click)="updateOrSkip(false)">update from file</button>
+			</td>
+		</tr>
+	</table>
+</div>
 <hr/>
 <p *ngFor="let item of logs">{{item}}</p>
