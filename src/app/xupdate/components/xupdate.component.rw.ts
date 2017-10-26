@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { Subject } from 'rxjs/Subject';
+
 import { Company, Contact, CompanyRepository } from '../../companies/core';
 import { DirectoryService } from '../../directories';
 
@@ -10,6 +12,7 @@ import { DirectoryService } from '../../directories';
 })
 export class XupdateComponent implements OnInit {
 	private _data: ImportedItem[];
+	private _newCountry = new Subject<string>();
 
 	constructor(
 		private _route: ActivatedRoute,
@@ -17,6 +20,7 @@ export class XupdateComponent implements OnInit {
 		private _companyRepo: CompanyRepository
 	) {
 		this._data = [];
+		this._newCountry = new Subject();
 	}
 
 	ngOnInit() {
@@ -51,11 +55,16 @@ export class XupdateComponent implements OnInit {
 			)
 			.subscribe(items => {
 				this._data = items;
-				this.processCountry();
+				this.processCountries();
 			});
 	}
 
-	private processCountry() {
+	private processCountries() {
+		const newCountries = this._data
+			.filter(i => i.findUnknownCountry());
+		if (newCountries.length !== 0) {
+			this._newCountry.next(newCountries[0].findUnknownCountry());
+		}
 	}
 }
 
@@ -100,7 +109,8 @@ class ImportedItem {
 	}
 
 	findUnknownCountry() {
-		return this.datas.find(d => d.company.countryName && !d.company.country);
+		const d = this.datas.find(data => data.company.countryName && !data.company.country);
+		return d ? d.company.countryName : undefined;
 	}
 	extractDataForCountryName(countryName: string) {
 		return this.datas.filter(d => d.company.countryName.toLowerCase() === countryName.trim().toLowerCase());
