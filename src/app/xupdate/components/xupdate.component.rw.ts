@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 
 import { Company, Contact, CompanyRepository } from '../../companies/core';
-import { DirectoryService } from '../../directories';
+import { DirectoryService, Country } from '../../directories';
 
 @Component({
 	selector: 'app-xupdate',
@@ -13,6 +13,8 @@ import { DirectoryService } from '../../directories';
 export class XupdateComponent implements OnInit {
 	private _data: ImportedItem[];
 	private _newCountry = new Subject<string>();
+
+	newCountry: string;
 
 	constructor(
 		private _route: ActivatedRoute,
@@ -55,16 +57,44 @@ export class XupdateComponent implements OnInit {
 			)
 			.subscribe(items => {
 				this._data = items;
-				this.processCountries();
+				this.processData();
 			});
 	}
 
-	private processCountries() {
+	private processData() {
 		const newCountries = this._data
 			.filter(i => i.findUnknownCountry());
 		if (newCountries.length !== 0) {
 			this._newCountry.next(newCountries[0].findUnknownCountry());
 		}
+	}
+
+	private putNewCountry(name: string) {
+		try {
+			const nCountry = new Country({ name: name });
+			this.postNewCountry(nCountry);
+		} catch (e) {
+			this.newCountry = name;
+		}
+	}
+
+	addCountry(code: string) {
+		const rCode = code.trim();
+		const name = this.newCountry;
+		if (rCode.length < 3) {
+			return;
+		}
+		this.newCountry = undefined;
+		const nCountry = new Country({ _id: rCode, name: name });
+		this.postNewCountry(nCountry);
+	}
+
+	postNewCountry(country: Country) {
+		this._dirSrv.storeEntry('country', country);
+		this._data
+			.map(d => d.extractDataForCountryName(country.name))
+			.reduce((x, y) => x.concat(y), [])
+			.forEach(d => d.company.country = country._id);
 	}
 }
 
