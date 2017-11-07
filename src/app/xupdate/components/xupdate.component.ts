@@ -13,6 +13,7 @@ import { DirectoryService, Country } from '../../directories';
 export class XupdateComponent implements OnInit {
 	private _data: ImportedItem[];
 	private _newCountry = new Subject<string>();
+	private _variantCompany = new Subject<ImportedItem>();
 
 	newCountry: string;
 	logs: string[];
@@ -24,11 +25,13 @@ export class XupdateComponent implements OnInit {
 	) {
 		this._data = [];
 		this._newCountry = new Subject();
+		this._variantCompany = new Subject();
 		this.logs = [];
 	}
 
 	ngOnInit() {
 		this._newCountry.subscribe(s => this.putNewCountry(s));
+		this._variantCompany.subscribe(i => this.putCompany(i));
 		this._route.params
 			.map(params => {
 				const strs = <string[][]>JSON.parse(params['data']);
@@ -69,6 +72,11 @@ export class XupdateComponent implements OnInit {
 		if (newCountries.length !== 0) {
 			this._newCountry.next(newCountries[0].findUnknownCountry());
 		}
+		const variantCompanies = this._data
+			.filter(i => i.extractCompanyVariantIndexes().length > 0);
+		if (variantCompanies.length !== 0) {
+			this._variantCompany.next(variantCompanies[0]);
+		}
 	}
 
 	private putNewCountry(name: string) {
@@ -78,6 +86,11 @@ export class XupdateComponent implements OnInit {
 		} catch (e) {
 			this.newCountry = name;
 		}
+	}
+
+	private putCompany(item: ImportedItem) {
+		const varInds = item.extractCompanyVariantIndexes();
+		
 	}
 
 	addCountry(code: string) {
@@ -148,6 +161,26 @@ class ImportedItem {
 	}
 	extractDataForCountryName(countryName: string) {
 		return this.datas.filter(d => d.company.countryName.toLowerCase() === countryName.trim().toLowerCase());
+	}
+	extractCompanyVariantIndexes() {
+		const companyData = <CompanyData[]>[];
+		const dataIndexes = <Number[]>[];
+		if (this.company) {
+			companyData.push(<CompanyData>{
+				country: this.company.country,
+				name: this.company.name,
+				website: this.company.website
+			});
+		}
+		this.datas.forEach((cd, ind) => {
+			const fInd = companyData.findIndex(fcd =>
+				fcd.country === cd.company.country && fcd.name === cd.company.name && fcd.website === cd.company.website);
+			if (fInd < 0) {
+				companyData.push(cd.company);
+				dataIndexes.push(ind);
+			}
+		});
+		return dataIndexes;
 	}
 }
 
