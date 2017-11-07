@@ -4,6 +4,9 @@
 	<input #countryCode size="3" maxlength="3" />
 	<button type="button" (click)="addCountry(countryCode.value); countryCode.value = '';">add country</button>
 </p>
+<p *ngIf="variantCompany">
+	Diff in company found...
+</p>
 <div *ngIf="diffItem">
 	<p>Found record with different data.</p>
 	<p>Record refers to {{diffItem.type}}: {{diffItem.name}}</p>

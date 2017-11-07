@@ -5,6 +5,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { Company, Contact, CompanyRepository } from '../../companies/core';
 import { DirectoryService, Country } from '../../directories';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
 	selector: 'app-xupdate',
@@ -13,9 +14,11 @@ import { DirectoryService, Country } from '../../directories';
 export class XupdateComponent implements OnInit {
 	private _data: ImportedItem[];
 	private _newCountry = new Subject<string>();
+	private _newCompany = new Subject<ImportedItem>();
 	private _variantCompany = new Subject<ImportedItem>();
 
 	newCountry: string;
+	variantCompany: ImportedItem;
 	logs: string[];
 
 	constructor(
@@ -25,6 +28,7 @@ export class XupdateComponent implements OnInit {
 	) {
 		this._data = [];
 		this._newCountry = new Subject();
+		this._newCompany = new Subject();
 		this._variantCompany = new Subject();
 		this.logs = [];
 	}
@@ -62,20 +66,33 @@ export class XupdateComponent implements OnInit {
 			)
 			.subscribe(items => {
 				this._data = items;
-				this.processData();
+				this.processCountries();
 			});
 	}
 
-	private processData() {
+	private processCountries() {
 		const newCountries = this._data
 			.filter(i => i.findUnknownCountry());
 		if (newCountries.length !== 0) {
 			this._newCountry.next(newCountries[0].findUnknownCountry());
+			return;
 		}
-		const variantCompanies = this._data
-			.filter(i => i.extractCompanyVariantIndexes().length > 0);
-		if (variantCompanies.length !== 0) {
-			this._variantCompany.next(variantCompanies[0]);
+		this._newCountry.complete();
+		this.processCompanies();
+	}
+
+	private processCompanies() {
+		const unprocCompany = this._data.find(i => !i.company);
+		if (unprocCompany) {
+			this._companyRepo.findByName(unprocCompany.companyKey, true)
+				.then(companies => {
+					if (companies.length > 0) {
+						unprocCompany.company = companies[0];
+					}
+					if (unprocCompany.extractCompanyVariantIndexes().length !== 0) {
+						this._variantCompany.next(unprocCompany);
+					}
+				});
 		}
 	}
 
@@ -90,7 +107,16 @@ export class XupdateComponent implements OnInit {
 
 	private putCompany(item: ImportedItem) {
 		const varInds = item.extractCompanyVariantIndexes();
-		
+		if (item.company || varInds.length > 1) {
+			this.variantCompany = item;
+			return;
+		}
+		const cData = item.datas[varInds[0]].company;
+		const nCompany = new Company({
+			name: cData.name,
+			country: cData.country,
+			website: cData.website
+		});
 	}
 
 	addCountry(code: string) {
@@ -111,15 +137,20 @@ export class XupdateComponent implements OnInit {
 			.reduce((x, y) => x.concat(y), [])
 			.forEach(d => d.company.country = country._id);
 		this.logs.unshift(country.name + ' (' + country._id + ') is added to country\'s directory');
-		this.processData();
+		this.processCountries();
+	}
+
+	postCompany(company: Company) {
+		this._companyRepo.store(company)
+			.then(() => this.processCompanies());
 	}
 }
 
 class ImportedItem {
 	companyKey: string;
-	contactKey: string;
+	// contactKey: string;
 	company: Company;
-	contactIndex: number;
+	// contactIndex: number;
 	datas: {
 		company: CompanyData,
 		contact: ContactData
@@ -129,7 +160,7 @@ class ImportedItem {
 		this.datas = [];
 		this.addData(dataRow);
 		this.companyKey = this.datas[0].company.name.toLowerCase();
-		this.contactKey = this.datas[0].contact.firstName.toLowerCase() + this.datas[0].contact.lastName.toLowerCase();
+		// this.contactKey = this.datas[0].contact.firstName.toLowerCase() + this.datas[0].contact.lastName.toLowerCase();
 	}
 
 	addData(dataRow: string[]) {
@@ -164,7 +195,7 @@ class ImportedItem {
 	}
 	extractCompanyVariantIndexes() {
 		const companyData = <CompanyData[]>[];
-		const dataIndexes = <Number[]>[];
+		const dataIndexes = <number[]>[];
 		if (this.company) {
 			companyData.push(<CompanyData>{
 				country: this.company.country,
