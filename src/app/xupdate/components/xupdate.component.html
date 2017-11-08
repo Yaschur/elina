@@ -4,33 +4,50 @@
 	<input #countryCode size="3" maxlength="3" />
 	<button type="button" (click)="addCountry(countryCode.value); countryCode.value = '';">add country</button>
 </p>
-<p *ngIf="variantCompany">
-	Diff in company found...
-</p>
-<div *ngIf="diffItem">
-	<p>Found record with different data.</p>
-	<p>Record refers to {{diffItem.type}}: {{diffItem.name}}</p>
-	<table>
+<div *ngIf="variantCompany">
+	<p>Differences in records for company is found.
+		<br/>The name of company, all letters lowercased:
+		<b>{{variantCompany.companyKey}}</b>
+	</p>
+	<table *ngIf="variantCompany.company; else newCompany">
 		<tr>
-			<th>fields</th>
-			<th>our values</th>
-			<th>values from file</th>
-		</tr>
-		<tr *ngFor="let key of diffItem.keys; index as i;">
-			<th>{{key}}</th>
-			<td>{{diffItem.origs[i] || '[no value]'}}</td>
-			<td>{{diffItem.updts[i] || '[no value]'}}</td>
+			<th>name</th>
+			<th>country</th>
+			<th>website</th>
+			<th>&nbsp;</th>
 		</tr>
 		<tr>
-			<th>-></th>
+			<td>{{variantCompany.company.name}}</td>
+			<td>{{variantCompany.company.country}}</td>
+			<td>{{variantCompany.company.website}}</td>
 			<td>
-				<button type="button" (click)="updateOrSkip(true)">keep ours</button>
-			</td>
-			<td>
-				<button type="button" (click)="updateOrSkip(false)">update from file</button>
+				<button (click)="resolveCompany(-1)">keep as is</button>
 			</td>
 		</tr>
 	</table>
+	<ng-template #newCompany>
+		<p>The company is not found in our database</p>
+	</ng-template>
+	<div>
+		Choose the right record to save:
+		<table>
+			<tr>
+				<th>name</th>
+				<th>country</th>
+				<th>website</th>
+				<th>&nbsp;</th>
+			</tr>
+			<tr *ngFor="let ind of variantCompany.extractCompanyVariantIndexes()">
+				<td>{{variantCompany.datas[ind].company.name}}</td>
+				<td>{{variantCompany.datas[ind].company.countryName}} ({{variantCompany.datas[ind].company.country}})</td>
+				<td>{{variantCompany.datas[ind].company.website}}</td>
+				<td>
+					<button (click)="resolveCompany(ind)">save this variant</button>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
+<div *ngIf="variantContactIndex > -1">waiting for contact to save...</div>
 <hr/>
 <p *ngFor="let item of logs">{{item}}</p>

@@ -14,6 +14,7 @@ const XLSX_IMPORT_KEY = 'xlsxImport';
 	templateUrl: './db-maintenance.component.html'
 })
 export class DbMaintenanceComponent {
+	private _xNewOnlyFlag = false;
 
 	replicationStatus = '';
 	transferStatus = '';
@@ -41,7 +42,7 @@ export class DbMaintenanceComponent {
 						.catch(e => this._ngZone.run(() => this.transferStatus = 'File import failed: ' + e));
 				} else if (key === XLSX_IMPORT_KEY && data) {
 					this._xlsxService.importFromXlsx(data)
-						.then(arr => this._ngZone.run(() => _router.navigate(['xupdate', { data: JSON.stringify(arr) }])));
+						.then(arr => this._ngZone.run(() => _router.navigate(['xupdate', { data: JSON.stringify(arr), newOnly: this._xNewOnlyFlag }])));
 				} else {
 					this._ngZone.run(() => this.transferStatus = 'File import failed: unknown error');
 				}
@@ -82,8 +83,9 @@ export class DbMaintenanceComponent {
 		this.transferStatus = 'File import is started...';
 		this._electronService.ipcRenderer.send('load-file', ['json'], DB_IMPORT_KEY);
 	}
-	importX() {
+	importX(newOnly: boolean) {
 		this.transferStatus = 'File import is started...';
+		this._xNewOnlyFlag = newOnly;
 		this._electronService.ipcRenderer.send('load-file', ['xlsx'], XLSX_IMPORT_KEY);
 	}
 }

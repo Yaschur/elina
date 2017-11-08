@@ -12,13 +12,16 @@ import { Observable } from 'rxjs/Observable';
 	templateUrl: './xupdate.component.html'
 })
 export class XupdateComponent implements OnInit {
+	private _newOnly: boolean;
 	private _data: ImportedItem[];
 	private _newCountry = new Subject<string>();
 	private _newCompany = new Subject<ImportedItem>();
 	private _variantCompany = new Subject<ImportedItem>();
+	private _variantContact = new Subject<ImportedItem>();
 
 	newCountry: string;
 	variantCompany: ImportedItem;
+	variantContactIndex: number;
 	logs: string[];
 
 	constructor(
@@ -27,17 +30,22 @@ export class XupdateComponent implements OnInit {
 		private _companyRepo: CompanyRepository
 	) {
 		this._data = [];
+		this._newOnly = false;
+		this.variantContactIndex = -1;
 		this._newCountry = new Subject();
 		this._newCompany = new Subject();
 		this._variantCompany = new Subject();
+		this._variantContact = new Subject();
 		this.logs = [];
 	}
 
 	ngOnInit() {
 		this._newCountry.subscribe(s => this.putNewCountry(s));
 		this._variantCompany.subscribe(i => this.putCompany(i));
+		this._variantContact.subscribe(i => this.putContact(i));
 		this._route.params
 			.map(params => {
+				this._newOnly = params['newOnly'] === 'true';
 				const strs = <string[][]>JSON.parse(params['data']);
 				return strs.reduce<ImportedItem[]>((items: ImportedItem[], sarr) => {
 					const nItem = new ImportedItem(sarr);
@@ -89,11 +97,20 @@ export class XupdateComponent implements OnInit {
 					if (companies.length > 0) {
 						unprocCompany.company = companies[0];
 					}
-					if (unprocCompany.extractCompanyVariantIndexes().length !== 0) {
-						this._variantCompany.next(unprocCompany);
-					}
+					this._variantCompany.next(unprocCompany);
 				});
+			return;
 		}
+		this._variantCompany.complete();
+		this.processContacts();
+	}
+
+	private processContacts() {
+		if (this._data.length > 0) {
+			this._variantContact.next(this._data[0]);
+			return;
+		}
+		this._variantContact.complete();
 	}
 
 	private putNewCountry(name: string) {
@@ -107,7 +124,11 @@ export class XupdateComponent implements OnInit {
 
 	private putCompany(item: ImportedItem) {
 		const varInds = item.extractCompanyVariantIndexes();
-		if (item.company || varInds.length > 1) {
+		if ((this._newOnly || varInds.length === 0) && item.company) {
+			this.processCompanies();
+			return;
+		}
+		if (varInds.length > 1 || (item.company && varInds.length > 0)) {
 			this.variantCompany = item;
 			return;
 		}
@@ -117,6 +138,28 @@ export class XupdateComponent implements OnInit {
 			country: cData.country,
 			website: cData.website
 		});
+		this.postCompany(nCompany);
+	}
+
+	private putContact(item: ImportedItem) {
+		if (item.datas.length === 0) {
+			this._data.shift();
+			this.processContacts();
+			return;
+		}
+		while (item.datas.length > 0) {
+			const cInd = item.resolveContact(this._newOnly);
+			if (cInd > 0) {
+				this.variantContactIndex = cInd;
+				return;
+			}
+		}
+		this._data.shift();
+		if (item.companyToSave) {
+			this.postCompany(item.company);
+			return;
+		}
+		this.processContacts();
 	}
 
 	addCountry(code: string) {
@@ -140,27 +183,42 @@ export class XupdateComponent implements OnInit {
 		this.processCountries();
 	}
 
-	postCompany(company: Company) {
+	resolveCompany(ind: number) {
+		const companyToResolve = this.variantCompany;
+		this.variantCompany = undefined;
+		companyToResolve.resolveCompany(ind);
+		if (ind < 0) {
+			this.processCompanies();
+			return;
+		}
+		this.postCompany(companyToResolve.company);
+	}
+
+	postCompany(company: Company, processingContacts: boolean = false) {
 		this._companyRepo.store(company)
-			.then(() => this.processCompanies());
+			.then(() => processingContacts ? this.processContacts() : this.processCompanies());
 	}
 }
 
 class ImportedItem {
+
+	private companyResolved: boolean;
+
+	companyToSave: boolean;
+
 	companyKey: string;
-	// contactKey: string;
 	company: Company;
-	// contactIndex: number;
 	datas: {
 		company: CompanyData,
 		contact: ContactData
 	}[];
 
 	constructor(dataRow: string[]) {
+		this.companyResolved = false;
+		this.companyToSave = false;
 		this.datas = [];
 		this.addData(dataRow);
 		this.companyKey = this.datas[0].company.name.toLowerCase();
-		// this.contactKey = this.datas[0].contact.firstName.toLowerCase() + this.datas[0].contact.lastName.toLowerCase();
 	}
 
 	addData(dataRow: string[]) {
@@ -194,8 +252,11 @@ class ImportedItem {
 		return this.datas.filter(d => d.company.countryName.toLowerCase() === countryName.trim().toLowerCase());
 	}
 	extractCompanyVariantIndexes() {
-		const companyData = <CompanyData[]>[];
 		const dataIndexes = <number[]>[];
+		if (this.companyResolved) {
+			return dataIndexes;
+		}
+		const companyData = <CompanyData[]>[];
 		if (this.company) {
 			companyData.push(<CompanyData>{
 				country: this.company.country,
@@ -212,6 +273,59 @@ class ImportedItem {
 			}
 		});
 		return dataIndexes;
+	}
+	resolveCompany(ind: number) {
+		this.companyResolved = true;
+		if (ind > -1) {
+			const data = this.datas[ind].company;
+			if (!this.company) {
+				this.company = new Company({
+					name: data.name,
+					country: data.country,
+					website: data.website
+				});
+			} else {
+				this.company.name = data.name;
+				this.company.country = data.country;
+				this.company.website = data.website;
+				this.company.updated = new Date();
+			}
+		}
+	}
+	getFirstContactIndex() {
+		const data = this.datas[0].contact;
+		return this.company.contacts.findIndex(c =>
+			c.firstName.trim().toLowerCase() === data.firstName.toLowerCase()
+			&& c.lastName.trim().toLowerCase() === data.lastName.toLowerCase()
+		);
+	}
+	resolveContact(newOnly: boolean) {
+		const cInd = this.getFirstContactIndex();
+		const data = this.datas.shift();
+		if (cInd < 0) {
+			this.company.contacts.push(
+				new Contact({
+					firstName: data.contact.firstName,
+					lastName: data.contact.lastName,
+					email: data.contact.email,
+					jobTitle: data.contact.jobTitle,
+					phone: data.contact.phone
+				})
+			);
+			this.companyToSave = true;
+			return -1;
+		}
+		if (newOnly) {
+			return -1;
+		}
+		const contact = this.company.contacts[cInd];
+		if (contact.firstName !== data.contact.firstName || contact.lastName !== data.contact.lastName
+			|| contact.jobTitle !== data.contact.jobTitle || contact.phone !== data.contact.phone
+			|| contact.email !== data.contact.email) {
+			this.datas.unshift(data);
+			return cInd;
+		}
+		return -1;
 	}
 }
 

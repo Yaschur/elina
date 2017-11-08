@@ -12,7 +12,8 @@
 		</p>
 		<p class="text-center">
 			<button type="button" class="btn btn-default navbar-btn" (click)="import()">Import database from file</button>
-			<button type="button" class="btn btn-default navbar-btn" (click)="importX()">Import excel from file</button>
+			<button type="button" class="btn btn-default navbar-btn" (click)="importX(false)">Import excel from file</button>
+			<button type="button" class="btn btn-default navbar-btn" (click)="importX(true)">Import excel from file (new only)</button>
 		</p>
 		<p>{{transferStatus}}</p>
 	</div>
