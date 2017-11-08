@@ -65,7 +65,9 @@ export class XupdateComponent implements OnInit {
 					item.datas.forEach(data => {
 						if (data.company.countryName) {
 							const country = cs.find(c => c.name.trim().toLowerCase() === data.company.countryName.toLowerCase());
-							data.company.country = country ? country._id : undefined;
+							data.company.country = country ? country._id : '';
+						} else {
+							data.company.country = '';
 						}
 					})
 				);
