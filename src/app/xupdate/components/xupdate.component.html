@@ -1,58 +1,112 @@
 <nav class="navbar navbar-default">
 	<p class="navbar-text">
-		<span class="glyphicon glyphicon-transfer"></span> Transfering data from excel file
+		<span class="glyphicon glyphicon-transfer"></span> Importing data from excel file
 	</p>
 </nav>
-<p *ngIf="newCountry">
-	New country is found. To insert it to directory, please provide country code.
-	<b>{{newCountry}}</b>:
-	<input #countryCode size="3" maxlength="3" />
-	<button type="button" (click)="addCountry(countryCode.value); countryCode.value = '';">add country</button>
-</p>
-<div *ngIf="variantCompany">
-	<p>Differences in records for company is found.
-		<br/>The name of company, all letters lowercased:
-		<b>{{variantCompany.companyKey}}</b>
-	</p>
-	<table *ngIf="variantCompany.company; else newCompany">
-		<tr>
-			<th>name</th>
-			<th>country</th>
-			<th>website</th>
-			<th>&nbsp;</th>
-		</tr>
-		<tr>
-			<td>{{variantCompany.company.name}}</td>
-			<td>{{variantCompany.company.country}}</td>
-			<td>{{variantCompany.company.website}}</td>
-			<td>
-				<button (click)="resolveCompany(-1)">keep as is</button>
-			</td>
-		</tr>
-	</table>
-	<ng-template #newCompany>
-		<p>The company is not found in our database</p>
-	</ng-template>
-	<div>
-		Choose the right record to save:
-		<table>
-			<tr>
-				<th>name</th>
-				<th>country</th>
-				<th>website</th>
-				<th>&nbsp;</th>
-			</tr>
-			<tr *ngFor="let ind of variantCompany.extractCompanyVariantIndexes()">
-				<td>{{variantCompany.datas[ind].company.name}}</td>
-				<td>{{variantCompany.datas[ind].company.countryName}} ({{variantCompany.datas[ind].company.country}})</td>
-				<td>{{variantCompany.datas[ind].company.website}}</td>
-				<td>
-					<button (click)="resolveCompany(ind)">save this variant</button>
-				</td>
-			</tr>
-		</table>
+<div class="panel {{newCountry || variantCompany || variantContactIndex > -1 ? 'panel-danger' : 'panel-default'}}">
+	<div class="panel-heading">Status of data processing</div>
+	<div class="panel-body">
+		<p>{{commonStats}}</p>
+		<div *ngIf="newCountry">
+			<p class="text-danger">
+				New unknown country is found. To insert it to directory, please provide 3-letters country code.
+			</p>
+			<p>
+				<b>{{newCountry}}</b>:
+				<input #countryCode size="3" maxlength="3" />
+				<button type="button" class="btn btn-info" (click)="addCountry(countryCode.value); countryCode.value = '';">add country</button>
+			</p>
+		</div>
+		<div *ngIf="variantCompany">
+			<p class="text-danger">
+				Differences in records for company is found. The name of company (lowercased):
+				<b>{{variantCompany.companyKey}}</b>
+			</p>
+			<table class="table table-condensed" *ngIf="variantCompany.company; else newCompany">
+				<tr>
+					<th class="col-md-3">name</th>
+					<th class="col-md-2">country</th>
+					<th class="col-md-3">website</th>
+					<th>&nbsp;</th>
+				</tr>
+				<tr>
+					<td>{{variantCompany.company.name}}</td>
+					<td>{{variantCompany.company.country}}</td>
+					<td>{{variantCompany.company.website}}</td>
+					<td>
+						<button type="button" class="btn btn-info" (click)="resolveCompany(-1)">keep as is</button>
+					</td>
+				</tr>
+			</table>
+			<ng-template #newCompany>
+				<p class="text-info">The company is not found in our database</p>
+			</ng-template>
+			<table class="table table-condensed">
+				<tr>
+					<th class="col-md-3">name</th>
+					<th class="col-md-2">country</th>
+					<th class="col-md-3">website</th>
+					<th>&nbsp;</th>
+				</tr>
+				<tr *ngFor="let ind of variantCompany.extractCompanyVariantIndexes()">
+					<td>{{variantCompany.datas[ind].company.name}}</td>
+					<td>{{variantCompany.datas[ind].company.countryName}} ({{variantCompany.datas[ind].company.country}})</td>
+					<td>{{variantCompany.datas[ind].company.website}}</td>
+					<td>
+						<button type="button" class="btn btn-info" (click)="resolveCompany(ind)">save this variant</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div *ngIf="variantContactIndex > -1">
+			<p class="text-danger">
+				Differences in records for contact is found. The name of company (lowercased) and contact:
+				<b>{{data[0].company.name}}</b>, {{data[0].company.contacts[variantContactIndex].name}}
+			</p>
+			<table class="table table-condensed">
+				<tr>
+					<th class="col-md-2">first name</th>
+					<th class="col-md-2">last name</th>
+					<th class="col-md-2">job title</th>
+					<th class="col-md-2">phone</th>
+					<th class="col-md-2">email</th>
+					<th>&nbsp;</th>
+				</tr>
+				<tr>
+					<td>{{data[0].company.contacts[variantContactIndex].firstName}}</td>
+					<td>{{data[0].company.contacts[variantContactIndex].lastName}}</td>
+					<td>{{data[0].company.contacts[variantContactIndex].jobTitle}}</td>
+					<td>{{data[0].company.contacts[variantContactIndex].phone}}</td>
+					<td>{{data[0].company.contacts[variantContactIndex].email}}</td>
+					<td>
+						<button type="button" class="btn btn-info" (click)="resolveContact(false)">keep as is</button>
+					</td>
+				</tr>
+			</table>
+			<table class="table table-condensed">
+				<tr>
+					<th class="col-md-2">first name</th>
+					<th class="col-md-2">last name</th>
+					<th class="col-md-2">job title</th>
+					<th class="col-md-2">phone</th>
+					<th class="col-md-2">email</th>
+					<th>&nbsp;</th>
+				</tr>
+				<tr>
+					<td>{{data[0].datas[0].contact.firstName}}</td>
+					<td>{{data[0].datas[0].contact.lastName}}</td>
+					<td>{{data[0].datas[0].contact.jobTitle}}</td>
+					<td>{{data[0].datas[0].contact.phone}}</td>
+					<td>{{data[0].datas[0].contact.email}}</td>
+					<td>
+						<button type="button" class="btn btn-info" (click)="resolveContact(true)">save this variant</button>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 </div>
-<div *ngIf="variantContactIndex > -1">waiting for contact to save...</div>
+
+
 <hr/>
 <p *ngFor="let item of logs">{{item}}</p>

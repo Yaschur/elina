@@ -13,15 +13,16 @@ import { Observable } from 'rxjs/Observable';
 })
 export class XupdateComponent implements OnInit {
 	private _newOnly: boolean;
-	private _data: ImportedItem[];
 	private _newCountry = new Subject<string>();
 	private _newCompany = new Subject<ImportedItem>();
 	private _variantCompany = new Subject<ImportedItem>();
 	private _variantContact = new Subject<ImportedItem>();
 
+	data: ImportedItem[];
 	newCountry: string;
 	variantCompany: ImportedItem;
 	variantContactIndex: number;
+	commonStats: string;
 	logs: string[];
 
 	constructor(
@@ -29,9 +30,10 @@ export class XupdateComponent implements OnInit {
 		private _dirSrv: DirectoryService,
 		private _companyRepo: CompanyRepository
 	) {
-		this._data = [];
+		this.data = [];
 		this._newOnly = false;
 		this.variantContactIndex = -1;
+		this.commonStats = 'File is loaded. Data is prepared for processing...';
 		this._newCountry = new Subject();
 		this._newCompany = new Subject();
 		this._variantCompany = new Subject();
@@ -75,14 +77,15 @@ export class XupdateComponent implements OnInit {
 			}
 			)
 			.subscribe(items => {
-				this._data = items;
+				this.data = items;
 				this.processCountries();
 			});
 	}
 
 	private processCountries() {
-		const newCountries = this._data
+		const newCountries = this.data
 			.filter(i => i.findUnknownCountry());
+		this.commonStats = 'Countries are being processed, records remained: ' + newCountries.length;
 		if (newCountries.length !== 0) {
 			this._newCountry.next(newCountries[0].findUnknownCountry());
 			return;
@@ -92,14 +95,15 @@ export class XupdateComponent implements OnInit {
 	}
 
 	private processCompanies() {
-		const unprocCompany = this._data.find(i => !i.company);
-		if (unprocCompany) {
-			this._companyRepo.findByName(unprocCompany.companyKey, true)
+		const unprocCompany = this.data.filter(i => !i.company);
+		this.commonStats = 'Companies are being processed, records remained: ' + unprocCompany.length;
+		if (unprocCompany.length > 0) {
+			this._companyRepo.findByName(unprocCompany[0].companyKey, true)
 				.then(companies => {
 					if (companies.length > 0) {
-						unprocCompany.company = companies[0];
+						unprocCompany[0].company = companies[0];
 					}
-					this._variantCompany.next(unprocCompany);
+					this._variantCompany.next(unprocCompany[0]);
 				});
 			return;
 		}
@@ -108,11 +112,13 @@ export class XupdateComponent implements OnInit {
 	}
 
 	private processContacts() {
-		if (this._data.length > 0) {
-			this._variantContact.next(this._data[0]);
+		this.commonStats = 'Contacts are being processed, records remained: ' + this.data.reduce((sum, ii) => sum + ii.datas.length, 0);
+		if (this.data.length > 0) {
+			this._variantContact.next(this.data[0]);
 			return;
 		}
 		this._variantContact.complete();
+		this.commonStats = 'Import is done. You can check changes made below.';
 	}
 
 	private putNewCountry(name: string) {
@@ -145,7 +151,7 @@ export class XupdateComponent implements OnInit {
 
 	private putContact(item: ImportedItem) {
 		if (item.datas.length === 0) {
-			this._data.shift();
+			this.data.shift();
 			this.processContacts();
 			return;
 		}
@@ -156,7 +162,7 @@ export class XupdateComponent implements OnInit {
 				return;
 			}
 		}
-		this._data.shift();
+		this.data.shift();
 		if (item.companyToSave) {
 			this.postCompany(item.company);
 			return;
@@ -177,9 +183,10 @@ export class XupdateComponent implements OnInit {
 
 	postNewCountry(country: Country) {
 		this._dirSrv.storeEntry('country', country);
-		this._data
+		this.data
 			.map(d => d.extractDataForCountryName(country.name))
 			.reduce((x, y) => x.concat(y), [])
+			// TODO: check country bug here
 			.forEach(d => d.company.country = country._id);
 		this.logs.unshift(country.name + ' (' + country._id + ') is added to country\'s directory');
 		this.processCountries();
@@ -194,6 +201,9 @@ export class XupdateComponent implements OnInit {
 			return;
 		}
 		this.postCompany(companyToResolve.company);
+	}
+
+	resolveContact(update: boolean) {
 	}
 
 	postCompany(company: Company, processingContacts: boolean = false) {
