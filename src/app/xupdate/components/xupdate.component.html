@@ -3,7 +3,7 @@
 		<span class="glyphicon glyphicon-transfer"></span> Importing data from excel file
 	</p>
 </nav>
-<div class="panel {{newCountry || variantCompany || variantContactIndex > -1 ? 'panel-danger' : 'panel-default'}}">
+<div class="panel {{newCountry || variantCompany || variantContactIndex > -1 ? 'panel-danger' : (data.length === 0 ? 'panel-success' : 'panel-default')}}">
 	<div class="panel-heading">Status of data processing</div>
 	<div class="panel-body">
 		<p>{{commonStats}}</p>
@@ -23,6 +23,7 @@
 				<b>{{variantCompany.companyKey}}</b>
 			</p>
 			<table class="table table-condensed" *ngIf="variantCompany.company; else newCompany">
+				<caption>This company in our database</caption>
 				<tr>
 					<th class="col-md-3">name</th>
 					<th class="col-md-2">country</th>
@@ -42,6 +43,7 @@
 				<p class="text-info">The company is not found in our database</p>
 			</ng-template>
 			<table class="table table-condensed">
+				<caption>Record(s) of this company from file</caption>
 				<tr>
 					<th class="col-md-3">name</th>
 					<th class="col-md-2">country</th>
@@ -61,9 +63,11 @@
 		<div *ngIf="variantContactIndex > -1">
 			<p class="text-danger">
 				Differences in records for contact is found. The name of company (lowercased) and contact:
-				<b>{{data[0].company.name}}</b>, {{data[0].company.contacts[variantContactIndex].name}}
+				<b>{{data[0].company.name}}</b>,
+				<b>{{data[0].company.contacts[variantContactIndex].name}}</b>
 			</p>
 			<table class="table table-condensed">
+				<caption>This contact in our database</caption>
 				<tr>
 					<th class="col-md-2">first name</th>
 					<th class="col-md-2">last name</th>
@@ -84,6 +88,7 @@
 				</tr>
 			</table>
 			<table class="table table-condensed">
+				<caption>Record of this contact from file</caption>
 				<tr>
 					<th class="col-md-2">first name</th>
 					<th class="col-md-2">last name</th>

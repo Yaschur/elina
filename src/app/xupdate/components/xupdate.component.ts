@@ -13,8 +13,10 @@ import { Observable } from 'rxjs/Observable';
 })
 export class XupdateComponent implements OnInit {
 	private _newOnly: boolean;
-	private _newCountry = new Subject<string>();
-	private _newCompany = new Subject<ImportedItem>();
+	private _countries = new Subject<ImportedItem[]>();
+	private _companies = new Subject<ImportedItem[]>();
+	private _contacts = new Subject<ImportedItem[]>();
+
 	private _variantCompany = new Subject<ImportedItem>();
 	private _variantContact = new Subject<ImportedItem>();
 
@@ -34,16 +36,19 @@ export class XupdateComponent implements OnInit {
 		this._newOnly = false;
 		this.variantContactIndex = -1;
 		this.commonStats = 'File is loaded. Data is prepared for processing...';
-		this._newCountry = new Subject();
-		this._newCompany = new Subject();
+		this._countries = new Subject();
+		this._companies = new Subject();
 		this._variantCompany = new Subject();
 		this._variantContact = new Subject();
+		this._contacts = new Subject();
 		this.logs = [];
 	}
 
 	ngOnInit() {
-		this._newCountry.subscribe(s => this.putNewCountry(s));
+		this._countries.subscribe(i => this.processCountries(i));
+		this._companies.subscribe(i => this.processCompanies(i));
 		this._variantCompany.subscribe(i => this.putCompany(i));
+		this._contacts.subscribe(i => this.processContacts(i));
 		this._variantContact.subscribe(i => this.putContact(i));
 		this._route.params
 			.map(params => {
@@ -67,7 +72,7 @@ export class XupdateComponent implements OnInit {
 					item.datas.forEach(data => {
 						if (data.company.countryName) {
 							const country = cs.find(c => c.name.trim().toLowerCase() === data.company.countryName.toLowerCase());
-							data.company.country = country ? country._id : '';
+							data.company.country = country ? country._id : undefined;
 						} else {
 							data.company.country = '';
 						}
@@ -78,24 +83,71 @@ export class XupdateComponent implements OnInit {
 			)
 			.subscribe(items => {
 				this.data = items;
-				this.processCountries();
+				this._countries.next(items);
 			});
 	}
 
-	private processCountries() {
-		const newCountries = this.data
+	private processCountries(data: ImportedItem[]) {
+		const newCountries = data
 			.filter(i => i.findUnknownCountry());
-		this.commonStats = 'Countries are being processed, records remained: ' + newCountries.length;
-		if (newCountries.length !== 0) {
-			this._newCountry.next(newCountries[0].findUnknownCountry());
-			return;
+		let counter = newCountries.length;
+		for (const ii of newCountries) {
+			this.commonStats = 'Countries are being processed, records remained: ' + (counter--);
+			const cName = ii.findUnknownCountry();
+			if (!cName) {
+				continue;
+			}
+			try {
+				const nCountry = new Country({ name: cName });
+				this.postNewCountry(data, nCountry);
+			} catch (e) {
+				this.newCountry = name;
+				this.data = data;
+				return;
+			}
 		}
-		this._newCountry.complete();
-		this.processCompanies();
+		this._countries.complete();
+		this._companies.next(data);
 	}
 
-	private processCompanies() {
-		const unprocCompany = this.data.filter(i => !i.company);
+	private postNewCountry(data: ImportedItem[], country: Country) {
+		data.map(d => d.extractDataForCountryName(country.name))
+			.reduce((x, y) => x.concat(y), [])
+			.forEach(d => d.company.country = country._id);
+		this._dirSrv.storeEntry('country', country);
+		this.logs.unshift(country.name + ' (' + country._id + ') is added to country\'s directory');
+	}
+
+	addCountry(code: string) {
+		const rCode = code.trim();
+		const name = this.newCountry;
+		if (rCode.length < 3) {
+			return;
+		}
+		this.newCountry = undefined;
+		const nCountry = new Country({ _id: rCode, name: name });
+		this.postNewCountry(this.data, nCountry);
+		this._countries.next(this.data);
+	}
+
+	// private processCompanies_() {
+	// 	const unprocCompany = this.data.filter(i => !i.company);
+	// 	this.commonStats = 'Companies are being processed, records remained: ' + unprocCompany.length;
+	// 	if (unprocCompany.length > 0) {
+	// 		this._companyRepo.findByName(unprocCompany[0].companyKey, true)
+	// 			.then(companies => {
+	// 				if (companies.length > 0) {
+	// 					unprocCompany[0].company = companies[0];
+	// 				}
+	// 				this._variantCompany.next(unprocCompany[0]);
+	// 			});
+	// 		return;
+	// 	}
+	// 	this._variantCompany.complete();
+	// 	this.processContacts();
+	// }
+	private processCompanies(data: ImportedItem[]) {
+		const unprocCompany = data.filter(i => !i.company);
 		this.commonStats = 'Companies are being processed, records remained: ' + unprocCompany.length;
 		if (unprocCompany.length > 0) {
 			this._companyRepo.findByName(unprocCompany[0].companyKey, true)
@@ -103,37 +155,20 @@ export class XupdateComponent implements OnInit {
 					if (companies.length > 0) {
 						unprocCompany[0].company = companies[0];
 					}
+					this.data = data;
 					this._variantCompany.next(unprocCompany[0]);
 				});
 			return;
 		}
 		this._variantCompany.complete();
-		this.processContacts();
-	}
-
-	private processContacts() {
-		this.commonStats = 'Contacts are being processed, records remained: ' + this.data.reduce((sum, ii) => sum + ii.datas.length, 0);
-		if (this.data.length > 0) {
-			this._variantContact.next(this.data[0]);
-			return;
-		}
-		this._variantContact.complete();
-		this.commonStats = 'Import is done. You can check changes made below.';
-	}
-
-	private putNewCountry(name: string) {
-		try {
-			const nCountry = new Country({ name: name });
-			this.postNewCountry(nCountry);
-		} catch (e) {
-			this.newCountry = name;
-		}
+		this._companies.complete();
+		this._contacts.next(data);
 	}
 
 	private putCompany(item: ImportedItem) {
 		const varInds = item.extractCompanyVariantIndexes();
 		if ((this._newOnly || varInds.length === 0) && item.company) {
-			this.processCompanies();
+			this._companies.next(this.data);
 			return;
 		}
 		if (varInds.length > 1 || (item.company && varInds.length > 0)) {
@@ -150,67 +185,163 @@ export class XupdateComponent implements OnInit {
 		this.postCompany(nCompany);
 	}
 
-	private putContact(item: ImportedItem) {
-		if (item.datas.length === 0) {
-			this.data.shift();
-			this.processContacts();
+	resolveCompany(ind: number) {
+		const companyToResolve = this.variantCompany;
+		this.variantCompany = undefined;
+		companyToResolve.resolveCompany(ind);
+		if (ind < 0) {
+			this._companies.next(this.data);
 			return;
 		}
+		this.postCompany(companyToResolve.company);
+	}
+
+	postCompany(company: Company, processingContacts: boolean = false) {
+		this._companyRepo.store(company)
+			.then(() => processingContacts ? this._contacts.next(this.data) : this._companies.next(this.data));
+	}
+
+	private processContacts(data: ImportedItem[]) {
+		this.commonStats = 'Contacts are being processed, records remained: ' + data.reduce((sum, ii) => sum + ii.datas.length, 0);
+		if (data.length > 0) {
+			this.data = data;
+			this._variantContact.next(data[0]);
+			return;
+		}
+		this._variantContact.complete();
+		this._contacts.complete();
+		this.commonStats = 'Import is done. You can check changes made below.';
+	}
+
+	private putContact(item: ImportedItem) {
 		while (item.datas.length > 0) {
 			const cInd = item.resolveContact(this._newOnly);
-			if (cInd > 0) {
+			if (cInd > -1) {
 				this.variantContactIndex = cInd;
 				return;
 			}
 		}
 		this.data.shift();
 		if (item.companyToSave) {
-			this.postCompany(item.company);
+			this.postCompany(item.company, true);
 			return;
 		}
-		this.processContacts();
-	}
-
-	addCountry(code: string) {
-		const rCode = code.trim();
-		const name = this.newCountry;
-		if (rCode.length < 3) {
-			return;
-		}
-		this.newCountry = undefined;
-		const nCountry = new Country({ _id: rCode, name: name });
-		this.postNewCountry(nCountry);
-	}
-
-	postNewCountry(country: Country) {
-		this._dirSrv.storeEntry('country', country);
-		this.data
-			.map(d => d.extractDataForCountryName(country.name))
-			.reduce((x, y) => x.concat(y), [])
-			// TODO: check country bug here
-			.forEach(d => d.company.country = country._id);
-		this.logs.unshift(country.name + ' (' + country._id + ') is added to country\'s directory');
-		this.processCountries();
-	}
-
-	resolveCompany(ind: number) {
-		const companyToResolve = this.variantCompany;
-		this.variantCompany = undefined;
-		companyToResolve.resolveCompany(ind);
-		if (ind < 0) {
-			this.processCompanies();
-			return;
-		}
-		this.postCompany(companyToResolve.company);
+		this._contacts.next(this.data);
 	}
 
 	resolveContact(update: boolean) {
+		this.variantContactIndex = -1;
+		this.data[0].forceDecisionToContact(update);
+		this._contacts.next(this.data);
 	}
 
-	postCompany(company: Company, processingContacts: boolean = false) {
-		this._companyRepo.store(company)
-			.then(() => processingContacts ? this.processContacts() : this.processCompanies());
-	}
+	// private processCountries_() {
+	// 	const newCountries = this.data
+	// 		.filter(i => i.findUnknownCountry());
+	// 	this.commonStats = 'Countries are being processed, records remained: ' + newCountries.length;
+	// 	if (newCountries.length !== 0) {
+	// 		this._newCountry.next(newCountries[0].findUnknownCountry());
+	// 		return;
+	// 	}
+	// 	this._newCountry.complete();
+	// 	this.processCompanies();
+	// }
+
+	// private putNewCountry(name: string) {
+	// 	try {
+	// 		const nCountry = new Country({ name: name });
+	// 		this.postNewCountry(nCountry);
+	// 	} catch (e) {
+	// 		this.newCountry = name;
+	// 	}
+	// }
+
+	// addCountry_(code: string) {
+	// 	const rCode = code.trim();
+	// 	const name = this.newCountry;
+	// 	if (rCode.length < 3) {
+	// 		return;
+	// 	}
+	// 	this.newCountry = undefined;
+	// 	const nCountry = new Country({ _id: rCode, name: name });
+	// 	this.postNewCountry(nCountry);
+	// }
+
+	// postNewCountry_(country: Country) {
+	// 	this.data.forEach(ii =>
+	// 		ii.datas.forEach(dd => {
+	// 			if (dd.company.countryName.toLowerCase() === country.name.trim().toLowerCase()) {
+	// 				dd.company.country = country._id;
+	// 			}
+	// 		})
+	// 	);
+	// 	// .map(d => d.extractDataForCountryName(country.name))
+	// 	// .reduce((x, y) => x.concat(y), [])
+	// 	// // TODO: check country bug here
+	// 	// .forEach(d => d.company.country = country._id);
+	// 	this._dirSrv.storeEntry('country', country);
+	// 	this.logs.unshift(country.name + ' (' + country._id + ') is added to country\'s directory');
+	// 	this.processCountries();
+	// }
+
+	// private processCompanies_() {
+	// 	const unprocCompany = this.data.filter(i => !i.company);
+	// 	this.commonStats = 'Companies are being processed, records remained: ' + unprocCompany.length;
+	// 	if (unprocCompany.length > 0) {
+	// 		this._companyRepo.findByName(unprocCompany[0].companyKey, true)
+	// 			.then(companies => {
+	// 				if (companies.length > 0) {
+	// 					unprocCompany[0].company = companies[0];
+	// 				}
+	// 				this._variantCompany.next(unprocCompany[0]);
+	// 			});
+	// 		return;
+	// 	}
+	// 	this._variantCompany.complete();
+	// 	this.processContacts();
+	// }
+
+
+
+
+
+	// private putCompany(item: ImportedItem) {
+	// 	const varInds = item.extractCompanyVariantIndexes();
+	// 	if ((this._newOnly || varInds.length === 0) && item.company) {
+	// 		this.processCompanies();
+	// 		return;
+	// 	}
+	// 	if (varInds.length > 1 || (item.company && varInds.length > 0)) {
+	// 		this.variantCompany = item;
+	// 		return;
+	// 	}
+	// 	const cData = item.datas[varInds[0]].company;
+	// 	const nCompany = new Company({
+	// 		name: cData.name,
+	// 		country: cData.country,
+	// 		website: cData.website
+	// 	});
+	// 	item.company = nCompany;
+	// 	this.postCompany(nCompany);
+	// }
+
+
+
+	// resolveCompany(ind: number) {
+	// 	const companyToResolve = this.variantCompany;
+	// 	this.variantCompany = undefined;
+	// 	companyToResolve.resolveCompany(ind);
+	// 	if (ind < 0) {
+	// 		this.processCompanies();
+	// 		return;
+	// 	}
+	// 	this.postCompany(companyToResolve.company);
+	// }
+
+	// postCompany(company: Company, processingContacts: boolean = false) {
+	// 	this._companyRepo.store(company)
+	// 		.then(() => processingContacts ? this.processContacts() : this.processCompanies());
+	// }
 }
 
 class ImportedItem {
@@ -256,13 +387,12 @@ class ImportedItem {
 	addDataFromItem(aItem: ImportedItem) {
 		aItem.datas.forEach(d => this.datas.push({ company: d.company, contact: d.contact }));
 	}
-
+	extractDataForCountryName(countryName: string) {
+		return this.datas.filter(d => d.company.countryName.toLowerCase() === countryName.trim().toLowerCase());
+	}
 	findUnknownCountry() {
 		const d = this.datas.find(data => data.company.countryName && !data.company.country);
 		return d ? d.company.countryName : undefined;
-	}
-	extractDataForCountryName(countryName: string) {
-		return this.datas.filter(d => d.company.countryName.toLowerCase() === countryName.trim().toLowerCase());
 	}
 	extractCompanyVariantIndexes() {
 		const dataIndexes = <number[]>[];
@@ -340,16 +470,39 @@ class ImportedItem {
 		}
 		return -1;
 	}
+	forceDecisionToContact(update: boolean) {
+		const cInd = this.getFirstContactIndex();
+		const data = this.datas.shift();
+		if (!update) {
+			return;
+		}
+		const contact = this.company.contacts[cInd];
+		const newContact = new Contact({
+			firstName: data.contact.firstName,
+			lastName: data.contact.lastName,
+			jobTitle: data.contact.jobTitle,
+			jobResponsibilities: contact.jobResponsibilities,
+			buyContents: contact.buyContents,
+			sellContents: contact.sellContents,
+			addInfos: contact.addInfos,
+			phone: data.contact.phone,
+			mobile: contact.mobile,
+			email: data.contact.email,
+			created: contact.created
+		});
+		this.company.contacts[cInd] = newContact;
+		this.companyToSave = true;
+	}
 }
 
-interface CompanyData {
+class CompanyData {
 	name: string;
 	countryName: string;
 	country: string;
 	website: string;
 }
 
-interface ContactData {
+class ContactData {
 	firstName: string;
 	lastName: string;
 	jobTitle: string;
