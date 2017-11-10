@@ -14,7 +14,7 @@ export class ContactNameSpec implements Spec {
 			contacts: {
 				$elemMatch: {
 					name: {
-						$regex: (this._remoteMode ? '(?i)' + this._term : new RegExp('.*' + this._term + '.*', 'i'))
+						$regex: (this._remoteMode ? '(*UTF8)(?i)' + this._term : new RegExp('.*' + this._term + '.*', 'i'))
 					}
 				}
 			}

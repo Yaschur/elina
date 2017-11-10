@@ -146,6 +146,7 @@ export class XupdateComponent implements OnInit {
 			country: cData.country,
 			website: cData.website
 		});
+		item.company = nCompany;
 		this.postCompany(nCompany);
 	}
 

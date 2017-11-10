@@ -33,7 +33,7 @@ export class CompanyRepository {
 	public async findByName(term: string, exact: boolean = false): Promise<Company[]> {
 		const remoteMode = await this._storeService.checkRemoteMode();
 		const tTerm = exact ? '^' + StoreService.utils.escapeForRegex(term) + '$' : StoreService.utils.escapeForRegex(term);
-		const filter = { name: { $regex: remoteMode ? '(?i)' + tTerm : new RegExp(tTerm, 'i') } };
+		const filter = { name: { $regex: remoteMode ? '(*UTF8)(?i)' + tTerm : new RegExp(tTerm, 'i') } };
 		return await this.findByFilter(filter);
 	}
 

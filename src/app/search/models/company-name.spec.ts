@@ -10,6 +10,6 @@ export class CompanyNameSpec implements Spec {
 	}
 
 	provideFilter(): Promise<any> {
-		return Promise.resolve({ name: { $regex: (this._remoteMode ? '(?i)' + this._term : new RegExp('.*' + this._term + '.*', 'i')) } });
+		return Promise.resolve({ name: { $regex: (this._remoteMode ? '(*UTF8)(?i)' + this._term : new RegExp('.*' + this._term + '.*', 'i')) } });
 	}
 }
