@@ -62,8 +62,8 @@
 		</div>
 		<div *ngIf="variantContactIndex > -1">
 			<p class="text-danger">
-				Differences in records for contact is found. The name of company (lowercased) and contact:
-				<b>{{data[0].company.name}}</b>,
+				Differences in records for contact is found. The name of company and contact:
+				<b>{{data[0].company.name}}</b> &gt;
 				<b>{{data[0].company.contacts[variantContactIndex].name}}</b>
 			</p>
 			<table class="table table-condensed">
@@ -111,7 +111,9 @@
 		</div>
 	</div>
 </div>
-
-
-<hr/>
-<p *ngFor="let item of logs">{{item}}</p>
+<div class="panel panel-default">
+	<div class="panel-heading">Log of data updated or added</div>
+	<ul class="list-group">
+		<li class="list-group-item" *ngFor="let item of logs">{{item}}</li>
+	</ul>
+</div>
