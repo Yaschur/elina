@@ -19,7 +19,7 @@
 		</div>
 		<div *ngIf="variantCompany">
 			<p class="text-danger">
-				Differences in records for company is found. The name of company (lowercased):
+				Differences in records of the company is found. The name of company (lowercased):
 				<b>{{variantCompany.companyKey}}</b>
 			</p>
 			<table class="table table-condensed" *ngIf="variantCompany.company; else newCompany">
