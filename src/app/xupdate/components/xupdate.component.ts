@@ -101,7 +101,7 @@ export class XupdateComponent implements OnInit {
 				const nCountry = new Country({ name: cName });
 				this.postNewCountry(data, nCountry);
 			} catch (e) {
-				this.newCountry = name;
+				this.newCountry = cName;
 				this.data = data;
 				return;
 			}
