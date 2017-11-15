@@ -38,8 +38,8 @@ export class SearchFormComponent implements OnInit {
 		private _configSrv: ConfigService
 	) {
 		this.hasCompanyNameTerm = true;
-		this.hasContactNameTerm = true;
-		this.participations = ['part1'];
+		this.hasContactNameTerm = false;
+		this.participations = [];
 		this.companies = [];
 		this.contacts = [];
 		this.searchForm = new FormGroup({});
@@ -72,7 +72,7 @@ export class SearchFormComponent implements OnInit {
 			const companyNameTerm = this.searchForm.get('companyName').value.trim();
 			this._searchBuilder.companyNameContains(companyNameTerm, this._remoteMode);
 		}
-		if (this.hasCompanyNameTerm) {
+		if (this.hasContactNameTerm) {
 			const contactNameTerm = this.searchForm.get('contactName').value.trim();
 			this._searchBuilder.contactNameContains(contactNameTerm, this._remoteMode);
 		}

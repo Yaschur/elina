@@ -12,11 +12,11 @@
 				<div class="col-md-8">
 					<input id="companyName" formControlName="companyName" type="text" class="form-control" />
 				</div>
-				<!-- <div class="col-md-1">
+				<div class="col-md-1">
 					<button type="button" class="btn btn-default">
 						<span class="glyphicon glyphicon-remove"></span>
 					</button>
-				</div> -->
+				</div>
 			</div>
 			<div *ngIf="hasContactNameTerm" class="form-group form-group-md">
 				<label class="col-md-3 control-label" for="contactName">has contact name contains</label>
@@ -60,7 +60,9 @@
 		<tr *ngFor="let company of companies">
 			<td>
 				{{company.name}}
-				<sup *ngIf="company.isNew"><mark>new</mark></sup>
+				<sup *ngIf="company.isNew">
+					<mark>new</mark>
+				</sup>
 			</td>
 			<td scope="row">{{company.country}} {{company.city ? '(' + company.city + ')' : ''}}</td>
 			<td scope="row">{{company.activitiesNum}}</td>
@@ -81,7 +83,9 @@
 		<tr *ngFor="let contact of contacts">
 			<td>
 				{{contact.name}}
-				<sup *ngIf="contact.isNew"><mark>new</mark></sup>
+				<sup *ngIf="contact.isNew">
+					<mark>new</mark>
+				</sup>
 				<sup *ngIf="!contact.active">fired!</sup>
 			</td>
 			<td>{{contact.jobTitle}}</td>
