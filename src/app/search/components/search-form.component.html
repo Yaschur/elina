@@ -6,8 +6,12 @@
 <div class="panel panel-default">
 	<div class="panel-heading">Search Query Form</div>
 	<div class="panel-body">
-		<div *ngFor="let key of searchManager.inUse; index as i">{{key}}_{{i}}</div>
+		<!-- <div *ngFor="let key of searchManager.inUse; index as i">{{key}}_{{i}}</div> -->
 		<form [formGroup]="searchForm" class="form-horizontal">
+			<!-- <div *ngFor="let key of searchManager.inUse; index as i" *ngSwitch="key">
+				<div *ngSwicthCase="companyName">company name</div>
+				<div *ngSwicthCase="contactName">contact name</div>
+			</div> -->
 			<div *ngIf="hasCompanyNameTerm" class="form-group form-group-md">
 				<label class="col-md-3 control-label" for="companyName">company name contains</label>
 				<div class="col-md-8">

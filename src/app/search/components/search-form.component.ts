@@ -67,10 +67,7 @@ export class SearchFormComponent implements OnInit {
 			);
 		}
 		this.participations.forEach(p => this.searchForm.addControl(p, new FormControl('')));
-		this.searchManager.useCriteria('participate');
-		this.searchManager.useCriteria('contactName');
 		this.searchManager.useCriteria('companyName');
-		this.searchManager.useCriteria('participate');
 	}
 
 	async onSubmit(showContact: boolean): Promise<void> {
