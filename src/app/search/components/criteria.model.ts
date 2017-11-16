@@ -1,4 +1,4 @@
-class SearchCriteria {
+export class SearchCriteria {
 	key: string;
 	maxAllowed: number;
 	title: string;
@@ -9,7 +9,7 @@ class SearchCriteria {
 		this.title = title;
 	}
 }
-class SearchCriteriaManager {
+export class SearchCriteriaManager {
 	searchCriterias = [
 		new SearchCriteria('companyName', 1, 'by company name'),
 		new SearchCriteria('contactName', 1, 'by contact name'),

@@ -11,6 +11,7 @@ import { SearchBuilder } from '../services/search-builder.service';
 import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
 import { CompanyVmService } from '../../companies/ui/services/company-vm.service';
 import { ContactCompanyBaseVm } from '../../companies/ui/models/contact-company-base-vm';
+import { SearchCriteriaManager } from './criteria.model';
 
 @Component({
 	selector: 'app-search-form',
@@ -18,6 +19,7 @@ import { ContactCompanyBaseVm } from '../../companies/ui/models/contact-company-
 })
 export class SearchFormComponent implements OnInit {
 
+	searchManager: SearchCriteriaManager;
 	searchForm: FormGroup;
 
 	allEvents: Observable<Event[]>;
@@ -46,6 +48,7 @@ export class SearchFormComponent implements OnInit {
 		this.allEvents = Observable.fromPromise(
 			this._eventRepo.findAll()
 		);
+		this.searchManager = new SearchCriteriaManager();
 	}
 
 	ngOnInit() {
@@ -64,6 +67,10 @@ export class SearchFormComponent implements OnInit {
 			);
 		}
 		this.participations.forEach(p => this.searchForm.addControl(p, new FormControl('')));
+		this.searchManager.useCriteria('participate');
+		this.searchManager.useCriteria('contactName');
+		this.searchManager.useCriteria('companyName');
+		this.searchManager.useCriteria('participate');
 	}
 
 	async onSubmit(showContact: boolean): Promise<void> {
