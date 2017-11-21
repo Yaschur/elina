@@ -24,9 +24,6 @@ export class SearchFormComponent implements OnInit {
 
 	allEvents: Observable<Event[]>;
 
-	hasCompanyNameTerm: boolean;
-	hasContactNameTerm: boolean;
-	participations: string[];
 	private _remoteMode: boolean;
 
 	companies: CompanyListVm[];
@@ -39,9 +36,6 @@ export class SearchFormComponent implements OnInit {
 		private _companyVm: CompanyVmService,
 		private _configSrv: ConfigService
 	) {
-		this.hasCompanyNameTerm = true;
-		this.hasContactNameTerm = false;
-		this.participations = [];
 		this.companies = [];
 		this.contacts = [];
 		this.searchForm = new FormGroup({});
@@ -49,40 +43,30 @@ export class SearchFormComponent implements OnInit {
 			this._eventRepo.findAll()
 		);
 		this.searchManager = new SearchCriteriaManager();
+		this.searchManager.useCriteria(this.searchManager.companyNameKey);
 	}
 
 	ngOnInit() {
 		this._configSrv.currentConfig
 			.then(config => this._remoteMode = config.database.nameOrUrl.startsWith('http'));
-		if (this.hasCompanyNameTerm) {
-			this.searchForm.addControl(
-				'companyName',
-				new FormControl('')
-			);
-		}
-		if (this.hasContactNameTerm) {
-			this.searchForm.addControl(
-				'contactName',
-				new FormControl('')
-			);
-		}
-		this.participations.forEach(p => this.searchForm.addControl(p, new FormControl('')));
-		this.searchManager.useCriteria('companyName');
+		this.searchManager.inUse.forEach((k, i) => this.searchForm.addControl(k + '_' + i, new FormControl('')));
 	}
 
 	async onSubmit(showContact: boolean): Promise<void> {
 		this._searchBuilder.reset();
-		if (this.hasCompanyNameTerm) {
-			const companyNameTerm = this.searchForm.get('companyName').value.trim();
-			this._searchBuilder.companyNameContains(companyNameTerm, this._remoteMode);
-		}
-		if (this.hasContactNameTerm) {
-			const contactNameTerm = this.searchForm.get('contactName').value.trim();
-			this._searchBuilder.contactNameContains(contactNameTerm, this._remoteMode);
-		}
-		this.participations.forEach(p => {
-			const eventChosen = this.searchForm.get(p).value;
-			this._searchBuilder.participateIn(eventChosen);
+		this.searchManager.inUse.forEach((k, i) => {
+			const value = this.searchForm.get(k + '_' + i).value;
+			switch (k) {
+				case this.searchManager.companyNameKey:
+					this._searchBuilder.companyNameContains(value.trim(), this._remoteMode);
+					break;
+				case this.searchManager.contactNameKey:
+					this._searchBuilder.contactNameContains(value.trim(), this._remoteMode);
+					break;
+				case this.searchManager.participateKey:
+					this._searchBuilder.participateIn(value);
+					break;
+			}
 		});
 		const filter = await this._searchBuilder.build();
 		const founded = await this._companyRepo.findByFilter(filter);

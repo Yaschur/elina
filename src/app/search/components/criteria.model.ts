@@ -10,10 +10,14 @@ export class SearchCriteria {
 	}
 }
 export class SearchCriteriaManager {
+	readonly companyNameKey = 'companyName';
+	readonly contactNameKey = 'contactName';
+	readonly participateKey = 'participate';
+
 	searchCriterias = [
-		new SearchCriteria('companyName', 1, 'by company name'),
-		new SearchCriteria('contactName', 1, 'by contact name'),
-		new SearchCriteria('participate', 5, 'by participation')
+		new SearchCriteria(this.companyNameKey, 1, 'by company name'),
+		new SearchCriteria(this.contactNameKey, 1, 'by contact name'),
+		new SearchCriteria(this.participateKey, 5, 'by participation')
 	];
 	inUse: string[] = [];
 
