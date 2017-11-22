@@ -8,12 +8,11 @@
 	<div class="panel-body">
 		<form [formGroup]="searchForm" class="form-horizontal">
 			<ng-template ngFor let-key [ngForOf]="searchManager.inUse" let-i="index">
-				<div [ngSwitch]="key" class="form-group form-group-md">
+				<div [ngSwitch]="searchManager.getKeyName(key)" class="form-group form-group-md">
 					<ng-template [ngSwitchCase]="searchManager.companyNameKey">
-						<label class="col-md-3 control-label" for="{{searchManager.companyNameKey}}_{{i}}">company name contains</label>
+						<label class="col-md-3 control-label" for="{{key}}">company name contains</label>
 						<div class="col-md-8">
-							<input id="{{searchManager.companyNameKey}}_{{i}}" formControlName="{{searchManager.companyNameKey}}_{{i}}"
-							 type="text" class="form-control" />
+							<input id="{{key}}" formControlName="{{key}}" type="text" class="form-control" />
 						</div>
 						<div class="col-md-1">
 							<button type="button" class="btn btn-default">
@@ -22,10 +21,9 @@
 						</div>
 					</ng-template>
 					<ng-template [ngSwitchCase]="searchManager.contactNameKey">
-						<label class="col-md-3 control-label" for="{{searchManager.contactNameKey}}_{{i}}">has contact name contains</label>
+						<label class="col-md-3 control-label" for="{{key}}">has contact name contains</label>
 						<div class="col-md-8">
-							<input id="{{searchManager.contactNameKey}}_{{i}}" formControlName="{{searchManager.contactNameKey}}_{{i}}"
-							 type="text" class="form-control" />
+							<input id="{{key}}" formControlName="{{key}}" type="text" class="form-control" />
 						</div>
 						<div class="col-md-1">
 							<button type="button" class="btn btn-default">
@@ -34,10 +32,9 @@
 						</div>
 					</ng-template>
 					<ng-template [ngSwitchCase]="searchManager.participateKey">
-						<label for="{{searchManager.participateKey}}_{{i}}" class="col-md-3 control-label">participating in</label>
+						<label for="{{key}}" class="col-md-3 control-label">participating in</label>
 						<div class="col-md-8">
-							<select id="{{searchManager.participateKey}}_{{i}}" formControlName="{{searchManager.participateKey}}_{{i}}"
-							 class="form-control">
+							<select id="{{key}}" formControlName="{{key}}" class="form-control">
 								<option value="">any event</option>
 								<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
 							</select>

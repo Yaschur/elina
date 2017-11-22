@@ -23,14 +23,26 @@ export class SearchCriteriaManager {
 
 	getAllowedCriterias(): SearchCriteria[] {
 		return this.searchCriterias
-			.filter(c => c.maxAllowed > this.inUse.filter(u => u === c.key).length);
+			.filter(c => c.maxAllowed > this.getInUseKeys().filter(u => u === c.key).length);
 	}
 	useCriteria(key: string): void {
 		const sc = this.searchCriterias
 			.find(c => c.key === key);
-		if (!sc || this.inUse.filter(u => u === key).length >= sc.maxAllowed) {
+		if (!sc || this.getInUseKeys().filter(u => u === key).length >= sc.maxAllowed) {
 			return;
 		}
-		this.inUse.push(key);
+		this.inUse.push(key + '_' + this.getNextUseId());
+	}
+	getKeyName(keyInUse: string): string {
+		return keyInUse.split('_')[0];
+	}
+	private getNextUseId(): number {
+		return Math.max(0, ...this.getInUseIds()) + 1;
+	}
+	private getInUseKeys(): string[] {
+		return this.inUse.map(s => this.getKeyName(s));
+	}
+	private getInUseIds(): number[] {
+		return this.inUse.map(s => +s.split('_')[1]);
 	}
 }

@@ -49,14 +49,14 @@ export class SearchFormComponent implements OnInit {
 	ngOnInit() {
 		this._configSrv.currentConfig
 			.then(config => this._remoteMode = config.database.nameOrUrl.startsWith('http'));
-		this.searchManager.inUse.forEach((k, i) => this.searchForm.addControl(k + '_' + i, new FormControl('')));
+		this.searchManager.inUse.forEach(k => this.searchForm.addControl(k, new FormControl('')));
 	}
 
 	async onSubmit(showContact: boolean): Promise<void> {
 		this._searchBuilder.reset();
-		this.searchManager.inUse.forEach((k, i) => {
-			const value = this.searchForm.get(k + '_' + i).value;
-			switch (k) {
+		this.searchManager.inUse.forEach(k => {
+			const value = this.searchForm.get(k).value;
+			switch (this.searchManager.getKeyName(k)) {
 				case this.searchManager.companyNameKey:
 					this._searchBuilder.companyNameContains(value.trim(), this._remoteMode);
 					break;
