@@ -44,6 +44,12 @@ export class SearchFormComponent implements OnInit {
 		);
 		this.searchManager = new SearchCriteriaManager();
 		this.searchManager.useCriteria(this.searchManager.companyNameKey);
+		this.searchManager.useCriteria(this.searchManager.companyNameKey);
+		this.searchManager.useCriteria(this.searchManager.contactNameKey);
+		this.searchManager.useCriteria(this.searchManager.participateKey);
+		this.searchManager.useCriteria(this.searchManager.participateKey);
+		this.searchManager.useCriteria(this.searchManager.participateKey);
+		this.searchManager.useCriteria(this.searchManager.participateKey);
 	}
 
 	ngOnInit() {
@@ -80,5 +86,10 @@ export class SearchFormComponent implements OnInit {
 			this.companies = founded
 				.map(c => this._companyVm.mapToCompanyListVm(c));
 		}
+	}
+
+	removeCriteria(key: string) {
+		this.searchManager.removeCriteria(key);
+		this.searchForm.removeControl(key);
 	}
 }

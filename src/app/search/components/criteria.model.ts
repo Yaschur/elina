@@ -33,6 +33,12 @@ export class SearchCriteriaManager {
 		}
 		this.inUse.push(key + '_' + this.getNextUseId());
 	}
+	removeCriteria(key: string) {
+		const ind = this.inUse.findIndex(u => u === key);
+		if (ind >= 0) {
+			this.inUse.splice(ind, 1);
+		}
+	}
 	getKeyName(keyInUse: string): string {
 		return keyInUse.split('_')[0];
 	}
