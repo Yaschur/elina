@@ -27,9 +27,9 @@ export class SearchBuilder {
 			(new ContactNameSpec()).setParam(term, remoteMode)
 		);
 	}
-	participateIn(event: string) {
+	participateIn(term: { event: string, status: string, category: string }) {
 		this._specs.push(
-			(new ParticipatingSpec(this._participantRepository)).setParam(event, '', '')
+			(new ParticipatingSpec(this._participantRepository)).setParam(term.event, term.status, term.category)
 		);
 	}
 	notParticipateIn(event: string) {

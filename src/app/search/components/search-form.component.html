@@ -35,12 +35,21 @@
 						</div>
 					</ng-template>
 					<ng-template [ngSwitchCase]="searchManager.participateKey">
-						<label for="{{key}}" class="col-md-3 control-label">participating in</label>
-						<div class="col-md-8">
-							<select id="{{key}}" formControlName="{{key}}" class="form-control">
+						<label class="col-md-3 control-label">participating in</label>
+						<div class="col-md-8" formGroupName="{{key}}">
+							<select formControlName="event" class="form-control">
 								<option value="">any event</option>
 								<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
 							</select>
+							in
+							<select formControlName="status" class="form-control">
+								<option value="">any</option>
+								<option *ngFor="let item of allPartyStatuses | async" [value]="item._id">{{item.name}}</option>
+							</select> status in
+							<select formControlName="category" class="form-control">
+								<option value="">any</option>
+								<option *ngFor="let item of allPartyCategories | async" [value]="item._id">{{item.name}}</option>
+							</select> category
 						</div>
 						<div class="col-md-1">
 							<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
