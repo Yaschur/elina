@@ -25,13 +25,15 @@ export class SearchCriteriaManager {
 		return this.searchCriterias
 			.filter(c => c.maxAllowed > this.getInUseKeys().filter(u => u === c.key).length);
 	}
-	useCriteria(key: string): void {
+	useCriteria(keyName: string): string {
 		const sc = this.searchCriterias
-			.find(c => c.key === key);
-		if (!sc || this.getInUseKeys().filter(u => u === key).length >= sc.maxAllowed) {
+			.find(c => c.key === keyName);
+		if (!sc || this.getInUseKeys().filter(u => u === keyName).length >= sc.maxAllowed) {
 			return;
 		}
-		this.inUse.push(key + '_' + this.getNextUseId());
+		const key = keyName + '_' + this.getNextUseId();
+		this.inUse.push(key);
+		return key;
 	}
 	removeCriteria(key: string) {
 		const ind = this.inUse.findIndex(u => u === key);

@@ -11,7 +11,7 @@ import { SearchBuilder } from '../services/search-builder.service';
 import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
 import { CompanyVmService } from '../../companies/ui/services/company-vm.service';
 import { ContactCompanyBaseVm } from '../../companies/ui/models/contact-company-base-vm';
-import { SearchCriteriaManager } from './criteria.model';
+import { SearchCriteriaManager, SearchCriteria } from './criteria.model';
 
 @Component({
 	selector: 'app-search-form',
@@ -21,6 +21,7 @@ export class SearchFormComponent implements OnInit {
 
 	searchManager: SearchCriteriaManager;
 	searchForm: FormGroup;
+	searchCriterias: SearchCriteria[];
 
 	allEvents: Observable<Event[]>;
 
@@ -43,19 +44,13 @@ export class SearchFormComponent implements OnInit {
 			this._eventRepo.findAll()
 		);
 		this.searchManager = new SearchCriteriaManager();
-		this.searchManager.useCriteria(this.searchManager.companyNameKey);
-		this.searchManager.useCriteria(this.searchManager.companyNameKey);
-		this.searchManager.useCriteria(this.searchManager.contactNameKey);
-		this.searchManager.useCriteria(this.searchManager.participateKey);
-		this.searchManager.useCriteria(this.searchManager.participateKey);
-		this.searchManager.useCriteria(this.searchManager.participateKey);
-		this.searchManager.useCriteria(this.searchManager.participateKey);
+		this.searchCriterias = [];
 	}
 
 	ngOnInit() {
 		this._configSrv.currentConfig
 			.then(config => this._remoteMode = config.database.nameOrUrl.startsWith('http'));
-		this.searchManager.inUse.forEach(k => this.searchForm.addControl(k, new FormControl('')));
+		this.addCriteria(this.searchManager.companyNameKey);
 	}
 
 	async onSubmit(showContact: boolean): Promise<void> {
@@ -89,7 +84,16 @@ export class SearchFormComponent implements OnInit {
 	}
 
 	removeCriteria(key: string) {
+		if (this.searchManager.inUse.length < 2) {
+			return;
+		}
 		this.searchManager.removeCriteria(key);
 		this.searchForm.removeControl(key);
+		this.searchCriterias = this.searchManager.getAllowedCriterias();
+	}
+	addCriteria(keyName: string) {
+		const key = this.searchManager.useCriteria(keyName);
+		this.searchForm.addControl(key, new FormControl(''));
+		this.searchCriterias = this.searchManager.getAllowedCriterias();
 	}
 }
