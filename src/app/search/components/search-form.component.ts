@@ -67,6 +67,9 @@ export class SearchFormComponent implements OnInit {
 				case this.searchManager.participateKey:
 					this._searchBuilder.participateIn(value);
 					break;
+				case this.searchManager.notParticipateKey:
+					this._searchBuilder.notParticipateIn(value);
+					break;
 			}
 		});
 		const filter = await this._searchBuilder.build();

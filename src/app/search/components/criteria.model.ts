@@ -13,11 +13,13 @@ export class SearchCriteriaManager {
 	readonly companyNameKey = 'companyName';
 	readonly contactNameKey = 'contactName';
 	readonly participateKey = 'participate';
+	readonly notParticipateKey = 'notParticipate';
 
 	searchCriterias = [
 		new SearchCriteria(this.companyNameKey, 1, 'by company name'),
 		new SearchCriteria(this.contactNameKey, 1, 'by contact name'),
-		new SearchCriteria(this.participateKey, 5, 'by participation')
+		new SearchCriteria(this.participateKey, 5, 'by participation'),
+		new SearchCriteria(this.notParticipateKey, 5, 'by NO participation'),
 	];
 	inUse: string[] = [];
 

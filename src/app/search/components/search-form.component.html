@@ -48,6 +48,20 @@
 							</button>
 						</div>
 					</ng-template>
+					<ng-template [ngSwitchCase]="searchManager.notParticipateKey">
+						<label for="{{key}}" class="col-md-3 control-label">NOT participating in</label>
+						<div class="col-md-8">
+							<select id="{{key}}" formControlName="{{key}}" class="form-control">
+								<option value="">any event</option>
+								<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
+							</select>
+						</div>
+						<div class="col-md-1">
+							<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</div>
+					</ng-template>
 				</div>
 			</ng-template>
 			<!-- <div class="form-group">
