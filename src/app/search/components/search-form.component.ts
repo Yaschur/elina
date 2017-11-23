@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { CompanyRepository } from '../../companies/core';
 import { Event, EventRepository } from '../../events/core';
-import { ConfigService } from '../../infra/index';
+import { ConfigService } from '../../infra';
+import { ParticipantStatus, ParticipantCategory, DirectoryService } from '../../directories';
 
 import { SearchBuilder } from '../services/search-builder.service';
 import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
@@ -24,6 +25,8 @@ export class SearchFormComponent implements OnInit {
 	searchCriterias: SearchCriteria[];
 
 	allEvents: Observable<Event[]>;
+	allPartyStatuses: Observable<ParticipantStatus[]>;
+	allPartyCategories: Observable<ParticipantCategory[]>;
 
 	private _remoteMode: boolean;
 
@@ -33,6 +36,7 @@ export class SearchFormComponent implements OnInit {
 	constructor(
 		private _companyRepo: CompanyRepository,
 		private _eventRepo: EventRepository,
+		private _dirSrv: DirectoryService,
 		private _searchBuilder: SearchBuilder,
 		private _companyVm: CompanyVmService,
 		private _configSrv: ConfigService
@@ -43,6 +47,8 @@ export class SearchFormComponent implements OnInit {
 		this.allEvents = Observable.fromPromise(
 			this._eventRepo.findAll()
 		);
+		this.allPartyStatuses = this._dirSrv.getDir('participantstatus').data;
+		this.allPartyCategories = this._dirSrv.getDir('participantcategory').data;
 		this.searchManager = new SearchCriteriaManager();
 		this.searchCriterias = [];
 	}
