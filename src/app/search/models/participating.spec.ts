@@ -4,8 +4,10 @@ export class ParticipatingSpec implements Spec {
 	private _event: string;
 	private _category: string;
 	private _status: string;
+	private _not: boolean;
 
-	constructor(private _participantRepo: ParticipantRepository) {
+	constructor(private _participantRepo: ParticipantRepository, not: boolean = false) {
+		this._not = not;
 	}
 
 	setParam(event: string, category: string, status: string): ParticipatingSpec {
@@ -26,6 +28,6 @@ export class ParticipatingSpec implements Spec {
 		// HACK: here - id transformation unknown for domain layer
 		const pIds = (await this._participantRepo.FindByFilter(filter))
 			.map(p => 'company_' + p.company);
-		return { _id: { $in: pIds } };
+		return this._not ? { $not: { _id: { $in: pIds } } } : { _id: { $in: pIds } };
 	}
 }

@@ -32,6 +32,11 @@ export class SearchBuilder {
 			(new ParticipatingSpec(this._participantRepository)).setParam(event, '', '')
 		);
 	}
+	notParticipateIn(event: string) {
+		this._specs.push(
+			(new ParticipatingSpec(this._participantRepository, true)).setParam(event, '', '')
+		);
+	}
 
 	async build(): Promise<any> {
 		const filter = [];
