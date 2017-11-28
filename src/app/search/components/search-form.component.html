@@ -9,75 +9,99 @@
 		</span>
 	</div>
 	<div class="panel-body">
-		<form [formGroup]="searchForm" class="form-horizontal">
-			<ng-template ngFor let-key [ngForOf]="searchManager.inUse" let-i="index">
-				<div [ngSwitch]="searchManager.getKeyName(key)" class="form-group form-group-md">
-					<ng-template [ngSwitchCase]="searchManager.companyNameKey">
-						<label class="col-md-3 control-label" for="{{key}}">company name contains</label>
-						<div class="col-md-8">
-							<input id="{{key}}" formControlName="{{key}}" type="text" class="form-control" />
-						</div>
-						<div class="col-md-1">
-							<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
-								<span class="glyphicon glyphicon-remove"></span>
-							</button>
-						</div>
-					</ng-template>
-					<ng-template [ngSwitchCase]="searchManager.contactNameKey">
-						<label class="col-md-3 control-label" for="{{key}}">has contact name contains</label>
-						<div class="col-md-8">
-							<input id="{{key}}" formControlName="{{key}}" type="text" class="form-control" />
-						</div>
-						<div class="col-md-1">
-							<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
-								<span class="glyphicon glyphicon-remove"></span>
-							</button>
-						</div>
-					</ng-template>
-					<ng-template [ngSwitchCase]="searchManager.participateKey">
-						<label class="col-md-3 control-label">participating in</label>
-						<div class="col-md-8" formGroupName="{{key}}">
-							<select formControlName="event" class="form-control">
-								<option value="">any event</option>
-								<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
-							</select>
-							in
-							<select formControlName="status" class="form-control">
-								<option value="">any</option>
-								<option *ngFor="let item of allPartyStatuses | async" [value]="item._id">{{item.name}}</option>
-							</select> status in
-							<select formControlName="category" class="form-control">
-								<option value="">any</option>
-								<option *ngFor="let item of allPartyCategories | async" [value]="item._id">{{item.name}}</option>
-							</select> category
-						</div>
-						<div class="col-md-1">
-							<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
-								<span class="glyphicon glyphicon-remove"></span>
-							</button>
-						</div>
-					</ng-template>
-					<ng-template [ngSwitchCase]="searchManager.notParticipateKey">
-						<label for="{{key}}" class="col-md-3 control-label">NOT participating in</label>
-						<div class="col-md-8">
-							<select id="{{key}}" formControlName="{{key}}" class="form-control">
-								<option value="">any event</option>
-								<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
-							</select>
-						</div>
-						<div class="col-md-1">
-							<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
-								<span class="glyphicon glyphicon-remove"></span>
-							</button>
-						</div>
-					</ng-template>
-				</div>
-			</ng-template>
-			<!-- <div class="form-group">
-				<select class="form-control">
-					<option *ngFor="let criteria of searchCriterias" [value]="criteria.key">{{criteria.title}}</option>
-				</select>
-			</div> -->
+		<form [formGroup]="searchForm">
+			<table class="table table-condensed">
+				<ng-template ngFor let-key [ngForOf]="searchManager.inUse" let-i="index">
+					<tbody [ngSwitch]="searchManager.getKeyName(key)">
+						<ng-template [ngSwitchCase]="searchManager.companyNameKey">
+							<tr>
+								<th class="pull-right">company name contains</th>
+								<td>
+									<input id="{{key}}" formControlName="{{key}}" type="text" class="form-control" />
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.contactNameKey">
+							<tr>
+								<th class="pull-right">has contact name contains</th>
+								<td>
+									<input id="{{key}}" formControlName="{{key}}" type="text" class="form-control" />
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.participateKey">
+							<tr formGroupName="{{key}}">
+								<th class="pull-right">participating in</th>
+								<td>
+									<select formControlName="event" class="form-control">
+										<option value="">any event</option>
+										<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
+									</select>
+									<div class="input-group">
+										<span class="input-group-addon">in status of </span>
+										<select formControlName="status" class="form-control">
+											<option value="">any</option>
+											<option *ngFor="let item of allPartyStatuses | async" [value]="item._id">{{item.name}}</option>
+										</select>
+									</div>
+									<div class="input-group">
+										<span class="input-group-addon">in category of </span>
+										<select formControlName="category" class="form-control">
+											<option value="">any</option>
+											<option *ngFor="let item of allPartyCategories | async" [value]="item._id">{{item.name}}</option>
+										</select>
+									</div>
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.notParticipateKey">
+							<tr formGroupName="{{key}}">
+								<th class="pull-right">NOT participating in</th>
+								<td>
+									<select formControlName="event" class="form-control">
+										<option value="">any event</option>
+										<option *ngFor="let item of allEvents | async" [value]="item._id">{{item.name}}</option>
+									</select>
+									<div class="input-group">
+										<span class="input-group-addon">in status of </span>
+										<select formControlName="status" class="form-control">
+											<option value="">any</option>
+											<option *ngFor="let item of allPartyStatuses | async" [value]="item._id">{{item.name}}</option>
+										</select>
+									</div>
+									<div class="input-group">
+										<span class="input-group-addon">in category of </span>
+										<select formControlName="category" class="form-control">
+											<option value="">any</option>
+											<option *ngFor="let item of allPartyCategories | async" [value]="item._id">{{item.name}}</option>
+										</select>
+									</div>
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
+					</tbody>
+				</ng-template>
+			</table>
 			<button type="button" class="btn btn-info" (click)="onSubmit(false)">
 				<span class="glyphicon glyphicon-search"></span> FIND COMPANIES
 			</button>

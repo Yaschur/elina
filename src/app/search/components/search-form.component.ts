@@ -102,7 +102,7 @@ export class SearchFormComponent implements OnInit {
 	}
 	addCriteria(keyName: string) {
 		const key = this.searchManager.useCriteria(keyName);
-		if (keyName === this.searchManager.participateKey) {
+		if (keyName === this.searchManager.participateKey || keyName === this.searchManager.notParticipateKey) {
 			this.searchForm.addControl(key, new FormGroup({
 				event: new FormControl(''),
 				status: new FormControl(''),

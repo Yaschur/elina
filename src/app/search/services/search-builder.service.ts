@@ -32,9 +32,9 @@ export class SearchBuilder {
 			(new ParticipatingSpec(this._participantRepository)).setParam(term.event, term.category, term.status)
 		);
 	}
-	notParticipateIn(event: string) {
+	notParticipateIn(term: { event: string, status: string, category: string }) {
 		this._specs.push(
-			(new ParticipatingSpec(this._participantRepository, true)).setParam(event, '', '')
+			(new ParticipatingSpec(this._participantRepository, true)).setParam(term.event, term.category, term.status)
 		);
 	}
 
