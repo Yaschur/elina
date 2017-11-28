@@ -10,7 +10,7 @@
 	</div>
 	<div class="panel-body">
 		<form [formGroup]="searchForm">
-			<table class="table table-condensed">
+			<table class="table table-condensed table-borderless">
 				<ng-template ngFor let-key [ngForOf]="searchManager.inUse" let-i="index">
 					<tbody [ngSwitch]="searchManager.getKeyName(key)">
 						<ng-template [ngSwitchCase]="searchManager.companyNameKey">
