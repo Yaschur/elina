@@ -14,10 +14,12 @@ export class SearchCriteriaManager {
 	readonly contactNameKey = 'contactName';
 	readonly participateKey = 'participate';
 	readonly notParticipateKey = 'notParticipate';
+	readonly countriesKey = 'countries';
 
 	searchCriterias = [
 		new SearchCriteria(this.companyNameKey, 1, 'by company name'),
 		new SearchCriteria(this.contactNameKey, 1, 'by contact name'),
+		new SearchCriteria(this.countriesKey, 1, 'by countries'),
 		new SearchCriteria(this.participateKey, 5, 'by participation'),
 		new SearchCriteria(this.notParticipateKey, 5, 'by NO participation'),
 	];

@@ -17,7 +17,7 @@
 							<tr>
 								<th class="pull-right">company name contains</th>
 								<td>
-									<input id="{{key}}" formControlName="{{key}}" type="text" class="form-control" />
+									<input formControlName="{{key}}" type="text" class="form-control" />
 								</td>
 								<td>
 									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
@@ -30,7 +30,21 @@
 							<tr>
 								<th class="pull-right">has contact name contains</th>
 								<td>
-									<input id="{{key}}" formControlName="{{key}}" type="text" class="form-control" />
+									<input formControlName="{{key}}" type="text" class="form-control" />
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.countriesKey">
+							<tr>
+								<th class="pull-right">company's country is one of</th>
+								<td>
+									<ss-multiselect-dropdown formControlName="{{key}}" [options]="countryOptions | async" [settings]="{showCheckAll:true,showUncheckAll:true,dynamicTitleMaxItems:3,displayAllSelectedText:true}"
+									 [texts]="{defaultTitle: 'no country', allSelected: 'any country', checkedPlural: 'countries'}">no country</ss-multiselect-dropdown>
 								</td>
 								<td>
 									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">

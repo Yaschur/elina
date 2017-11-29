@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
+import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 
 import { CompanyRepository } from '../../companies/core';
 import { Event, EventRepository } from '../../events/core';
@@ -28,6 +29,7 @@ export class SearchFormComponent implements OnInit {
 	allEvents: Observable<Event[]>;
 	allPartyStatuses: Observable<ParticipantStatus[]>;
 	allPartyCategories: Observable<ParticipantCategory[]>;
+	countryOptions: Observable<IMultiSelectOption[]>;
 
 	private _remoteMode: boolean;
 
@@ -50,6 +52,8 @@ export class SearchFormComponent implements OnInit {
 		);
 		this.allPartyStatuses = this._dirSrv.getDir('participantstatus').data;
 		this.allPartyCategories = this._dirSrv.getDir('participantcategory').data;
+		this.countryOptions = this._dirSrv.getDir('country').data
+			.map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }));
 		this.searchManager = new SearchCriteriaManager();
 		this.searchCriterias = [];
 	}
@@ -70,6 +74,9 @@ export class SearchFormComponent implements OnInit {
 					break;
 				case this.searchManager.contactNameKey:
 					this._searchBuilder.contactNameContains(value.trim(), this._remoteMode);
+					break;
+				case this.searchManager.countriesKey:
+					this._searchBuilder.companyInCountries(value);
 					break;
 				case this.searchManager.participateKey:
 					this._searchBuilder.participateIn(value);

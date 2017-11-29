@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CompanyNameSpec } from '../models/company-name.spec';
 import { ContactNameSpec } from '../models/contact-name.spec';
 import { ParticipatingSpec } from '../models/participating.spec';
+import { CountriesSpec } from '../models/countries.spec';
 import { ParticipantRepository } from '../../participants';
 
 @Injectable()
@@ -20,6 +21,11 @@ export class SearchBuilder {
 	companyNameContains(term: string, remoteMode: boolean): void {
 		this._specs.push(
 			(new CompanyNameSpec()).setParam(term, remoteMode)
+		);
+	}
+	companyInCountries(terms: string[]): void {
+		this._specs.push(
+			(new CountriesSpec()).setParam(terms)
 		);
 	}
 	contactNameContains(term: string, remoteMode: boolean): void {

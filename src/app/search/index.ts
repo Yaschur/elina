@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+
 import { ParticipantModule } from '../participants/';
 
 import { SearchFormComponent } from './components/search-form.component';
@@ -13,6 +15,7 @@ import { SearchBuilder } from './services/search-builder.service';
 		CommonModule,
 		ReactiveFormsModule,
 		ParticipantModule,
+		MultiselectDropdownModule,
 		SearchRoutingModule
 	],
 	declarations: [
