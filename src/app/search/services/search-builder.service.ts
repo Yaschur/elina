@@ -5,6 +5,7 @@ import { ContactNameSpec } from '../models/contact-name.spec';
 import { ParticipatingSpec } from '../models/participating.spec';
 import { CountriesSpec } from '../models/countries.spec';
 import { ParticipantRepository } from '../../participants';
+import { DateCreatedSpec } from '../models/date-created.spec';
 
 @Injectable()
 export class SearchBuilder {
@@ -41,6 +42,11 @@ export class SearchBuilder {
 	notParticipateIn(term: { event: string, status: string, category: string }) {
 		this._specs.push(
 			(new ParticipatingSpec(this._participantRepository, true)).setParam(term.event, term.category, term.status)
+		);
+	}
+	createdBetween(term: { from: Date, to: Date }) {
+		this._specs.push(
+			(new DateCreatedSpec()).setParam(term.from, term.to)
 		);
 	}
 
