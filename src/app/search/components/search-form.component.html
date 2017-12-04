@@ -59,6 +59,20 @@
 								</td>
 							</tr>
 						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.regionsKey">
+							<tr>
+								<th class="pull-right">company's region is one of</th>
+								<td>
+									<ss-multiselect-dropdown formControlName="{{key}}" [options]="regionOptions | async" [settings]="{showCheckAll:true,showUncheckAll:true,dynamicTitleMaxItems:3,displayAllSelectedText:true}"
+									 [texts]="{defaultTitle: 'no region', allSelected: 'any region', checkedPlural: 'regions'}">no region</ss-multiselect-dropdown>
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.countriesKey">
 							<tr>
 								<th class="pull-right">company's country is one of</th>

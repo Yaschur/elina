@@ -5,7 +5,7 @@ export class RegionsQuery implements Query {
 
 	private _ids: string[] = [];
 
-	constructor(private _dirSrv: DirectoryService) { }
+	constructor(private _regions: Region[]) { }
 
 	setParam(terms: string[]): RegionsQuery {
 		this._ids = terms;
@@ -13,10 +13,11 @@ export class RegionsQuery implements Query {
 	}
 
 	async provideFilter(): Promise<any> {
-		const codes = await this._dirSrv.getDir('region').data
-			.map(regions => regions.filter(region => this._ids.some(id => id === region._id)))
-			.flatMap(regions => regions.map(region => (<Region>region).countries))
-			.toPromise();
-		return (new CountriesQuery()).setParam(codes).provideFilter();
+		const codes = this._regions
+			.filter(r => this._ids.some(id => id === r._id))
+			.reduce((cs, c) => cs.concat(<string[]>(<Region>c).countries), []);
+		return Promise.resolve(
+			(new CountriesQuery()).setParam(codes).provideFilter()
+		);
 	}
 }

@@ -7,13 +7,16 @@ import { CountriesQuery } from '../models/countries.query';
 import { ParticipantRepository } from '../../participants';
 import { DateCreatedQuery } from '../models/date-created.query';
 import { RegionsQuery } from '../models/regions.query';
-import { DirectoryService } from '../../directories/index';
+import { DirectoryService, Region } from '../../directories/index';
 
 @Injectable()
 export class SearchBuilder {
 	private _queries: Query[];
+	private _regions: Region[];
 
-	constructor(private _participantRepository: ParticipantRepository, private _dirService: DirectoryService) {
+	constructor(private _participantRepository: ParticipantRepository, dirService: DirectoryService) {
+		dirService.getDir('region').data
+			.subscribe(rs => this._regions = <Region[]>rs);
 		this.reset();
 	}
 
@@ -53,7 +56,7 @@ export class SearchBuilder {
 	}
 	companyInRegions(terms: string[]) {
 		this._queries.push(
-			(new RegionsQuery(this._dirService)).setParam(terms)
+			(new RegionsQuery(this._regions)).setParam(terms)
 		);
 	}
 
