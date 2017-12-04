@@ -84,6 +84,9 @@ export class SearchFormComponent implements OnInit {
 				case this.searchManager.notParticipateKey:
 					this._searchBuilder.notParticipateIn(value);
 					break;
+				case this.searchManager.createdKey:
+					this._searchBuilder.createdBetween(value);
+					break;
 			}
 		});
 		const filter = await this._searchBuilder.build();
@@ -115,6 +118,11 @@ export class SearchFormComponent implements OnInit {
 				event: new FormControl(''),
 				status: new FormControl(''),
 				category: new FormControl('')
+			}));
+		} else if (keyName === this.searchManager.createdKey) {
+			this.searchForm.addControl(key, new FormGroup({
+				from: new FormControl(''),
+				to: new FormControl('')
 			}));
 		} else {
 			this.searchForm.addControl(key, new FormControl(''));

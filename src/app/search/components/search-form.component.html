@@ -39,6 +39,26 @@
 								</td>
 							</tr>
 						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.createdKey">
+							<tr formGroupName="{{key}}">
+								<th class="pull-right">was created</th>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon">after </span>
+										<input formControlName="from" type="date" class="form-control" />
+									</div>
+									<div class="input-group">
+										<span class="input-group-addon">before </span>
+										<input formControlName="to" type="date" class="form-control" />
+									</div>
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.countriesKey">
 							<tr>
 								<th class="pull-right">company's country is one of</th>
