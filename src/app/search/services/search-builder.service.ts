@@ -6,12 +6,14 @@ import { ParticipatingQuery } from '../models/participating.query';
 import { CountriesQuery } from '../models/countries.query';
 import { ParticipantRepository } from '../../participants';
 import { DateCreatedQuery } from '../models/date-created.query';
+import { RegionsQuery } from '../models/regions.query';
+import { DirectoryService } from '../../directories/index';
 
 @Injectable()
 export class SearchBuilder {
 	private _queries: Query[];
 
-	constructor(private _participantRepository: ParticipantRepository) {
+	constructor(private _participantRepository: ParticipantRepository, private _dirService: DirectoryService) {
 		this.reset();
 	}
 
@@ -47,6 +49,11 @@ export class SearchBuilder {
 	createdBetween(term: { from: Date, to: Date }) {
 		this._queries.push(
 			(new DateCreatedQuery()).setParam(term.from, term.to)
+		);
+	}
+	companyInRegions(terms: string[]) {
+		this._queries.push(
+			(new RegionsQuery(this._dirService)).setParam(terms)
 		);
 	}
 
