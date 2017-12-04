@@ -87,6 +87,20 @@
 								</td>
 							</tr>
 						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.activitiesKey">
+							<tr>
+								<th class="pull-right">company's activity is one of</th>
+								<td>
+									<ss-multiselect-dropdown formControlName="{{key}}" [options]="activityOptions | async" [settings]="{showCheckAll:true,showUncheckAll:true,dynamicTitleMaxItems:3,displayAllSelectedText:true}"
+									 [texts]="{defaultTitle: 'no activity', allSelected: 'any activity', checkedPlural: 'activities'}">no activity</ss-multiselect-dropdown>
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.participateKey">
 							<tr formGroupName="{{key}}">
 								<th class="pull-right">participating in</th>

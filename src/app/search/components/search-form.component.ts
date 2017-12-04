@@ -31,6 +31,7 @@ export class SearchFormComponent implements OnInit {
 	allPartyCategories: Observable<ParticipantCategory[]>;
 	countryOptions: Observable<IMultiSelectOption[]>;
 	regionOptions: Observable<IMultiSelectOption[]>;
+	activityOptions: Observable<IMultiSelectOption[]>;
 
 	private _remoteMode: boolean;
 
@@ -56,6 +57,8 @@ export class SearchFormComponent implements OnInit {
 		this.countryOptions = this._dirSrv.getDir('country').data
 			.map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }));
 		this.regionOptions = this._dirSrv.getDir('region').data
+			.map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }));
+		this.activityOptions = this._dirSrv.getDir('activity').data
 			.map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }));
 		this.searchManager = new SearchCriteriaManager();
 		this.searchCriterias = [];
@@ -92,6 +95,9 @@ export class SearchFormComponent implements OnInit {
 					break;
 				case this.searchManager.regionsKey:
 					this._searchBuilder.companyInRegions(value);
+					break;
+				case this.searchManager.activitiesKey:
+					this._searchBuilder.companyActivitiesIn(value);
 					break;
 			}
 		});

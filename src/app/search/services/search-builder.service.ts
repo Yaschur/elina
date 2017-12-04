@@ -8,6 +8,7 @@ import { ParticipantRepository } from '../../participants';
 import { DateCreatedQuery } from '../models/date-created.query';
 import { RegionsQuery } from '../models/regions.query';
 import { DirectoryService, Region } from '../../directories/index';
+import { ActivitiesQuery } from '../models/activities.query';
 
 @Injectable()
 export class SearchBuilder {
@@ -57,6 +58,11 @@ export class SearchBuilder {
 	companyInRegions(terms: string[]) {
 		this._queries.push(
 			(new RegionsQuery(this._regions)).setParam(terms)
+		);
+	}
+	companyActivitiesIn(terms: string[]) {
+		this._queries.push(
+			(new ActivitiesQuery()).setParam(terms)
 		);
 	}
 
