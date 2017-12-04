@@ -1,8 +1,8 @@
-export class CountriesSpec implements Spec {
+export class CountriesQuery implements Query {
 
 	private _codes: string[] = [];
 
-	setParam(terms: string[]): CountriesSpec {
+	setParam(terms: string[]): CountriesQuery {
 		this._codes = terms;
 		return this;
 	}

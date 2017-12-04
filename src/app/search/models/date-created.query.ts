@@ -1,9 +1,9 @@
-export class DateCreatedSpec implements Spec {
+export class DateCreatedQuery implements Query {
 
 	private _createdBefore: Date;
 	private _createdAfter: Date;
 
-	setParam(fromTerm: Date, toTerm: Date) {
+	setParam(fromTerm: Date, toTerm: Date): DateCreatedQuery {
 		this._createdBefore = toTerm;
 		this._createdAfter = fromTerm;
 		return this;

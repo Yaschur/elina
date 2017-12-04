@@ -1,6 +1,6 @@
 import { ParticipantRepository } from '../../participants';
 
-export class ParticipatingSpec implements Spec {
+export class ParticipatingQuery implements Query {
 	private _event: string;
 	private _category: string;
 	private _status: string;
@@ -10,7 +10,7 @@ export class ParticipatingSpec implements Spec {
 		this._not = not;
 	}
 
-	setParam(event: string, category: string, status: string): ParticipatingSpec {
+	setParam(event: string, category: string, status: string): ParticipatingQuery {
 		this._event = event;
 		this._category = category;
 		this._status = status;

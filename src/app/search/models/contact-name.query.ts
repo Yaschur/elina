@@ -1,9 +1,9 @@
-export class ContactNameSpec implements Spec {
+export class ContactNameQuery implements Query {
 
 	private _term: string;
 	private _remoteMode: boolean;
 
-	setParam(term: string, remoteMode: boolean): ContactNameSpec {
+	setParam(term: string, remoteMode: boolean): ContactNameQuery {
 		this._term = term;
 		this._remoteMode = remoteMode;
 		return this;

@@ -1,3 +1,3 @@
-interface Spec {
+interface Query {
 	provideFilter(): Promise<any>;
 }
