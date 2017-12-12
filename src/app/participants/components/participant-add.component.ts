@@ -76,6 +76,7 @@ export class ParticipantAddComponent implements OnInit {
 				throw Error('participant already exists');
 			}
 			await this._partyRepo.store(participant);
+			this._location.back();
 			this.participantForm.get('event').updateValueAndValidity({ onlySelf: false, emitEvent: true });
 			this.participantForm.get('category').setValue('');
 			this.participantForm.get('status').setValue('');
