@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import * as PouchDB from 'pouchdb';
-import * as PouchDbFind from 'pouchdb-find';
+import * as $PouchDB from 'pouchdb';
+import * as $PouchDbFind from 'pouchdb-find';
 import * as PouchDbUpsert from 'pouchdb-upsert';
 
 import { ConfigService, Config } from '../config.service';
 
-PouchDB.plugin(PouchDbFind);
+const PouchDB = $PouchDB['default'];
+
+PouchDB.plugin($PouchDbFind['default']);
 PouchDB.plugin(PouchDbUpsert);
 PouchDB.debug.disable();
 
