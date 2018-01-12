@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default" *ngIf="!collapsed; else linePanel">
 	<div class="panel-heading">
 		Info
 		<button type="button" class="btn btn-link btn-xs" (click)="gotoEdit()">edit</button>
@@ -37,3 +37,6 @@
 		</span>
 	</div>
 </div>
+<ng-template #linePanel>
+	<div class="well well-xs">{{company.name}}</div>
+</ng-template>

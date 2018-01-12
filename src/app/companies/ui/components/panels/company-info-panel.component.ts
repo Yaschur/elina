@@ -11,7 +11,9 @@ import { CompanyDetailsVm } from '../../models/company-details-vm.model';
 export class CompanyInfoPanelComponent {
 
 	@Input()
-	company: CompanyDetailsVm = new CompanyDetailsVm();
+	company = new CompanyDetailsVm();
+	@Input()
+	collapsed = false;
 
 	constructor(private _router: Router) { }
 
