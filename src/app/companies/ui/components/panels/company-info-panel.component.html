@@ -3,7 +3,7 @@
 		Info
 		<button type="button" class="btn btn-link btn-xs" (click)="gotoEdit()">edit</button>
 		<div class="pull-right">
-			<button type="button" class="btn btn-xs">
+			<button type="button" class="btn btn-xs" (click)="toggleCollapse()">
 				<span class="glyphicon glyphicon-minus"></span>
 			</button>
 		</div>
@@ -38,5 +38,5 @@
 	</div>
 </div>
 <ng-template #linePanel>
-	<div class="well well-xs">{{company.name}}</div>
+	<div class="well well-sm">{{company.name}}</div>
 </ng-template>

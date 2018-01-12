@@ -20,4 +20,7 @@ export class CompanyInfoPanelComponent {
 	gotoEdit(): void {
 		this._router.navigate(['company/edit', this.company.id]);
 	}
+	toggleCollapse(): void {
+		this.collapsed = !this.collapsed;
+	}
 }
