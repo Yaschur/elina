@@ -13,6 +13,7 @@ import { CompanyEditComponent } from './components/company-edit.component';
 import { CompanyDetailsComponent } from './components/company-details.component';
 import { ContactEditComponent } from './components/contact-edit.component';
 import { ContactDetailsComponent } from './components/contact-details.component';
+import { CompanyInfoPanelComponent } from './components/panels/company-info-panel.component';
 
 @NgModule({
 	imports: [
@@ -24,6 +25,7 @@ import { ContactDetailsComponent } from './components/contact-details.component'
 		CompaniesRoutingModule
 	],
 	declarations: [
+		CompanyInfoPanelComponent,
 		CompanyListComponent,
 		CompanyEditComponent,
 		CompanyDetailsComponent,

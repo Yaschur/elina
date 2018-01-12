@@ -1,11 +1,3 @@
-pre.memo {
-	line-height: 1.2em;
-	border: none;
-	word-break: normal;
-	white-space: pre-line;
-	background-color: inherit;
-	padding: 1px 1px 1px 5px;
-}
 dt.note {
 	font-weight: normal;
 }

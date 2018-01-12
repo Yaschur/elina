@@ -1,0 +1,39 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Info
+		<button type="button" class="btn btn-link btn-xs" (click)="gotoEdit()">edit</button>
+		<div class="pull-right">
+			<button type="button" class="btn btn-xs">
+				<span class="glyphicon glyphicon-minus"></span>
+			</button>
+		</div>
+	</div>
+	<div class="panel-body">
+		<dl class="dl-horizontal">
+			<dt>Company name</dt>
+			<dd>{{company.name}}</dd>
+			<dt>Description</dt>
+			<dd>
+				<pre class="memo">{{company.description}}</pre>
+			</dd>
+			<dt>Country</dt>
+			<dd>{{company.country}}</dd>
+			<dt>City</dt>
+			<dd>{{company.city}}</dd>
+			<dt>Activities</dt>
+			<dd>{{company.activities}}</dd>
+			<dt>Phone</dt>
+			<dd>{{company.phone}}</dd>
+			<dt>Website</dt>
+			<dd>{{company.website}}</dd>
+		</dl>
+		<span class="text-nowrap">
+			<small>
+				<em>created:</em> {{company.created | date:'dd MMM yyyy HH:mm'}}</small>
+		</span>
+		<span class="text-nowrap">
+			<small>
+				<em>updated:</em> {{company.updated | date:'dd MMM yyyy HH:mm'}}</small>
+		</span>
+	</div>
+</div>

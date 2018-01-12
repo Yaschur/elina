@@ -13,7 +13,10 @@ import { ContactBaseVm } from '../models/contact-base-vm.model';
 @Component({
 	selector: 'app-company-details',
 	templateUrl: './company-details.component.html',
-	styleUrls: ['./company-details.component.css']
+	styleUrls: [
+		'./panels/panels.css',
+		'./company-details.component.css'
+	]
 })
 
 export class CompanyDetailsComponent implements OnInit {
@@ -102,75 +105,3 @@ export class CompanyDetailsComponent implements OnInit {
 		this.cancelNote();
 	}
 }
-
-// 	private mapCompany(domain: Company) {
-// 		this._domainCompany = domain;
-// 		const company = domain;
-// 		this.company.id = company._id;
-// 		this.company.name = company.name;
-// 		this.company.description = company.description;
-// 		this.company.city = company.city;
-// 		this.company.website = company.website;
-// 		this.company.phone = company.phone;
-// 		this.company.created = company.created;
-// 		this.company.updated = company.updated;
-// 		this.mapContacts(this.includeFired);
-// 		this.company.notes = company.notes
-// 			.map(n => ({ created: n.created, text: n.text }));
-// 		this._dirSrv.getDir('country').data
-// 			.subscribe(cs => {
-// 				const country = cs.find(c => c._id === company.country);
-// 				if (country) {
-// 					this.company.country = country.name;
-// 				}
-// 			});
-// 		this._dirSrv.getDir('activity').data
-// 			.subscribe(as => {
-// 				this.company.activities = as
-// 					.filter(a => company.activities.includes(a._id))
-// 					.map(a => a.name)
-// 					.join(', ');
-// 			});
-// 	}
-
-// 	private mapContacts(withFired) {
-// 		this.company.contacts = this._domainCompany.contacts
-// 			.filter(c => withFired || c.active)
-// 			.map(c => new ContactListVm(c))
-// 			.sort((a, b) => {
-// 				const aName = a.name.toUpperCase();
-// 				const bName = b.name.toUpperCase();
-// 				if (aName < bName) {
-// 					return -1;
-// 				}
-// 				if (aName > bName) {
-// 					return 1;
-// 				}
-// 				return 0;
-// 			});
-// 	}
-// }
-
-// class ContactListVm {
-// 	id: string;
-// 	name: string;
-// 	jobTitle: string;
-// 	// jobResponsibilities: string[];
-// 	// buyContents: string[];
-// 	// sellContents: string[];
-// 	// phone: string;
-// 	// mobile: string;
-// 	// email: string;
-// 	active: boolean;
-// 	isNew: boolean;
-// 	// created: Date;
-// 	// updated: Date;
-
-// 	constructor(contact: Contact) {
-// 		this.id = contact._id;
-// 		this.name = contact.name;
-// 		this.jobTitle = contact.jobTitle;
-// 		this.isNew = contact.active && new Date().getTime() - new Date(contact.created).getTime() < NEWPERIOD;
-// 		this.active = contact.active;
-// 	}
-// }
