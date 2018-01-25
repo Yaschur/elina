@@ -13,11 +13,13 @@ import { ConfigService } from './config.service';
 
 import { DbMaintenanceComponent } from './maintenance/db-maintenance.component';
 import { ConfigComponent } from './maintenance/config.component';
+import { UsettingsService } from './usettings/usettings.service';
 
 export * from './store/store.service';
 export * from './xlsx/xlsx.service';
 export * from './config.service';
 export * from './entity.model';
+export * from './usettings/usettings.service';
 
 @NgModule({
 	imports: [
@@ -34,7 +36,8 @@ export * from './entity.model';
 		ConfigService,
 		DbMaintService,
 		StoreService,
-		XlsxService
+		XlsxService,
+		UsettingsService
 	],
 })
 export class InfraModule { }
