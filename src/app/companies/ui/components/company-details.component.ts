@@ -24,14 +24,12 @@ const PanelsCheckersKey = 'companypanels';
 export class CompanyDetailsComponent implements OnInit {
 	domainItem: Observable<Company>;
 	company: CompanyDetailsVm = new CompanyDetailsVm();
-	contacts: ContactBaseVm[] = [];
 	note;
 	indNoteToDel;
-	includeFired = false;
-	checkGlyph = 'unchecked';
 
 	panelsCheckers: { [key: string]: boolean } = {
-		'info': false
+		'info': false,
+		'contacts': false
 	};
 
 	constructor(
@@ -52,7 +50,6 @@ export class CompanyDetailsComponent implements OnInit {
 			.subscribe(item => {
 				if (item) {
 					this.company = this._vmSrv.mapToCompanyDetailsVm(item);
-					this.contacts = this.company.contacts.filter(c => c.active);
 				}
 			});
 		this._usettings.get(PanelsCheckersKey)
@@ -65,21 +62,6 @@ export class CompanyDetailsComponent implements OnInit {
 
 	gotoEdit(): void {
 		this._router.navigate(['company/edit', this.company.id]);
-	}
-
-	contactDetails(contactId): void {
-		this._router.navigate(['contact/details', this.company.id, contactId]);
-	}
-
-	toggleActive(): void {
-		this.includeFired = !this.includeFired;
-		this.checkGlyph = this.includeFired ? 'check' : 'unchecked';
-		this.contacts = this.company.contacts
-			.filter(c => this.includeFired || c.active);
-	}
-
-	addContact(): void {
-		this._router.navigate(['contact/edit', this.company.id, '__new__']);
 	}
 
 	addNote() {

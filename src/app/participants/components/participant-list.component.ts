@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
@@ -16,7 +16,14 @@ import { ParticipantRepository } from '../repositories/participant.repository';
 
 export class ParticipantListComponent implements OnInit {
 
-	@Input() company: Observable<Company>;
+	@Input()
+	company: Observable<Company>;
+
+	@Input()
+	collapsed = false;
+
+	@Output()
+	toggle = new EventEmitter<boolean>();
 
 	participants: ParticipantListVM[];
 
@@ -96,6 +103,11 @@ export class ParticipantListComponent implements OnInit {
 
 	editParticipant(id: string): void {
 		this._router.navigate(['participant/edit', id]);
+	}
+
+	toggleCollapse(): void {
+		this.collapsed = !this.collapsed;
+		this.toggle.emit(this.collapsed);
 	}
 }
 

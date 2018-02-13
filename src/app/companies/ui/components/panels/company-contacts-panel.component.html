@@ -1,6 +1,11 @@
 <div class="panel panel-default" *ngIf="!collapsed; else linePanel">
-	<div class="panel-heading">Participants
-		<button type="button" class="btn btn-link btn-xs" (click)="addParticipant()">add participant</button>
+	<div class="panel-heading">
+		Contacts
+		<button type="button" class="btn btn-link btn-xs" (click)="addContact()">add contact</button>
+		<button type="button" class="btn btn-link btn-xs" (click)="toggleActive()">
+			<span class="glyphicon glyphicon-{{checkGlyph}}"></span>
+			include fired
+		</button>
 		<div class="pull-right">
 			<button type="button" class="btn btn-xs" (click)="toggleCollapse()">
 				<span class="glyphicon glyphicon-minus"></span>
@@ -11,21 +16,20 @@
 		<table class="table table-hover table-condensed">
 			<thead>
 				<tr>
-					<th>event</th>
-					<th>contact</th>
-					<th>category</th>
-					<th>status</th>
+					<th>name</th>
+					<th>job title</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let participant of participants" (click)="editParticipant(participant._id)">
-					<td>{{participant.eventName}}</td>
+				<tr *ngFor="let contact of getContacts()" (click)="contactDetails(contact.id)">
 					<td>
-						{{participant.contactName}}
-						<sup *ngIf="participant.contactIsFired">fired!</sup>
+						{{contact.name}}
+						<sup *ngIf="contact.isNew">
+							<mark>new</mark>
+						</sup>
+						<sup *ngIf="!contact.active">fired!</sup>
 					</td>
-					<td>{{participant.categoryName}}</td>
-					<td>{{participant.statusName}}</td>
+					<td>{{contact.jobTitle}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -34,8 +38,8 @@
 <ng-template #linePanel>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			Participants:
-			<strong>{{participants.length}}</strong>
+			Contacts:
+			<strong>{{getContacts().length}}</strong>
 			<div class="pull-right">
 				<button type="button" class="btn btn-xs" (click)="toggleCollapse()">
 					<span class="glyphicon glyphicon-plus"></span>

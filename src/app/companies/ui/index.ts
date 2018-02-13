@@ -14,6 +14,7 @@ import { CompanyDetailsComponent } from './components/company-details.component'
 import { ContactEditComponent } from './components/contact-edit.component';
 import { ContactDetailsComponent } from './components/contact-details.component';
 import { CompanyInfoPanelComponent } from './components/panels/company-info-panel.component';
+import { CompanyContactsPanelComponent } from './components/panels/company-contacts-panel.component';
 
 @NgModule({
 	imports: [
@@ -26,6 +27,7 @@ import { CompanyInfoPanelComponent } from './components/panels/company-info-pane
 	],
 	declarations: [
 		CompanyInfoPanelComponent,
+		CompanyContactsPanelComponent,
 		CompanyListComponent,
 		CompanyEditComponent,
 		CompanyDetailsComponent,

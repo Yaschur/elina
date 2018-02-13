@@ -7,39 +7,8 @@
 	</button>
 </nav>
 <app-company-info-panel [company]="company" [collapsed]="panelsCheckers['info']" (toggle)="panelToggle('info', $event)"></app-company-info-panel>
-<div class="panel panel-default">
-	<div class="panel-heading">
-		Contacts
-		<button type="button" class="btn btn-link btn-xs" (click)="addContact()">add contact</button>
-		<button type="button" class="btn btn-link btn-xs" (click)="toggleActive()">
-			<span class="glyphicon glyphicon-{{checkGlyph}}"></span>
-			include fired
-		</button>
-	</div>
-	<div class="panel-body">
-		<table class="table table-hover table-condensed">
-			<thead>
-				<tr>
-					<th>name</th>
-					<th>job title</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let contact of contacts" (click)="contactDetails(contact.id)">
-					<td>
-						{{contact.name}}
-						<sup *ngIf="contact.isNew">
-							<mark>new</mark>
-						</sup>
-						<sup *ngIf="!contact.active">fired!</sup>
-					</td>
-					<td>{{contact.jobTitle}}</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
-<app-participant-list [company]="domainItem"></app-participant-list>
+<app-company-contacts-panel [company]="company" [collapsed]="panelsCheckers['contacts']" (toggle)="panelToggle('contacts', $event)"></app-company-contacts-panel>
+<app-participant-list [company]="domainItem" [collapsed]="panelsCheckers['participants']" (toggle)="panelToggle('participants', $event)"></app-participant-list>
 <div class="panel panel-default">
 	<div class="panel-heading">
 		Notes
