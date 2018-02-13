@@ -9,6 +9,9 @@ import { Note } from '../../core/models/note.model';
 import { CompanyVmService } from '../services/company-vm.service';
 import { CompanyDetailsVm } from '../models/company-details-vm.model';
 import { ContactBaseVm } from '../models/contact-base-vm.model';
+import { UsettingsService } from '../../../infra';
+
+const PanelsCheckersKey = 'companypanels';
 
 @Component({
 	selector: 'app-company-details',
@@ -18,7 +21,6 @@ import { ContactBaseVm } from '../models/contact-base-vm.model';
 		'./company-details.component.css'
 	]
 })
-
 export class CompanyDetailsComponent implements OnInit {
 	domainItem: Observable<Company>;
 	company: CompanyDetailsVm = new CompanyDetailsVm();
@@ -28,12 +30,17 @@ export class CompanyDetailsComponent implements OnInit {
 	includeFired = false;
 	checkGlyph = 'unchecked';
 
+	panelsCheckers: { [key: string]: boolean } = {
+		'info': false
+	};
+
 	constructor(
 		private _route: ActivatedRoute,
 		private _router: Router,
 		private _location: Location,
 		private _companyRepo: CompanyRepository,
-		private _vmSrv: CompanyVmService
+		private _vmSrv: CompanyVmService,
+		private _usettings: UsettingsService
 	) {
 		this.cancelNote();
 		this.domainItem = this._route.params
@@ -48,6 +55,8 @@ export class CompanyDetailsComponent implements OnInit {
 					this.contacts = this.company.contacts.filter(c => c.active);
 				}
 			});
+		this._usettings.get(PanelsCheckersKey)
+			.then(p => { if (p) { this.panelsCheckers = p; } });
 	}
 
 	gotoList(): void {
@@ -103,5 +112,9 @@ export class CompanyDetailsComponent implements OnInit {
 		await this._companyRepo.store(dCompany);
 		this.company.notes.splice(ind, 1);
 		this.cancelNote();
+	}
+	async panelToggle(key: string, collapse: boolean) {
+		this.panelsCheckers[key] = collapse;
+		await this._usettings.set(PanelsCheckersKey, this.panelsCheckers);
 	}
 }

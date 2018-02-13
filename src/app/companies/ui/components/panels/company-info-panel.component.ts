@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { CompanyDetailsVm } from '../../models/company-details-vm.model';
 
@@ -14,6 +14,8 @@ export class CompanyInfoPanelComponent {
 	company = new CompanyDetailsVm();
 	@Input()
 	collapsed = false;
+	@Output()
+	toggle = new EventEmitter<boolean>();
 
 	constructor(private _router: Router) { }
 
@@ -22,5 +24,6 @@ export class CompanyInfoPanelComponent {
 	}
 	toggleCollapse(): void {
 		this.collapsed = !this.collapsed;
+		this.toggle.emit(this.collapsed);
 	}
 }

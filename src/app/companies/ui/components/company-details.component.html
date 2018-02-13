@@ -6,7 +6,7 @@
 		<span class="glyphicon glyphicon-menu-hamburger"></span>
 	</button>
 </nav>
-<app-company-info-panel [company]="company" [collapsed]="false"></app-company-info-panel>
+<app-company-info-panel [company]="company" [collapsed]="panelsCheckers['info']" (toggle)="panelToggle('info', $event)"></app-company-info-panel>
 <div class="panel panel-default">
 	<div class="panel-heading">
 		Contacts
