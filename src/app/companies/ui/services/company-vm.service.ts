@@ -78,6 +78,9 @@ export class CompanyVmService {
 		r.isNew = contact.active && new Date().getTime() - new Date(contact.created).getTime() < NEWPERIOD;
 		r.jobTitle = contact.jobTitle;
 		r.name = contact.name;
+		r.email = contact.email;
+		r.mobile = contact.mobile;
+		r.phone = contact.phone;
 		return r;
 	}
 
@@ -90,14 +93,11 @@ export class CompanyVmService {
 			.map(a => a.name)
 			.join(', ');
 		r.created = contact.created;
-		r.email = contact.email;
 		r.firstName = contact.firstName;
 		r.jobResponsibilities = this.jobresponsibilities.filter(a => contact.jobResponsibilities.includes(a._id))
 			.map(a => a.name)
 			.join(', ');
 		r.lastName = contact.lastName;
-		r.mobile = contact.mobile;
-		r.phone = contact.phone;
 		r.sellContents = this.contentresponsibilities.filter(a => contact.sellContents.includes(a._id))
 			.map(a => a.name)
 			.join(', ');

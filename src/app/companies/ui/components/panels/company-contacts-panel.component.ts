@@ -38,7 +38,7 @@ export class CompanyContactsPanelComponent {
 		this.includeFired = !this.includeFired;
 		this.checkGlyph = this.includeFired ? 'check' : 'unchecked';
 	}
-	contactDetails(contactId): void {
-		this._router.navigate(['contact/details', this.company.id, contactId]);
-	}
+	// contactDetails(contactId): void {
+	// 	this._router.navigate(['contact/details', this.company.id, contactId]);
+	// }
 }

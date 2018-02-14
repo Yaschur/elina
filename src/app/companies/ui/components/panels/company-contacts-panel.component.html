@@ -18,18 +18,27 @@
 				<tr>
 					<th>name</th>
 					<th>job title</th>
+					<th>contacts</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let contact of getContacts()" (click)="contactDetails(contact.id)">
+				<tr *ngFor="let contact of getContacts()">
 					<td>
-						{{contact.name}}
+						<a routerLink="/contact/details/{{company.id}}/{{contact.id}}">{{contact.name}}</a>
 						<sup *ngIf="contact.isNew">
 							<mark>new</mark>
 						</sup>
 						<sup *ngIf="!contact.active">fired!</sup>
 					</td>
 					<td>{{contact.jobTitle}}</td>
+					<td>
+						<span *ngIf="contact.mobile" style="white-space: nowrap">
+							<span class="glyphicon glyphicon-phone"></span> {{contact.mobile}} </span>
+						<span *ngIf="contact.phone" style="white-space: nowrap">
+							<span class="glyphicon glyphicon-phone-alt"></span> {{contact.phone}}</span>
+						<span *ngIf="contact.email" style="white-space: nowrap">
+							<span class="glyphicon glyphicon-envelope"></span> {{contact.email}}</span>
+					</td>
 				</tr>
 			</tbody>
 		</table>
