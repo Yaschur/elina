@@ -1,11 +1,11 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		Search Query Form
+		Search
 		<span class="pull-right" *ngIf="searchCriterias.length > 0">
-			<select #criteriaBox>
+			<select #criteriaBox (change)="addCriteria($event.target.value);criteriaBox.value='';">
+				<option value="">choose to add search criteria</option>
 				<option *ngFor="let criteria of searchCriterias" [value]="criteria.key">{{criteria.title}}</option>
 			</select>
-			<button class="btn btn-default btn-sm" type="button" (click)="addCriteria(criteriaBox.value)">add criteria</button>
 		</span>
 	</div>
 	<div class="panel-body">
@@ -15,7 +15,7 @@
 					<tbody [ngSwitch]="searchManager.getKeyName(key)">
 						<ng-template [ngSwitchCase]="searchManager.companyNameKey">
 							<tr>
-								<th class="pull-right">company name contains</th>
+								<th class="pull-right">by company name</th>
 								<td>
 									<input formControlName="{{key}}" type="text" class="form-control" />
 								</td>
@@ -28,7 +28,7 @@
 						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.contactNameKey">
 							<tr>
-								<th class="pull-right">has contact name contains</th>
+								<th class="pull-right">by contact name</th>
 								<td>
 									<input formControlName="{{key}}" type="text" class="form-control" />
 								</td>
@@ -41,7 +41,7 @@
 						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.createdKey">
 							<tr formGroupName="{{key}}">
-								<th class="pull-right">was created</th>
+								<th class="pull-right">by date created</th>
 								<td>
 									<div class="input-group">
 										<span class="input-group-addon">after </span>
@@ -61,7 +61,7 @@
 						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.regionsKey">
 							<tr>
-								<th class="pull-right">company's region is one of</th>
+								<th class="pull-right">by regions</th>
 								<td>
 									<ss-multiselect-dropdown formControlName="{{key}}" [options]="regionOptions | async" [settings]="{showCheckAll:true,showUncheckAll:true,dynamicTitleMaxItems:3,displayAllSelectedText:true}"
 									 [texts]="{defaultTitle: 'no region', allSelected: 'any region', checkedPlural: 'regions'}">no region</ss-multiselect-dropdown>
@@ -75,7 +75,7 @@
 						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.countriesKey">
 							<tr>
-								<th class="pull-right">company's country is one of</th>
+								<th class="pull-right">by countries</th>
 								<td>
 									<ss-multiselect-dropdown formControlName="{{key}}" [options]="countryOptions | async" [settings]="{showCheckAll:true,showUncheckAll:true,dynamicTitleMaxItems:3,displayAllSelectedText:true}"
 									 [texts]="{defaultTitle: 'no country', allSelected: 'any country', checkedPlural: 'countries'}">no country</ss-multiselect-dropdown>
@@ -89,7 +89,7 @@
 						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.activitiesKey">
 							<tr>
-								<th class="pull-right">company's activity is one of</th>
+								<th class="pull-right">by activities</th>
 								<td>
 									<ss-multiselect-dropdown formControlName="{{key}}" [options]="activityOptions | async" [settings]="{showCheckAll:true,showUncheckAll:true,dynamicTitleMaxItems:3,displayAllSelectedText:true}"
 									 [texts]="{defaultTitle: 'no activity', allSelected: 'any activity', checkedPlural: 'activities'}">no activity</ss-multiselect-dropdown>
@@ -103,7 +103,7 @@
 						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.participateKey">
 							<tr formGroupName="{{key}}">
-								<th class="pull-right">participating in</th>
+								<th class="pull-right">by participation</th>
 								<td>
 									<select formControlName="event" class="form-control">
 										<option value="">any event</option>
@@ -133,7 +133,7 @@
 						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.notParticipateKey">
 							<tr formGroupName="{{key}}">
-								<th class="pull-right">NOT participating in</th>
+								<th class="pull-right">by NO participation</th>
 								<td>
 									<select formControlName="event" class="form-control">
 										<option value="">any event</option>
