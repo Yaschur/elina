@@ -4,13 +4,25 @@
 			<span class="glyphicon glyphicon-home"></span> Company
 		</p>
 		<button type="button" class="btn btn-default navbar-btn" (click)="onCancel()">
-		<span class="glyphicon glyphicon-arrow-left"></span> close
-	</button>
+			<span class="glyphicon glyphicon-arrow-left"></span> close
+		</button>
 		<button type="button" [disabled]="companyForm.pristine || companyForm.invalid" class="btn btn-default navbar-btn"
 		 (click)="onSubmit()">
-		<span class="glyphicon glyphicon-ok"></span> SAVE
-	</button>
+			<span class="glyphicon glyphicon-ok"></span> SAVE
+		</button>
+		<button type="button" *ngIf="canBeDeleted" class="btn btn-default navbar-btn pull-right" [disabled]="modalRef" (click)="deleteConfirmation(template)">
+			<span class="glyphicon glyphicon-trash"></span> delete
+		</button>
 	</nav>
+	<ng-template #template>
+		<div class="modal-body" role="dialog">
+			<div class="panel panel-default">
+				<div class="panel-body">You are about to delete company record from database. This can't be undone. Are you sure?</div>
+			</div>
+			<button type="button" class="btn btn-info" (click)="deleteCancelled()">No, no way</button>
+			<button type="button" class="btn btn-danger" (click)="deleteConfirmed()">Yes, delete</button>
+		</div>
+	</ng-template>
 
 	<div class="form-group" [ngClass]="{'has-error': companyForm.get('name').dirty && companyForm.get('name').invalid}">
 		<label for="name">Name:</label>
@@ -32,7 +44,8 @@
 		<input id="city" formControlName="city" type="text" class="form-control">
 	</div>
 	<div class="form-group">
-		<label for="activities">Activities:</label> <small>use Ctrl-click for multiple selection or deselection</small>
+		<label for="activities">Activities:</label>
+		<small>use Ctrl-click for multiple selection or deselection</small>
 		<select multiple id="activities" formControlName="activities" class="form-control">
 			<option *ngFor="let item of activities | async" [value]="item._id">{{item.name}}</option>
 		</select>
