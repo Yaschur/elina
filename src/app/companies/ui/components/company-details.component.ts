@@ -26,6 +26,8 @@ export class CompanyDetailsComponent implements OnInit {
 	company: CompanyDetailsVm = new CompanyDetailsVm();
 	note;
 	indNoteToDel;
+	hiringSign = '';
+	hiringGlyph = '';
 
 	panelsCheckers: { [key: string]: boolean } = {
 		'info': false,
@@ -50,6 +52,7 @@ export class CompanyDetailsComponent implements OnInit {
 			.subscribe(item => {
 				if (item) {
 					this.company = this._vmSrv.mapToCompanyDetailsVm(item);
+					this.setHiringSign();
 				}
 			});
 		this._usettings.get(PanelsCheckersKey)
@@ -98,5 +101,18 @@ export class CompanyDetailsComponent implements OnInit {
 	async panelToggle(key: string, collapse: boolean) {
 		this.panelsCheckers[key] = collapse;
 		await this._usettings.set(PanelsCheckersKey, this.panelsCheckers);
+	}
+
+	async toggleActive() {
+		const dCompany = await this._companyRepo.getById(this.company.id);
+		dCompany.toggleActivity();
+		await this._companyRepo.store(dCompany);
+		this.company.active = dCompany.active;
+		this.setHiringSign();
+	}
+
+	private setHiringSign() {
+		this.hiringSign = this.company.active ? 'deactivate' : 'activate';
+		this.hiringGlyph = this.company.active ? 'log-out' : 'log-in';
 	}
 }

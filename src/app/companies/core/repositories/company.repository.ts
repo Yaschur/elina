@@ -30,11 +30,14 @@ export class CompanyRepository {
 		return new Company(dbItem);
 	}
 
-	public async findByName(term: string, exact: boolean = false): Promise<Company[]> {
+	public async findByName(term: string, exact: boolean = false, activeOnly: boolean = true): Promise<Company[]> {
 		const remoteMode = await this._storeService.checkRemoteMode();
 		const tTerm = exact ? '^' + StoreService.utils.escapeForRegex(term) + '$' : StoreService.utils.escapeForRegex(term);
-		const filter = { name: { $regex: remoteMode ? '(*UTF8)(?i)' + tTerm : new RegExp(tTerm, 'i') } };
-		return await this.findByFilter(filter);
+		const filter: any[] = [{ name: { $regex: remoteMode ? '(*UTF8)(?i)' + tTerm : new RegExp(tTerm, 'i') } }];
+		if (activeOnly) {
+			filter.push({ active: true });
+		}
+		return await this.findByFilter(filter.length === 1 ? filter[0] : filter);
 	}
 
 	public async findByFilter(filter: any): Promise<Company[]> {
@@ -45,10 +48,10 @@ export class CompanyRepository {
 		)).map(dbItem => new Company(dbItem));
 	}
 
-	public async findAll(): Promise<Company[]> {
+	public async findAll(activeOnly: boolean = true): Promise<Company[]> {
 		return (await this._storeService.find(
 			CompanyRepository.entityType,
-			{ name: { $gt: null } },
+			activeOnly ? [{ name: { $gt: null } }, { active: true }] : { name: { $gt: null } },
 			['name']
 		)).map(dbItem => new Company(dbItem));
 	}

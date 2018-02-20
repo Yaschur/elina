@@ -5,6 +5,11 @@
 	<button type="button" class="btn btn-default navbar-btn" (click)="gotoList()">
 		<span class="glyphicon glyphicon-menu-hamburger"></span>
 	</button>
+	<div class="pull-right">
+		<button type="button" class="btn btn-default navbar-btn" (click)="toggleActive()">
+			<span class="glyphicon glyphicon-{{hiringGlyph}}"></span> {{hiringSign}}
+		</button>
+	</div>
 </nav>
 <app-company-info-panel [company]="company" [collapsed]="panelsCheckers['info']" (toggle)="panelToggle('info', $event)"></app-company-info-panel>
 <app-company-contacts-panel [company]="company" [collapsed]="panelsCheckers['contacts']" (toggle)="panelToggle('contacts', $event)"></app-company-contacts-panel>

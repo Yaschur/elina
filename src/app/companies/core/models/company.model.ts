@@ -13,6 +13,7 @@ export class Company extends Entity {
 	notes: Note[];
 	contacts: Contact[];
 
+	active: boolean;
 	created: Date;
 	updated: Date;
 
@@ -28,6 +29,7 @@ export class Company extends Entity {
 		this.activities = item.activities || [];
 		this.phone = item.phone || '';
 		this.website = item.website || '';
+		this.active = item.active === undefined ? true : item.active;
 		this.created = item.created || new Date();
 		this.updated = item.updated || new Date();
 
@@ -42,5 +44,8 @@ export class Company extends Entity {
 			return null;
 		}
 		return this.contacts[contInd];
+	}
+	toggleActivity(): void {
+		this.active = !this.active;
 	}
 }

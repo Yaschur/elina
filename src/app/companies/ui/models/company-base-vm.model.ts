@@ -4,4 +4,5 @@ export class CompanyBaseVm {
 	country: string;
 	city: string;
 	isNew: boolean;
+	active: boolean;
 }
