@@ -21,6 +21,8 @@ export class CompanyEditComponent implements OnInit {
 	countries: Observable<Country[]>;
 	activities: Observable<Activity[]>;
 
+	similars: string[];
+
 	companyForm: FormGroup;
 
 	modalRef: BsModalRef;
@@ -38,6 +40,7 @@ export class CompanyEditComponent implements OnInit {
 		this.countries = this._dirSrv.getDir('country').data;
 		this.activities = this._dirSrv.getDir('activity').data;
 		this.canBeDeleted = false;
+		this.similars = [];
 		this.createForm();
 	}
 
@@ -55,7 +58,7 @@ export class CompanyEditComponent implements OnInit {
 			});
 	}
 
-	onSubmit() {
+	async onSubmit(force: boolean = true) {
 		const company = new Company({
 			_id: this.company ? this.company._id : null,
 			name: this.companyForm.get('name').value.trim(),
@@ -70,6 +73,14 @@ export class CompanyEditComponent implements OnInit {
 			notes: this.company ? this.company.notes : [],
 			contacts: this.company ? this.company.contacts : []
 		});
+		if (!force && this.companyForm.controls['name'].dirty) {
+			const similars = (await this._companyRepo.findByName(company.name, false, false))
+				.filter(c => !this.company || c._id !== this.company._id);
+			if (similars.length > 0) {
+				this.similars = similars.map(s => s.name);
+				return;
+			}
+		}
 		this._companyRepo.store(company)
 			.then(() => this._router.navigate(['company/details', company._id]))
 			.catch(e => console.log(e));
