@@ -47,11 +47,12 @@ export class CompanyEditComponent implements OnInit {
 		cobs
 			.subscribe(item => {
 				this.company = item;
+				if (item) {
+					this._partyRepo.FindByCompany(item._id)
+						.then(prts => this.canBeDeleted = prts.length === 0);
+				}
 				this.initForm();
 			});
-		cobs
-			.switchMap(item => item ? this._partyRepo.FindByCompany(item._id) : Observable.of([]))
-			.subscribe(pts => this.canBeDeleted = pts.length === 0);
 	}
 
 	onSubmit() {

@@ -17,7 +17,12 @@ import { CompanyDetailsVm } from '../models/company-details-vm.model';
 })
 export class CompanyListComponent implements OnInit {
 	private companies: BehaviorSubject<Company[]> = new BehaviorSubject<Company[]>([]);
-	private searchTerms: Subject<string> = new Subject<string>();
+	private searchTerms: Subject<{ term: string, inact: boolean }> = new Subject<{ term: string, inact: boolean }>();
+
+	includeInactive = false;
+	term = '';
+
+	checkGlyph = 'unchecked';
 
 	companyList: Observable<CompanyListVm[]>;
 
@@ -34,13 +39,14 @@ export class CompanyListComponent implements OnInit {
 			.then(cs => this.companies.next(cs));
 		this.searchTerms
 			.debounceTime(500)
-			.distinctUntilChanged((x, y) => x.trim().toUpperCase() === y.trim().toUpperCase())
-			.subscribe(async term => {
-				const search = term.trim();
-				const cs = await (search ? this._companyRepo.findByName(search) : this._companyRepo.findAll());
+			.distinctUntilChanged((x, y) => x.term.trim().toUpperCase() === y.term.trim().toUpperCase() && x.inact === y.inact)
+			.subscribe(async m => {
+				const search = m.term.trim();
+				const cs = await (search ? this._companyRepo.findByName(search, false, !m.inact) : this._companyRepo.findAll(!m.inact));
 				this.companies.next(cs);
 			});
-		this.companyList = this.companies.map(cs => cs.map(c => this._vmSrv.mapToCompanyListVm(c)));
+		this.companyList = this.companies
+			.map(cs => cs.map(c => this._vmSrv.mapToCompanyListVm(c)));
 	}
 
 	gotoNew(): void {
@@ -52,7 +58,8 @@ export class CompanyListComponent implements OnInit {
 	}
 
 	search(term: string): void {
-		this.searchTerms.next(term);
+		this.term = term;
+		this.searchTerms.next({ term: this.term, inact: this.includeInactive});
 	}
 
 	onXlsx(): void {
@@ -67,5 +74,11 @@ export class CompanyListComponent implements OnInit {
 				);
 			});
 		subs.unsubscribe();
+	}
+
+	toggleActive(): void {
+		this.includeInactive = !this.includeInactive;
+		this.checkGlyph = this.includeInactive ? 'check' : 'unchecked';
+		this.searchTerms.next({ term: this.term, inact: this.includeInactive});
 	}
 }
