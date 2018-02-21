@@ -37,6 +37,7 @@
 				<sup *ngIf="company.isNew">
 					<mark>new</mark>
 				</sup>
+				<sup *ngIf="!company.active">inactive!</sup>
 			</td>
 			<td scope="row">{{company.country}} {{company.city ? '(' + company.city + ')' : ''}}</td>
 			<td scope="row">{{company.activitiesNum}}</td>

@@ -39,7 +39,7 @@ export class CompanyVmService {
 		r.id = company._id;
 		r.city = company.city;
 		r.country = (this.countries.find(c => c._id === company.country) || { name: '' }).name;
-		r.isNew = new Date().getTime() - new Date(company.created).getTime() < NEWPERIOD;
+		r.isNew = company.active && new Date().getTime() - new Date(company.created).getTime() < NEWPERIOD;
 		r.name = company.name;
 		r.active = company.active;
 		return r;
