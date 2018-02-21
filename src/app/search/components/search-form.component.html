@@ -101,6 +101,23 @@
 								</td>
 							</tr>
 						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.retiredKey">
+							<tr>
+								<th class="pull-right">by active/ inactive state</th>
+								<td>
+									<select formControlName="{{key}}" class="form-control">
+										<option value="">active only companies</option>
+										<option value="both">active and inactive companies</option>
+										<option value="inactiveOnly">inactive only companies</option>
+									</select>
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.participateKey">
 							<tr formGroupName="{{key}}">
 								<th class="pull-right">by participation</th>

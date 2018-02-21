@@ -18,6 +18,7 @@ export class SearchCriteriaManager {
 	readonly createdKey = 'created';
 	readonly regionsKey = 'regions';
 	readonly activitiesKey = 'activities';
+	readonly retiredKey = 'retired';
 
 	searchCriterias = [
 		new SearchCriteria(this.companyNameKey, 1, 'by company name'),
@@ -26,6 +27,7 @@ export class SearchCriteriaManager {
 		new SearchCriteria(this.regionsKey, 1, 'by regions'),
 		new SearchCriteria(this.countriesKey, 1, 'by countries'),
 		new SearchCriteria(this.activitiesKey, 1, 'by activities'),
+		new SearchCriteria(this.retiredKey, 1, 'by active/ inactive state'),
 		new SearchCriteria(this.participateKey, 5, 'by participation'),
 		new SearchCriteria(this.notParticipateKey, 5, 'by NO participation'),
 	];

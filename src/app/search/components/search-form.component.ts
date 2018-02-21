@@ -67,7 +67,7 @@ export class SearchFormComponent implements OnInit {
 	ngOnInit() {
 		this._configSrv.currentConfig
 			.then(config => this._remoteMode = config.database.nameOrUrl.startsWith('http'));
-		this.addCriteria(this.searchManager.companyNameKey);
+		this.addCriteria(this.searchManager.retiredKey);
 	}
 
 	async onSubmit(showContact: boolean): Promise<void> {
@@ -98,6 +98,9 @@ export class SearchFormComponent implements OnInit {
 					break;
 				case this.searchManager.activitiesKey:
 					this._searchBuilder.companyActivitiesIn(value);
+					break;
+				case this.searchManager.retiredKey:
+					this._searchBuilder.companyRetired(value);
 					break;
 			}
 		});

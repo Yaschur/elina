@@ -9,6 +9,7 @@ import { DateCreatedQuery } from '../models/date-created.query';
 import { RegionsQuery } from '../models/regions.query';
 import { DirectoryService, Region } from '../../directories/index';
 import { ActivitiesQuery } from '../models/activities.query';
+import { RetiredQuery } from '../models/retired.query';
 
 @Injectable()
 export class SearchBuilder {
@@ -65,12 +66,21 @@ export class SearchBuilder {
 			(new ActivitiesQuery()).setParam(terms)
 		);
 	}
+	companyRetired(term: 'both' | '' | 'inactiveOnly') {
+		const actFlag = term === 'both' || term === '';
+		const inactFlag = term === 'both' || term === 'inactiveOnly';
+		this._queries.push(
+			(new RetiredQuery()).setParam(actFlag, inactFlag)
+		);
+	}
 
 	async build(): Promise<any> {
 		const filter = [];
 		for (let i = 0; i < this._queries.length; i++) {
 			const f = await this._queries[i].provideFilter();
-			filter.push(f);
+			if (f) {
+				filter.push(f);
+			}
 		}
 		return filter;
 	}
