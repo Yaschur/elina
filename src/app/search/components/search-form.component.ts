@@ -139,8 +139,10 @@ export class SearchFormComponent implements OnInit {
 				from: new FormControl(''),
 				to: new FormControl('')
 			}));
-		} else {
+		} else if (keyName === this.searchManager.retiredKey) {
 			this.searchForm.addControl(key, new FormControl(''));
+		} else {
+			this.searchForm.addControl(key, new FormControl(null));
 		}
 		this.searchCriterias = this.searchManager.getAllowedCriterias();
 	}

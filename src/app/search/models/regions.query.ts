@@ -8,7 +8,7 @@ export class RegionsQuery implements Query {
 	constructor(private _regions: Region[]) { }
 
 	setParam(terms: string[]): RegionsQuery {
-		this._ids = terms;
+		this._ids = terms || [''];
 		return this;
 	}
 

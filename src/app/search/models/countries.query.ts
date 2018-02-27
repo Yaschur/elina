@@ -3,7 +3,7 @@ export class CountriesQuery implements Query {
 	private _codes: string[] = [];
 
 	setParam(terms: string[]): CountriesQuery {
-		this._codes = terms;
+		this._codes = terms || [''];
 		return this;
 	}
 
