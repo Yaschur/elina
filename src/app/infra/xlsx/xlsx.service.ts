@@ -16,6 +16,33 @@ export class XlsxService {
 		'isNew': {
 			header: 'new',
 			value: this.convertBoolean
+		},
+		'companyName': {
+			header: 'company'
+		},
+		'firstName': {
+			header: 'first name'
+		},
+		'lastName': {
+			header: 'last name'
+		},
+		'jobResponsibilities': {
+			header: 'job responsibilities'
+		},
+		'buyContents': {
+			header: 'buy contents'
+		},
+		'sellContents': {
+			header: 'sell contents'
+		},
+		'addInfos': {
+			header: 'add infos'
+		},
+		'jobTitle': {
+			header: 'job title'
+		},
+		'active': {
+			value: this.convertBoolean
 		}
 	};
 

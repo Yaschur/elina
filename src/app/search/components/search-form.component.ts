@@ -4,9 +4,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 
-import { CompanyRepository } from '../../companies/core';
+import { CompanyRepository, Company } from '../../companies/core';
 import { Event, EventRepository } from '../../events/core';
-import { ConfigService } from '../../infra';
+import { ConfigService, XlsxService } from '../../infra';
 import { ParticipantStatus, ParticipantCategory, DirectoryService } from '../../directories';
 
 import { SearchBuilder } from '../services/search-builder.service';
@@ -35,8 +35,8 @@ export class SearchFormComponent implements OnInit {
 
 	private _remoteMode: boolean;
 
-	companies: CompanyListVm[];
-	contacts: ContactCompanyBaseVm[];
+	companies: Company[];
+	resultMode: '' | 'company' | 'contact' = '';
 
 	constructor(
 		private _companyRepo: CompanyRepository,
@@ -44,10 +44,10 @@ export class SearchFormComponent implements OnInit {
 		private _dirSrv: DirectoryService,
 		private _searchBuilder: SearchBuilder,
 		private _companyVm: CompanyVmService,
-		private _configSrv: ConfigService
+		private _configSrv: ConfigService,
+		private _xlsxSrv: XlsxService
 	) {
 		this.companies = [];
-		this.contacts = [];
 		this.searchForm = new FormGroup({});
 		this.allEvents = Observable.fromPromise(
 			this._eventRepo.findAll()
@@ -70,7 +70,21 @@ export class SearchFormComponent implements OnInit {
 		this.addCriteria(this.searchManager.retiredKey);
 	}
 
+	get noResults(): boolean {
+		return this.resultMode === '' || this.companies.length === 0;
+	}
+	get companyList(): CompanyListVm[] {
+		return this.companies
+			.map(c => this._companyVm.mapToCompanyListVm(c));
+	}
+	get contactList(): ContactCompanyBaseVm[] {
+		return []
+			.concat(...this.companies.map(c => this._companyVm.flatMapToContactCompanyBaseVm(c)))
+			.sort(this._companyVm.sortContacts);
+	}
+
 	async onSubmit(showContact: boolean): Promise<void> {
+		this.resultMode = showContact ? 'contact' : 'company';
 		this._searchBuilder.reset();
 		this.searchManager.inUse.forEach(k => {
 			const value = this.searchForm.get(k).value;
@@ -105,17 +119,7 @@ export class SearchFormComponent implements OnInit {
 			}
 		});
 		const filter = await this._searchBuilder.build();
-		const founded = await this._companyRepo.findByFilter(filter);
-		if (showContact) {
-			this.companies = [];
-			this.contacts = []
-				.concat(...founded.map(c => this._companyVm.flatMapToContactCompanyBaseVm(c)))
-				.sort(this._companyVm.sortContacts);
-		} else {
-			this.contacts = [];
-			this.companies = founded
-				.map(c => this._companyVm.mapToCompanyListVm(c));
-		}
+		this.companies = await this._companyRepo.findByFilter(filter);
 	}
 
 	removeCriteria(key: string) {
@@ -145,5 +149,27 @@ export class SearchFormComponent implements OnInit {
 			this.searchForm.addControl(key, new FormControl(null));
 		}
 		this.searchCriterias = this.searchManager.getAllowedCriterias();
+	}
+
+	onXlsx() {
+		if (this.resultMode === 'company') {
+			this._xlsxSrv.exportToXlsx(
+				this.companies.map(c => this._companyVm.mapToCompanyDetailsVm(c)),
+				'search_companies.xlsx',
+				'Companies',
+				['name', 'country', 'city', 'description', 'activities', 'phone', 'website', 'isNew', 'created', 'updated']
+			);
+			return;
+		}
+		if (this.resultMode === 'contact') {
+			this._xlsxSrv.exportToXlsx(
+				[].concat(...this.companies.map(c => this._companyVm.flatMapToContactCompanyDetailsVm(c)))
+					.sort(this._companyVm.sortContacts),
+				'search_contacts.xlsx',
+				'Contacts',
+				['firstName', 'lastName', 'jobTitle', 'companyName', 'phone', 'mobile', 'email',
+					'jobResponsibilities', 'buyContents', 'sellContents', 'addInfos', 'active', 'isNew', 'created', 'updated']
+			);
+		}
 	}
 }

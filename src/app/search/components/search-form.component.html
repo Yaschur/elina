@@ -192,10 +192,14 @@
 </div>
 <div class="panel panel-default">
 	<div class="panel-heading">
-		results
+		Results
+		<button (click)="onXlsx()" [disabled]="noResults || companies.length === 0" type="button" title="Export results to excel file"
+		 class="btn btn-primary btn-xs">
+			<span class="glyphicon glyphicon-floppy-save"></span>
+		</button>
 	</div>
 	<div class="panel-body">
-		<table *ngIf="companies && companies.length > 0" class="table table-hover table-condensed">
+		<table *ngIf="resultMode === 'company' && companies.length !== 0" class="table table-hover table-condensed">
 			<thead>
 				<tr>
 					<th>company name</th>
@@ -205,7 +209,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let company of companies">
+				<tr *ngFor="let company of companyList">
 					<td>
 						{{company.name}}
 						<sup *ngIf="company.isNew">
@@ -219,7 +223,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<table *ngIf="contacts && contacts.length > 0" class="table table-hover table-condensed">
+		<table *ngIf="resultMode === 'contact' && companies.length !== 0" class="table table-hover table-condensed">
 			<thead>
 				<tr>
 					<th>contact name</th>
@@ -229,7 +233,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let contact of contacts">
+				<tr *ngFor="let contact of contactList">
 					<td>
 						{{contact.name}}
 						<sup *ngIf="contact.isNew">
