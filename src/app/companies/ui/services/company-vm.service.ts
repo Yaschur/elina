@@ -8,6 +8,7 @@ import { ContactBaseVm } from '../models/contact-base-vm.model';
 import { ContactDetailVm } from '../models/contact-detail-vm.model';
 import { CompanyListVm } from '../models/company-list-vm.model';
 import { ContactCompanyBaseVm } from '../models/contact-company-base-vm';
+import { ContactCompanyDetailVm } from '../models/contact-company-detail-vm';
 
 const NEWPERIOD = 365 * 24 * 60 * 60 * 1000;
 
@@ -39,7 +40,7 @@ export class CompanyVmService {
 		r.id = company._id;
 		r.city = company.city;
 		r.country = (this.countries.find(c => c._id === company.country) || { name: '' }).name;
-		r.isNew = new Date().getTime() - new Date(company.created).getTime() < NEWPERIOD;
+		r.isNew = company.active && new Date().getTime() - new Date(company.created).getTime() < NEWPERIOD;
 		r.name = company.name;
 		r.active = company.active;
 		return r;
@@ -108,6 +109,17 @@ export class CompanyVmService {
 
 	flatMapToContactCompanyBaseVm(company: Company): ContactCompanyBaseVm[] {
 		const r = company.contacts.map(c => <ContactCompanyBaseVm>this.mapToContactBaseVm(c));
+		const cd = this.mapToCompanyBaseVm(company);
+		r.forEach(c => {
+			c.companyId = cd.id;
+			c.companyName = cd.name;
+			c.country = cd.country;
+		});
+		return r;
+	}
+
+	flatMapToContactCompanyDetailsVm(company: Company): ContactCompanyDetailVm[] {
+		const r = company.contacts.map(c => <ContactCompanyDetailVm>this.mapToContactDetailsVm(c));
 		const cd = this.mapToCompanyBaseVm(company);
 		r.forEach(c => {
 			c.companyId = cd.id;

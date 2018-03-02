@@ -31,7 +31,12 @@ export class DbMaintService {
 			.then(() => DbMaintService.getVersion(db))
 			.then(vInfo => {
 				console.log('dbVersion: ' + vInfo.dbVersion);
-				// DbMaintService.setVersion(db, vInfo);
+				return DbMaintService.migrate(db, vInfo);
+			})
+			.then(vInfo => {
+				if (vInfo) {
+					DbMaintService.setVersion(db, vInfo);
+				}
 			})
 			.then(() => db);
 	}
@@ -43,6 +48,22 @@ export class DbMaintService {
 			console.log(e);
 			return { dbVersion: 0 };
 		}
+	}
+
+	static async migrate(trgDb: PouchDB.Database<any>, versionInfo: VersionInfo): Promise<VersionInfo> {
+		let docs = [];
+
+		if (versionInfo.dbVersion === 0) {
+			docs = (await trgDb.find({ selector: { type: 'company' }, limit: 100000 })).docs;
+			docs.forEach(c => c.active = true);
+		}
+
+		if (docs.length !== 0) {
+			await trgDb.bulkDocs(docs);
+			return <VersionInfo>{ dbVersion: versionInfo.dbVersion + 1 };
+		}
+
+		return null;
 	}
 
 	static async setVersion(trgDb: PouchDB.Database<any>, versionInfo: VersionInfo): Promise<void> {

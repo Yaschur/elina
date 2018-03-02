@@ -9,6 +9,7 @@
 		</div>
 	</div>
 	<div class="panel-body">
+		<div *ngIf="!company.active" class="panel-heading bg-danger">this company is inactive!</div>
 		<dl class="dl-horizontal">
 			<dt>Company name</dt>
 			<dd>{{company.name}}</dd>
@@ -42,6 +43,7 @@
 		<div class="panel-heading">
 			Info:
 			<strong>{{company.name}}</strong>
+			<span *ngIf="!company.active" class="text-danger"> (inactive!)</span>
 			<div class="pull-right">
 				<button type="button" class="btn btn-xs" (click)="toggleCollapse()">
 					<span class="glyphicon glyphicon-plus"></span>

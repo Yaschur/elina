@@ -10,6 +10,9 @@
 			<button (click)="onXlsx()" type="button" class="btn btn-default">
 				<span class="glyphicon glyphicon-floppy-save"></span> excel
 			</button>
+			<button type="button" class="btn btn-default" (click)="toggleActive()">
+				<span class="glyphicon glyphicon-{{checkGlyph}}"></span> include inactive
+			</button>
 		</li>
 	</ul>
 	<form class="navbar-form navbar-left">
@@ -31,7 +34,10 @@
 		<tr *ngFor="let company of companyList | async" (click)="gotoDetails(company.id)">
 			<td>
 				{{company.name}}
-				<sup *ngIf="company.isNew"><mark>new</mark></sup>
+				<sup *ngIf="company.isNew">
+					<mark>new</mark>
+				</sup>
+				<sup *ngIf="!company.active">inactive!</sup>
 			</td>
 			<td scope="row">{{company.country}} {{company.city ? '(' + company.city + ')' : ''}}</td>
 			<td scope="row">{{company.activitiesNum}}</td>

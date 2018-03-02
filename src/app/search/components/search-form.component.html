@@ -101,6 +101,23 @@
 								</td>
 							</tr>
 						</ng-template>
+						<ng-template [ngSwitchCase]="searchManager.retiredKey">
+							<tr>
+								<th class="pull-right">by active/ inactive state</th>
+								<td>
+									<select formControlName="{{key}}" class="form-control">
+										<option value="">active only companies</option>
+										<option value="both">active and inactive companies</option>
+										<option value="inactiveOnly">inactive only companies</option>
+									</select>
+								</td>
+								<td>
+									<button type="button" class="btn btn-default" (click)="removeCriteria(key)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</ng-template>
 						<ng-template [ngSwitchCase]="searchManager.participateKey">
 							<tr formGroupName="{{key}}">
 								<th class="pull-right">by participation</th>
@@ -173,50 +190,62 @@
 		</form>
 	</div>
 </div>
-<table *ngIf="companies && companies.length > 0" class="table table-hover table-condensed">
-	<thead>
-		<tr>
-			<th>company name</th>
-			<th>location</th>
-			<th># of activities</th>
-			<th># of contacts</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let company of companies">
-			<td>
-				{{company.name}}
-				<sup *ngIf="company.isNew">
-					<mark>new</mark>
-				</sup>
-			</td>
-			<td scope="row">{{company.country}} {{company.city ? '(' + company.city + ')' : ''}}</td>
-			<td scope="row">{{company.activitiesNum}}</td>
-			<td scope="row">{{company.contactsNum}}</td>
-		</tr>
-	</tbody>
-</table>
-<table *ngIf="contacts && contacts.length > 0" class="table table-hover table-condensed">
-	<thead>
-		<tr>
-			<th>contact name</th>
-			<th>job title</th>
-			<th>company name</th>
-			<th>country</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let contact of contacts">
-			<td>
-				{{contact.name}}
-				<sup *ngIf="contact.isNew">
-					<mark>new</mark>
-				</sup>
-				<sup *ngIf="!contact.active">fired!</sup>
-			</td>
-			<td>{{contact.jobTitle}}</td>
-			<td>{{contact.companyName}}</td>
-			<td>{{contact.country}}</td>
-		</tr>
-	</tbody>
-</table>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Results
+		<button (click)="onXlsx()" [disabled]="noResults || companies.length === 0" type="button" title="Export results to excel file"
+		 class="btn btn-primary btn-xs">
+			<span class="glyphicon glyphicon-floppy-save"></span>
+		</button>
+	</div>
+	<div class="panel-body">
+		<table *ngIf="resultMode === 'company' && companies.length !== 0" class="table table-hover table-condensed">
+			<thead>
+				<tr>
+					<th>company name</th>
+					<th>location</th>
+					<th># of activities</th>
+					<th># of contacts</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let company of companyList">
+					<td>
+						{{company.name}}
+						<sup *ngIf="company.isNew">
+							<mark>new</mark>
+						</sup>
+						<sup *ngIf="!company.active">inactive!</sup>
+					</td>
+					<td scope="row">{{company.country}} {{company.city ? '(' + company.city + ')' : ''}}</td>
+					<td scope="row">{{company.activitiesNum}}</td>
+					<td scope="row">{{company.contactsNum}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<table *ngIf="resultMode === 'contact' && companies.length !== 0" class="table table-hover table-condensed">
+			<thead>
+				<tr>
+					<th>contact name</th>
+					<th>job title</th>
+					<th>company name</th>
+					<th>country</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let contact of contactList">
+					<td>
+						{{contact.name}}
+						<sup *ngIf="contact.isNew">
+							<mark>new</mark>
+						</sup>
+						<sup *ngIf="!contact.active">fired!</sup>
+					</td>
+					<td>{{contact.jobTitle}}</td>
+					<td>{{contact.companyName}}</td>
+					<td>{{contact.country}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -3,7 +3,7 @@ export class ActivitiesQuery implements Query {
 	private _ids: string[] = [];
 
 	setParam(terms: string[]): ActivitiesQuery {
-		this._ids = terms;
+		this._ids = terms || [''];
 		return this;
 	}
 
