@@ -7,7 +7,11 @@ import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 import { CompanyRepository, Company } from '../../companies/core';
 import { Event, EventRepository } from '../../events/core';
 import { ConfigService, XlsxService } from '../../infra';
-import { ParticipantStatus, ParticipantCategory, DirectoryService } from '../../directories';
+import {
+	ParticipantStatus,
+	ParticipantCategory,
+	DirectoryService,
+} from '../../directories';
 
 import { SearchBuilder } from '../services/search-builder.service';
 import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
@@ -18,10 +22,9 @@ import { SearchCriteriaManager, SearchCriteria } from './criteria.model';
 @Component({
 	selector: 'app-search-form',
 	templateUrl: './search-form.component.html',
-	styleUrls: ['./search-form.component.css']
+	styleUrls: ['./search-form.component.css'],
 })
 export class SearchFormComponent implements OnInit {
-
 	searchManager: SearchCriteriaManager;
 	searchForm: FormGroup;
 	searchCriterias: SearchCriteria[];
@@ -37,6 +40,7 @@ export class SearchFormComponent implements OnInit {
 
 	companies: Company[];
 	resultMode: '' | 'company' | 'contact' = '';
+	exporting = false;
 
 	constructor(
 		private _companyRepo: CompanyRepository,
@@ -49,24 +53,33 @@ export class SearchFormComponent implements OnInit {
 	) {
 		this.companies = [];
 		this.searchForm = new FormGroup({});
-		this.allEvents = Observable.fromPromise(
-			this._eventRepo.findAll()
-		);
+		this.allEvents = Observable.fromPromise(this._eventRepo.findAll());
 		this.allPartyStatuses = this._dirSrv.getDir('participantstatus').data;
 		this.allPartyCategories = this._dirSrv.getDir('participantcategory').data;
-		this.countryOptions = this._dirSrv.getDir('country').data
-			.map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }));
-		this.regionOptions = this._dirSrv.getDir('region').data
-			.map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }));
-		this.activityOptions = this._dirSrv.getDir('activity').data
-			.map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }));
+		this.countryOptions = this._dirSrv
+			.getDir('country')
+			.data.map(cs =>
+				cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name })
+			);
+		this.regionOptions = this._dirSrv
+			.getDir('region')
+			.data.map(cs =>
+				cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name })
+			);
+		this.activityOptions = this._dirSrv
+			.getDir('activity')
+			.data.map(cs =>
+				cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name })
+			);
 		this.searchManager = new SearchCriteriaManager();
 		this.searchCriterias = [];
 	}
 
 	ngOnInit() {
-		this._configSrv.currentConfig
-			.then(config => this._remoteMode = config.database.nameOrUrl.startsWith('http'));
+		this._configSrv.currentConfig.then(
+			config =>
+				(this._remoteMode = config.database.nameOrUrl.startsWith('http'))
+		);
 		this.addCriteria(this.searchManager.retiredKey);
 	}
 
@@ -74,12 +87,15 @@ export class SearchFormComponent implements OnInit {
 		return this.resultMode === '' || this.companies.length === 0;
 	}
 	get companyList(): CompanyListVm[] {
-		return this.companies
-			.map(c => this._companyVm.mapToCompanyListVm(c));
+		return this.companies.map(c => this._companyVm.mapToCompanyListVm(c));
 	}
 	get contactList(): ContactCompanyBaseVm[] {
 		return []
-			.concat(...this.companies.map(c => this._companyVm.flatMapToContactCompanyBaseVm(c)))
+			.concat(
+				...this.companies.map(c =>
+					this._companyVm.flatMapToContactCompanyBaseVm(c)
+				)
+			)
 			.sort(this._companyVm.sortContacts);
 	}
 
@@ -90,10 +106,16 @@ export class SearchFormComponent implements OnInit {
 			const value = this.searchForm.get(k).value;
 			switch (this.searchManager.getKeyName(k)) {
 				case this.searchManager.companyNameKey:
-					this._searchBuilder.companyNameContains(value.trim(), this._remoteMode);
+					this._searchBuilder.companyNameContains(
+						value.trim(),
+						this._remoteMode
+					);
 					break;
 				case this.searchManager.contactNameKey:
-					this._searchBuilder.contactNameContains(value.trim(), this._remoteMode);
+					this._searchBuilder.contactNameContains(
+						value.trim(),
+						this._remoteMode
+					);
 					break;
 				case this.searchManager.countriesKey:
 					this._searchBuilder.companyInCountries(value);
@@ -132,17 +154,26 @@ export class SearchFormComponent implements OnInit {
 	}
 	addCriteria(keyName: string) {
 		const key = this.searchManager.useCriteria(keyName);
-		if (keyName === this.searchManager.participateKey || keyName === this.searchManager.notParticipateKey) {
-			this.searchForm.addControl(key, new FormGroup({
-				event: new FormControl(''),
-				status: new FormControl(''),
-				category: new FormControl('')
-			}));
+		if (
+			keyName === this.searchManager.participateKey ||
+			keyName === this.searchManager.notParticipateKey
+		) {
+			this.searchForm.addControl(
+				key,
+				new FormGroup({
+					event: new FormControl(''),
+					status: new FormControl(''),
+					category: new FormControl(''),
+				})
+			);
 		} else if (keyName === this.searchManager.createdKey) {
-			this.searchForm.addControl(key, new FormGroup({
-				from: new FormControl(''),
-				to: new FormControl('')
-			}));
+			this.searchForm.addControl(
+				key,
+				new FormGroup({
+					from: new FormControl(''),
+					to: new FormControl(''),
+				})
+			);
 		} else if (keyName === this.searchManager.retiredKey) {
 			this.searchForm.addControl(key, new FormControl(''));
 		} else {
@@ -151,25 +182,60 @@ export class SearchFormComponent implements OnInit {
 		this.searchCriterias = this.searchManager.getAllowedCriterias();
 	}
 
-	onXlsx() {
+	async onXlsx() {
 		if (this.resultMode === 'company') {
-			this._xlsxSrv.exportToXlsx(
+			this.exporting = true;
+			await this._xlsxSrv.exportToXlsx(
 				this.companies.map(c => this._companyVm.mapToCompanyDetailsVm(c)),
 				'search_companies.xlsx',
 				'Companies',
-				['name', 'country', 'city', 'description', 'activities', 'phone', 'website', 'isNew', 'created', 'updated']
+				[
+					'name',
+					'country',
+					'city',
+					'description',
+					'activities',
+					'phone',
+					'website',
+					'isNew',
+					'created',
+					'updated',
+				]
 			);
+			this.exporting = false;
 			return;
 		}
 		if (this.resultMode === 'contact') {
-			this._xlsxSrv.exportToXlsx(
-				[].concat(...this.companies.map(c => this._companyVm.flatMapToContactCompanyDetailsVm(c)))
+			this.exporting = true;
+			await this._xlsxSrv.exportToXlsx(
+				[]
+					.concat(
+						...this.companies.map(c =>
+							this._companyVm.flatMapToContactCompanyDetailsVm(c)
+						)
+					)
 					.sort(this._companyVm.sortContacts),
 				'search_contacts.xlsx',
 				'Contacts',
-				['firstName', 'lastName', 'jobTitle', 'companyName', 'phone', 'mobile', 'email',
-					'jobResponsibilities', 'buyContents', 'sellContents', 'addInfos', 'active', 'isNew', 'created', 'updated']
+				[
+					'firstName',
+					'lastName',
+					'jobTitle',
+					'companyName',
+					'phone',
+					'mobile',
+					'email',
+					'jobResponsibilities',
+					'buyContents',
+					'sellContents',
+					'addInfos',
+					'active',
+					'isNew',
+					'created',
+					'updated',
+				]
 			);
+			this.exporting = false;
 		}
 	}
 }

@@ -193,8 +193,8 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
 		Results
-		<button (click)="onXlsx()" [disabled]="noResults || companies.length === 0" type="button" title="Export results to excel file"
-		 class="btn btn-primary btn-xs">
+		<button (click)="onXlsx()" [disabled]="noResults || companies.length === 0 || exporting" type="button"
+		 title="Export results to excel file" class="btn btn-primary btn-xs">
 			<span class="glyphicon glyphicon-floppy-save"></span>
 		</button>
 	</div>
