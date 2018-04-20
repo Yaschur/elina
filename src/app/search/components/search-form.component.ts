@@ -35,6 +35,7 @@ export class SearchFormComponent implements OnInit {
 	countryOptions: Observable<IMultiSelectOption[]>;
 	regionOptions: Observable<IMultiSelectOption[]>;
 	activityOptions: Observable<IMultiSelectOption[]>;
+	resultMessage: string;
 
 	private _remoteMode: boolean;
 
@@ -100,6 +101,7 @@ export class SearchFormComponent implements OnInit {
 	}
 
 	async onSubmit(showContact: boolean): Promise<void> {
+		this.resultMessage = '';
 		this.resultMode = showContact ? 'contact' : 'company';
 		this._searchBuilder.reset();
 		this.searchManager.inUse.forEach(k => {
@@ -142,6 +144,9 @@ export class SearchFormComponent implements OnInit {
 		});
 		const filter = await this._searchBuilder.build();
 		this.companies = await this._companyRepo.findByFilter(filter);
+		this.resultMessage = `${showContact ? 'contacts' : 'companies'} found: ${
+			showContact ? this.contactList.length : this.companyList.length
+		}`;
 	}
 
 	removeCriteria(key: string) {

@@ -197,6 +197,7 @@
 		 title="Export results to excel file" class="btn btn-primary btn-xs">
 			<span class="glyphicon glyphicon-floppy-save"></span>
 		</button>
+		<span class="text-info">{{resultMessage}}</span>
 	</div>
 	<div class="panel-body">
 		<table *ngIf="resultMode === 'company' && companies.length !== 0" class="table table-hover table-condensed">
