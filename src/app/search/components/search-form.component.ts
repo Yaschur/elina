@@ -6,7 +6,7 @@ import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 
 import { CompanyRepository, Company } from '../../companies/core';
 import { Event, EventRepository } from '../../events/core';
-import { ConfigService, XlsxService } from '../../infra';
+import { ConfigService, XlsxService, UsettingsService } from '../../infra';
 import {
 	ParticipantStatus,
 	ParticipantCategory,
@@ -18,6 +18,8 @@ import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
 import { CompanyVmService } from '../../companies/ui/services/company-vm.service';
 import { ContactCompanyBaseVm } from '../../companies/ui/models/contact-company-base-vm';
 import { SearchCriteriaManager, SearchCriteria } from './criteria.model';
+
+// const SearchSetsKey = 'searchsets';
 
 @Component({
 	selector: 'app-search-form',
@@ -50,7 +52,8 @@ export class SearchFormComponent implements OnInit {
 		private _searchBuilder: SearchBuilder,
 		private _companyVm: CompanyVmService,
 		private _configSrv: ConfigService,
-		private _xlsxSrv: XlsxService
+		private _xlsxSrv: XlsxService,
+		private _usettings: UsettingsService
 	) {
 		this.companies = [];
 		this.searchForm = new FormGroup({});
@@ -81,6 +84,15 @@ export class SearchFormComponent implements OnInit {
 			config =>
 				(this._remoteMode = config.database.nameOrUrl.startsWith('http'))
 		);
+		// this._usettings.get(SearchSetsKey).then(sets => {
+		// 	if (!sets) {
+		// 		sets = JSON.parse(`"{${this.searchManager.retiredKey}": ""}`);
+		// 	}
+		// 	for (const key in sets) {
+		// 		const criteria = this.searchManager.getKeyName(key);
+		// 		this.addCriteria(criteria);
+		// 	}
+		// });
 		this.addCriteria(this.searchManager.retiredKey);
 	}
 
@@ -102,6 +114,7 @@ export class SearchFormComponent implements OnInit {
 
 	async onSubmit(showContact: boolean): Promise<void> {
 		this.resultMessage = '';
+		// this._usettings.set(SearchSetsKey, this.searchForm.value);
 		this.resultMode = showContact ? 'contact' : 'company';
 		this._searchBuilder.reset();
 		this.searchManager.inUse.forEach(k => {
@@ -179,7 +192,11 @@ export class SearchFormComponent implements OnInit {
 					to: new FormControl(''),
 				})
 			);
-		} else if (keyName === this.searchManager.retiredKey) {
+		} else if (
+			keyName === this.searchManager.retiredKey ||
+			keyName === this.searchManager.companyNameKey ||
+			keyName === this.searchManager.contactNameKey
+		) {
 			this.searchForm.addControl(key, new FormControl(''));
 		} else {
 			this.searchForm.addControl(key, new FormControl(null));
