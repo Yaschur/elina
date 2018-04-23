@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+import { SearchState } from './store/search.state';
 
 import { ParticipantModule } from '../participants/';
 
 import { SearchFormComponent } from './components/search-form.component';
 import { SearchRoutingModule } from './search-routing.module';
 import { SearchBuilder } from './services/search-builder.service';
+import { NgxsModule } from '@ngxs/store';
 
 @NgModule({
 	imports: [
@@ -16,13 +18,10 @@ import { SearchBuilder } from './services/search-builder.service';
 		ReactiveFormsModule,
 		ParticipantModule,
 		MultiselectDropdownModule,
-		SearchRoutingModule
+		NgxsModule.forFeature([SearchState]),
+		SearchRoutingModule,
 	],
-	declarations: [
-		SearchFormComponent
-	],
-	providers: [
-		SearchBuilder
-	]
+	declarations: [SearchFormComponent],
+	providers: [SearchBuilder],
 })
-export class SearchModule { }
+export class SearchModule {}

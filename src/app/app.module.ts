@@ -2,9 +2,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 
+import { NgxsModule } from '@ngxs/store';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BackForwardComponent } from './shared/back-forward.component';
+import { BackForwardComponent } from './shared/components/back-forward.component';
 import { CompaniesModule } from './companies/ui';
 import { EventsModule } from './events';
 import { InfraModule } from './infra';
@@ -20,10 +22,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/switchMap';
 
 @NgModule({
-	declarations: [
-		BackForwardComponent,
-		AppComponent
-	],
+	declarations: [BackForwardComponent, AppComponent],
 	imports: [
 		BrowserModule,
 		InfraModule,
@@ -32,9 +31,10 @@ import 'rxjs/add/operator/switchMap';
 		EventsModule,
 		SearchModule,
 		XupdateModule,
-		AppRoutingModule
+		NgxsModule.forRoot(),
+		AppRoutingModule,
 	],
 	providers: [],
-	bootstrap: [AppComponent]
+	bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
