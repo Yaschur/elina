@@ -1,6 +1,17 @@
+import { Company } from '../../companies/core';
+
 export class SetFilter {
 	static readonly type = '[Search] SetFilter';
 	constructor(public readonly payload?: any) {}
+}
+
+export class SearchCompanies {
+	static readonly type = '[Search] SearchCompanies';
+}
+
+export class LoadCompanies {
+	static readonly type = '[Search] LoadCompanies';
+	constructor(public readonly payload: Company[]) {}
 }
 
 export class SelectCompany {

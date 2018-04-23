@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
 import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 
 import { CompanyRepository, Company } from '../../companies/core';
@@ -18,6 +20,10 @@ import { CompanyListVm } from '../../companies/ui/models/company-list-vm.model';
 import { CompanyVmService } from '../../companies/ui/services/company-vm.service';
 import { ContactCompanyBaseVm } from '../../companies/ui/models/contact-company-base-vm';
 import { SearchCriteriaManager, SearchCriteria } from './criteria.model';
+import { SearchState } from '../store/search.state';
+import { SetFilter } from '../store/search.actions';
+import { SearchStateModel } from '../store/search-state.model';
+import { take } from 'rxjs/operator/take';
 
 // const SearchSetsKey = 'searchsets';
 
@@ -39,11 +45,12 @@ export class SearchFormComponent implements OnInit {
 	activityOptions: Observable<IMultiSelectOption[]>;
 	resultMessage: string;
 
-	private _remoteMode: boolean;
-
 	companies: Company[];
 	resultMode: '' | 'company' | 'contact' = '';
 	exporting = false;
+
+	private _remoteMode: boolean;
+	@Select(SearchState.getFilter) private _filter$: Observable<any>;
 
 	constructor(
 		private _companyRepo: CompanyRepository,
@@ -53,6 +60,7 @@ export class SearchFormComponent implements OnInit {
 		private _companyVm: CompanyVmService,
 		private _configSrv: ConfigService,
 		private _xlsxSrv: XlsxService,
+		private _store: Store,
 		private _usettings: UsettingsService
 	) {
 		this.companies = [];
@@ -77,6 +85,16 @@ export class SearchFormComponent implements OnInit {
 			);
 		this.searchManager = new SearchCriteriaManager();
 		this.searchCriterias = [];
+
+		this._filter$.take(1).subscribe(filter => {
+			if (!filter || Object.keys(filter).length === 0) {
+				filter = JSON.parse(`{"${this.searchManager.retiredKey}": ""}`);
+			}
+			for (const key in filter) {
+				const criteria = this.searchManager.getKeyName(key);
+				this.addCriteria(criteria, filter[key]);
+			}
+		});
 	}
 
 	ngOnInit() {
@@ -93,7 +111,7 @@ export class SearchFormComponent implements OnInit {
 		// 		this.addCriteria(criteria);
 		// 	}
 		// });
-		this.addCriteria(this.searchManager.retiredKey);
+		// this.addCriteria(this.searchManager.retiredKey);
 	}
 
 	get noResults(): boolean {
@@ -115,6 +133,12 @@ export class SearchFormComponent implements OnInit {
 	async onSubmit(showContact: boolean): Promise<void> {
 		this.resultMessage = '';
 		// this._usettings.set(SearchSetsKey, this.searchForm.value);
+		const filterSet = {};
+		for (const key in this.searchForm.value) {
+			const criteria = this.searchManager.getKeyName(key);
+			filterSet[criteria] = this.searchForm.value[key];
+		}
+		this._store.dispatch(new SetFilter(filterSet));
 		this.resultMode = showContact ? 'contact' : 'company';
 		this._searchBuilder.reset();
 		this.searchManager.inUse.forEach(k => {
@@ -170,7 +194,7 @@ export class SearchFormComponent implements OnInit {
 		this.searchForm.removeControl(key);
 		this.searchCriterias = this.searchManager.getAllowedCriterias();
 	}
-	addCriteria(keyName: string) {
+	addCriteria(keyName: string, value?: any) {
 		const key = this.searchManager.useCriteria(keyName);
 		if (
 			keyName === this.searchManager.participateKey ||
@@ -200,6 +224,9 @@ export class SearchFormComponent implements OnInit {
 			this.searchForm.addControl(key, new FormControl(''));
 		} else {
 			this.searchForm.addControl(key, new FormControl(null));
+		}
+		if (value) {
+			this.searchForm.controls[key].setValue(value);
 		}
 		this.searchCriterias = this.searchManager.getAllowedCriterias();
 	}
