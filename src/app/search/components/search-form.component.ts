@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs';
+// import { Subscription } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
+import { take, map } from 'rxjs/operators';
 import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 
-import { CompanyRepository, Company } from '../../companies/core';
+import { Company } from '../../companies/core';
 import { Event, EventRepository } from '../../events/core';
-import { ConfigService, XlsxService, UsettingsService } from '../../infra';
+import { ConfigService, XlsxService } from '../../infra';
 import {
 	ParticipantStatus,
 	ParticipantCategory,
@@ -23,7 +24,6 @@ import { SearchCriteriaManager, SearchCriteria } from './criteria.model';
 import { SearchState } from '../store/search.state';
 import { SetFilter } from '../store/search.actions';
 import { SearchStateModel } from '../store/search-state.model';
-import { take } from 'rxjs/operator/take';
 
 // const SearchSetsKey = 'searchsets';
 
@@ -32,7 +32,7 @@ import { take } from 'rxjs/operator/take';
 	templateUrl: './search-form.component.html',
 	styleUrls: ['./search-form.component.css'],
 })
-export class SearchFormComponent implements OnInit {
+export class SearchFormComponent {
 	searchManager: SearchCriteriaManager;
 	searchForm: FormGroup;
 	searchCriterias: SearchCriteria[];
@@ -45,43 +45,44 @@ export class SearchFormComponent implements OnInit {
 	activityOptions: Observable<IMultiSelectOption[]>;
 	resultMessage: string;
 
-	companies: Company[];
 	resultMode: '' | 'company' | 'contact' = '';
 	exporting = false;
 
+	noResults: Observable<boolean>;
+	companyList: Observable<CompanyListVm[]>;
+	contactList: Observable<ContactCompanyBaseVm[]>;
+
 	private _remoteMode: boolean;
 	@Select(SearchState.getFilter) private _filter$: Observable<any>;
+	@Select(SearchState.getResults) private _results: Observable<Company[]>;
 
 	constructor(
-		private _companyRepo: CompanyRepository,
 		private _eventRepo: EventRepository,
 		private _dirSrv: DirectoryService,
 		private _searchBuilder: SearchBuilder,
 		private _companyVm: CompanyVmService,
 		private _configSrv: ConfigService,
 		private _xlsxSrv: XlsxService,
-		private _store: Store,
-		private _usettings: UsettingsService
+		private _store: Store // private _usettings: UsettingsService
 	) {
-		this.companies = [];
 		this.searchForm = new FormGroup({});
 		this.allEvents = Observable.fromPromise(this._eventRepo.findAll());
 		this.allPartyStatuses = this._dirSrv.getDir('participantstatus').data;
 		this.allPartyCategories = this._dirSrv.getDir('participantcategory').data;
 		this.countryOptions = this._dirSrv
 			.getDir('country')
-			.data.map(cs =>
-				cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name })
+			.data.pipe(
+				map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }))
 			);
 		this.regionOptions = this._dirSrv
 			.getDir('region')
-			.data.map(cs =>
-				cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name })
+			.data.pipe(
+				map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }))
 			);
 		this.activityOptions = this._dirSrv
 			.getDir('activity')
-			.data.map(cs =>
-				cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name })
+			.data.pipe(
+				map(cs => cs.map(c => <IMultiSelectOption>{ id: c._id, name: c.name }))
 			);
 		this.searchManager = new SearchCriteriaManager();
 		this.searchCriterias = [];
@@ -95,40 +96,56 @@ export class SearchFormComponent implements OnInit {
 				this.addCriteria(criteria, filter[key]);
 			}
 		});
-	}
 
-	ngOnInit() {
 		this._configSrv.currentConfig.then(
 			config =>
 				(this._remoteMode = config.database.nameOrUrl.startsWith('http'))
 		);
-		// this._usettings.get(SearchSetsKey).then(sets => {
-		// 	if (!sets) {
-		// 		sets = JSON.parse(`"{${this.searchManager.retiredKey}": ""}`);
-		// 	}
-		// 	for (const key in sets) {
-		// 		const criteria = this.searchManager.getKeyName(key);
-		// 		this.addCriteria(criteria);
-		// 	}
-		// });
-		// this.addCriteria(this.searchManager.retiredKey);
+
+		this.noResults = this._results.pipe(map(cs => !cs || cs.length === 0));
+		this.companyList = this._results.pipe(
+			map(cs => cs.map(c => this._companyVm.mapToCompanyListVm(c)))
+		);
+		this.contactList = this._results.pipe(
+			map(cs =>
+				[]
+					.concat(
+						...cs.map(c => this._companyVm.flatMapToContactCompanyBaseVm(c))
+					)
+					.sort(this._companyVm.sortContacts)
+			)
+		);
 	}
 
-	get noResults(): boolean {
-		return this.resultMode === '' || this.companies.length === 0;
-	}
-	get companyList(): CompanyListVm[] {
-		return this.companies.map(c => this._companyVm.mapToCompanyListVm(c));
-	}
-	get contactList(): ContactCompanyBaseVm[] {
-		return []
-			.concat(
-				...this.companies.map(c =>
-					this._companyVm.flatMapToContactCompanyBaseVm(c)
-				)
-			)
-			.sort(this._companyVm.sortContacts);
-	}
+	// ngOnInit() {
+
+	// this._usettings.get(SearchSetsKey).then(sets => {
+	// 	if (!sets) {
+	// 		sets = JSON.parse(`"{${this.searchManager.retiredKey}": ""}`);
+	// 	}
+	// 	for (const key in sets) {
+	// 		const criteria = this.searchManager.getKeyName(key);
+	// 		this.addCriteria(criteria);
+	// 	}
+	// });
+	// this.addCriteria(this.searchManager.retiredKey);
+	// }
+
+	// get noResults(): boolean {
+	// 	return this.resultMode === '' || this.companies.length === 0;
+	// }
+	// get companyList(): CompanyListVm[] {
+	// 	return this.companies.map(c => this._companyVm.mapToCompanyListVm(c));
+	// }
+	// get contactList(): ContactCompanyBaseVm[] {
+	// 	return []
+	// 		.concat(
+	// 			...this.companies.map(c =>
+	// 				this._companyVm.flatMapToContactCompanyBaseVm(c)
+	// 			)
+	// 		)
+	// 		.sort(this._companyVm.sortContacts);
+	// }
 
 	async onSubmit(showContact: boolean): Promise<void> {
 		this.resultMessage = '';
@@ -138,12 +155,11 @@ export class SearchFormComponent implements OnInit {
 			const criteria = this.searchManager.getKeyName(key);
 			filterSet[criteria] = this.searchForm.value[key];
 		}
-		this._store.dispatch(new SetFilter(filterSet));
 		this.resultMode = showContact ? 'contact' : 'company';
 		this._searchBuilder.reset();
-		this.searchManager.inUse.forEach(k => {
-			const value = this.searchForm.get(k).value;
-			switch (this.searchManager.getKeyName(k)) {
+		for (const k in filterSet) {
+			const value = filterSet[k];
+			switch (k) {
 				case this.searchManager.companyNameKey:
 					this._searchBuilder.companyNameContains(
 						value.trim(),
@@ -178,12 +194,15 @@ export class SearchFormComponent implements OnInit {
 					this._searchBuilder.companyRetired(value);
 					break;
 			}
-		});
-		const filter = await this._searchBuilder.build();
-		this.companies = await this._companyRepo.findByFilter(filter);
-		this.resultMessage = `${showContact ? 'contacts' : 'companies'} found: ${
-			showContact ? this.contactList.length : this.companyList.length
-		}`;
+		}
+		const filterCompiled = await this._searchBuilder.build();
+		this._store.dispatch(
+			new SetFilter({ set: filterSet, compiled: filterCompiled })
+		);
+		// this.companies = await this._companyRepo.findByFilter(filter);
+		// this.resultMessage = `${showContact ? 'contacts' : 'companies'} found: ${
+		// 	showContact ? this.contactList.length : this.companyList.length
+		// }`;
 	}
 
 	removeCriteria(key: string) {
@@ -232,59 +251,59 @@ export class SearchFormComponent implements OnInit {
 	}
 
 	async onXlsx() {
-		if (this.resultMode === 'company') {
-			this.exporting = true;
-			await this._xlsxSrv.exportToXlsx(
-				this.companies.map(c => this._companyVm.mapToCompanyDetailsVm(c)),
-				'search_companies.xlsx',
-				'Companies',
-				[
-					'name',
-					'country',
-					'city',
-					'description',
-					'activities',
-					'phone',
-					'website',
-					'isNew',
-					'created',
-					'updated',
-				]
-			);
-			this.exporting = false;
-			return;
-		}
-		if (this.resultMode === 'contact') {
-			this.exporting = true;
-			await this._xlsxSrv.exportToXlsx(
-				[]
-					.concat(
-						...this.companies.map(c =>
-							this._companyVm.flatMapToContactCompanyDetailsVm(c)
-						)
-					)
-					.sort(this._companyVm.sortContacts),
-				'search_contacts.xlsx',
-				'Contacts',
-				[
-					'firstName',
-					'lastName',
-					'jobTitle',
-					'companyName',
-					'phone',
-					'mobile',
-					'email',
-					'jobResponsibilities',
-					'buyContents',
-					'sellContents',
-					'addInfos',
-					'active',
-					'isNew',
-					'created',
-					'updated',
-				]
-			);
-			this.exporting = false;
-		}
+		// 	if (this.resultMode === 'company') {
+		// 		this.exporting = true;
+		// 		await this._xlsxSrv.exportToXlsx(
+		// 			this.companies.map(c => this._companyVm.mapToCompanyDetailsVm(c)),
+		// 			'search_companies.xlsx',
+		// 			'Companies',
+		// 			[
+		// 				'name',
+		// 				'country',
+		// 				'city',
+		// 				'description',
+		// 				'activities',
+		// 				'phone',
+		// 				'website',
+		// 				'isNew',
+		// 				'created',
+		// 				'updated',
+		// 			]
+		// 		);
+		// 		this.exporting = false;
+		// 		return;
+		// 	}
+		// 	if (this.resultMode === 'contact') {
+		// 		this.exporting = true;
+		// 		await this._xlsxSrv.exportToXlsx(
+		// 			[]
+		// 				.concat(
+		// 					...this.companies.map(c =>
+		// 						this._companyVm.flatMapToContactCompanyDetailsVm(c)
+		// 					)
+		// 				)
+		// 				.sort(this._companyVm.sortContacts),
+		// 			'search_contacts.xlsx',
+		// 			'Contacts',
+		// 			[
+		// 				'firstName',
+		// 				'lastName',
+		// 				'jobTitle',
+		// 				'companyName',
+		// 				'phone',
+		// 				'mobile',
+		// 				'email',
+		// 				'jobResponsibilities',
+		// 				'buyContents',
+		// 				'sellContents',
+		// 				'addInfos',
+		// 				'active',
+		// 				'isNew',
+		// 				'created',
+		// 				'updated',
+		// 			]
+		// 		);
+		// 		this.exporting = false;
+		// 	}
 	}
 }

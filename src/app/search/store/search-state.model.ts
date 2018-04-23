@@ -3,6 +3,7 @@ import { AppStateModel } from '../../shared/store/app-state.model';
 
 export interface SearchStateModel extends AppStateModel {
 	filter: any;
+	compiledFilter: any[];
 	results: Company[];
 	selectedCompany: string;
 	selectedContact: string;

@@ -2,7 +2,7 @@ import { Company } from '../../companies/core';
 
 export class SetFilter {
 	static readonly type = '[Search] SetFilter';
-	constructor(public readonly payload?: any) {}
+	constructor(public readonly payload: { set: any; compiled: any[] }) {}
 }
 
 export class SearchCompanies {
