@@ -21,7 +21,11 @@ import { CompanyVmService } from '../../companies/ui/services/company-vm.service
 import { ContactCompanyBaseVm } from '../../companies/ui/models/contact-company-base-vm';
 import { SearchCriteriaManager, SearchCriteria } from './criteria.model';
 import { SearchState } from '../store/search.state';
-import { SetFilter } from '../store/search.actions';
+import {
+	SetFilter,
+	SelectCompany,
+	SelectContact,
+} from '../store/search.actions';
 import { SearchStateModel } from '../store/search-state.model';
 import { mergeMap } from 'rxjs/operator/mergeMap';
 
@@ -273,6 +277,16 @@ export class SearchFormComponent {
 			);
 			this.exporting = false;
 		}
+	}
+
+	gotoCompanyProfile(companyId: string) {
+		this._store.dispatch(new SelectCompany(companyId));
+	}
+
+	gotoContactProfile(companyId: string, contactId: string) {
+		this._store.dispatch(
+			new SelectContact({ companyId: companyId, contactId: contactId })
+		);
 	}
 
 	private getCompanies(cs: Company[]): CompanyListVm[] {

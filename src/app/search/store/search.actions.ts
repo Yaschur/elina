@@ -27,5 +27,7 @@ export class SelectCompany {
 
 export class SelectContact {
 	static readonly type = '[Search] SelectContact';
-	constructor(public readonly payload?: any) {}
+	constructor(
+		public readonly payload: { companyId: string; contactId: string }
+	) {}
 }

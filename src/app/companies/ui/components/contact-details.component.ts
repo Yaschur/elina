@@ -8,37 +8,47 @@ import { ContactDetailVm } from '../models/contact-detail-vm.model';
 @Component({
 	selector: 'app-contact-details',
 	templateUrl: './contact-details.component.html',
-	styleUrls: ['./contact-details.component.css']
+	styleUrls: ['./contact-details.component.css'],
 })
 export class ContactDetailsComponent implements OnInit {
 	domainCompany: Company;
 	contact: ContactDetailVm = new ContactDetailVm();
 	hiringSign = '';
 	hiringGlyph = '';
+	returnTo: string;
 
 	constructor(
 		private _route: ActivatedRoute,
 		private _router: Router,
 		private _companyRepo: CompanyRepository,
 		private _vmSrv: CompanyVmService
-	) { }
+	) {}
 
 	ngOnInit() {
-		this._route.params
-			.subscribe(async params => {
-				this.domainCompany = await this._companyRepo.getById(params['company_id']);
-				const dContact = this.domainCompany.getContactById(params['contact_id']);
-				this.contact = this._vmSrv.mapToContactDetailsVm(dContact);
-				this.setHiringSign();
-			});
+		this._route.params.subscribe(async params => {
+			this.domainCompany = await this._companyRepo.getById(
+				params['company_id']
+			);
+			const dContact = this.domainCompany.getContactById(params['contact_id']);
+			this.contact = this._vmSrv.mapToContactDetailsVm(dContact);
+			this.setHiringSign();
+			this.returnTo = this._route.snapshot.queryParams['returnTo'];
+			if (!this.returnTo) {
+				this.returnTo = `company/details/${this.domainCompany._id}`;
+			}
+		});
 	}
 
 	gotoCompany(): void {
-		this._router.navigate(['company/details', this.domainCompany._id]);
+		this._router.navigate([this.returnTo]);
 	}
 
 	gotoEdit(): void {
-		this._router.navigate(['contact/edit', this.domainCompany._id, this.contact.id]);
+		this._router.navigate([
+			'contact/edit',
+			this.domainCompany._id,
+			this.contact.id,
+		]);
 	}
 
 	async toggleHiring() {

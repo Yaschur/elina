@@ -1,7 +1,15 @@
+import { Router } from '@angular/router';
+
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 
 import { SearchStateModel } from './search-state.model';
-import { SetFilter, SearchCompanies, LoadCompanies } from './search.actions';
+import {
+	SetFilter,
+	SearchCompanies,
+	LoadCompanies,
+	SelectCompany,
+	SelectContact,
+} from './search.actions';
 import { CompanyRepository } from '../../companies/core';
 
 @State<SearchStateModel>({
@@ -29,7 +37,10 @@ export class SearchState {
 		return state.results;
 	}
 
-	constructor(private _companyRepo: CompanyRepository) {}
+	constructor(
+		private _companyRepo: CompanyRepository,
+		private _router: Router
+	) {}
 
 	@Action(SetFilter)
 	setFilter(stateContext: StateContext<SearchStateModel>, action: SetFilter) {
@@ -56,5 +67,33 @@ export class SearchState {
 		stateContext.patchState({
 			results: action.payload,
 		});
+	}
+
+	@Action(SelectCompany)
+	selectCompany(
+		stateContext: StateContext<SearchStateModel>,
+		action: SelectCompany
+	) {
+		this._router.navigate(['company', 'details', action.payload], {
+			queryParams: { returnTo: 'search' },
+		});
+	}
+
+	@Action(SelectContact)
+	selectContact(
+		stateContext: StateContext<SearchStateModel>,
+		action: SelectContact
+	) {
+		this._router.navigate(
+			[
+				'contact',
+				'details',
+				action.payload.companyId,
+				action.payload.contactId,
+			],
+			{
+				queryParams: { returnTo: 'search' },
+			}
+		);
 	}
 }

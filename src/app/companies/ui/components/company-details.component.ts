@@ -16,10 +16,7 @@ const PanelsCheckersKey = 'companypanels';
 @Component({
 	selector: 'app-company-details',
 	templateUrl: './company-details.component.html',
-	styleUrls: [
-		'./panels/panels.css',
-		'./company-details.component.css'
-	]
+	styleUrls: ['./panels/panels.css', './company-details.component.css'],
 })
 export class CompanyDetailsComponent implements OnInit {
 	domainItem: Observable<Company>;
@@ -28,10 +25,11 @@ export class CompanyDetailsComponent implements OnInit {
 	indNoteToDel;
 	hiringSign = '';
 	hiringGlyph = '';
+	returnTo = 'company';
 
 	panelsCheckers: { [key: string]: boolean } = {
-		'info': false,
-		'contacts': false
+		info: false,
+		contacts: false,
 	};
 
 	constructor(
@@ -43,24 +41,31 @@ export class CompanyDetailsComponent implements OnInit {
 		private _usettings: UsettingsService
 	) {
 		this.cancelNote();
-		this.domainItem = this._route.params
-			.switchMap(params => this._companyRepo.getById(params['id']));
+		this.domainItem = this._route.params.switchMap(params =>
+			this._companyRepo.getById(params['id'])
+		);
+		const ret = this._route.snapshot.queryParams['returnTo'];
+		if (ret) {
+			this.returnTo = ret;
+		}
 	}
 
 	ngOnInit() {
-		this.domainItem
-			.subscribe(item => {
-				if (item) {
-					this.company = this._vmSrv.mapToCompanyDetailsVm(item);
-					this.setHiringSign();
-				}
-			});
-		this._usettings.get(PanelsCheckersKey)
-			.then(p => { if (p) { this.panelsCheckers = p; } });
+		this.domainItem.subscribe(item => {
+			if (item) {
+				this.company = this._vmSrv.mapToCompanyDetailsVm(item);
+				this.setHiringSign();
+			}
+		});
+		this._usettings.get(PanelsCheckersKey).then(p => {
+			if (p) {
+				this.panelsCheckers = p;
+			}
+		});
 	}
 
 	gotoList(): void {
-		this._router.navigate(['company']);
+		this._router.navigate([this.returnTo]);
 	}
 
 	gotoEdit(): void {
@@ -83,7 +88,10 @@ export class CompanyDetailsComponent implements OnInit {
 		const dCompany = await this._companyRepo.getById(this.company.id);
 		dCompany.notes.unshift(newNote);
 		await this._companyRepo.store(dCompany);
-		this.company.notes.unshift({ created: newNote.created, text: newNote.text });
+		this.company.notes.unshift({
+			created: newNote.created,
+			text: newNote.text,
+		});
 		this.cancelNote();
 	}
 	async removeNote(i) {
