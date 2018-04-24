@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs/Observable';
-// import { Subscription } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
-import { take, map } from 'rxjs/operators';
+import { take, map, combineLatest } from 'rxjs/operators';
 import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 
 import { Company } from '../../companies/core';
@@ -24,8 +23,7 @@ import { SearchCriteriaManager, SearchCriteria } from './criteria.model';
 import { SearchState } from '../store/search.state';
 import { SetFilter } from '../store/search.actions';
 import { SearchStateModel } from '../store/search-state.model';
-
-// const SearchSetsKey = 'searchsets';
+import { mergeMap } from 'rxjs/operator/mergeMap';
 
 @Component({
 	selector: 'app-search-form',
@@ -43,14 +41,16 @@ export class SearchFormComponent {
 	countryOptions: Observable<IMultiSelectOption[]>;
 	regionOptions: Observable<IMultiSelectOption[]>;
 	activityOptions: Observable<IMultiSelectOption[]>;
-	resultMessage: string;
+	resultMessage: Observable<string>;
 
-	resultMode: '' | 'company' | 'contact' = '';
 	exporting = false;
 
 	noResults: Observable<boolean>;
 	companyList: Observable<CompanyListVm[]>;
 	contactList: Observable<ContactCompanyBaseVm[]>;
+
+	@Select(SearchState.getResultMode)
+	resultMode: Observable<'' | 'company' | 'contact'>;
 
 	private _remoteMode: boolean;
 	@Select(SearchState.getFilter) private _filter$: Observable<any>;
@@ -63,7 +63,7 @@ export class SearchFormComponent {
 		private _companyVm: CompanyVmService,
 		private _configSrv: ConfigService,
 		private _xlsxSrv: XlsxService,
-		private _store: Store // private _usettings: UsettingsService
+		private _store: Store
 	) {
 		this.searchForm = new FormGroup({});
 		this.allEvents = Observable.fromPromise(this._eventRepo.findAll());
@@ -115,47 +115,28 @@ export class SearchFormComponent {
 					.sort(this._companyVm.sortContacts)
 			)
 		);
+
+		// this.resultMessage = `${showContact ? 'contacts' : 'companies'} found: ${
+		// 	showContact ? this.contactList.length : this.companyList.length
+		// }`;
+		this.resultMessage = this.resultMode.pipe(
+			combineLatest(this.companyList, this.contactList, (mode, cmps, cnts) => {
+				if (mode === '') {
+					return '';
+				}
+				return `${mode === 'contact' ? 'contacts' : 'companies'} found: ${
+					mode === 'contact' ? cnts.length : cmps.length
+				}`;
+			})
+		);
 	}
 
-	// ngOnInit() {
-
-	// this._usettings.get(SearchSetsKey).then(sets => {
-	// 	if (!sets) {
-	// 		sets = JSON.parse(`"{${this.searchManager.retiredKey}": ""}`);
-	// 	}
-	// 	for (const key in sets) {
-	// 		const criteria = this.searchManager.getKeyName(key);
-	// 		this.addCriteria(criteria);
-	// 	}
-	// });
-	// this.addCriteria(this.searchManager.retiredKey);
-	// }
-
-	// get noResults(): boolean {
-	// 	return this.resultMode === '' || this.companies.length === 0;
-	// }
-	// get companyList(): CompanyListVm[] {
-	// 	return this.companies.map(c => this._companyVm.mapToCompanyListVm(c));
-	// }
-	// get contactList(): ContactCompanyBaseVm[] {
-	// 	return []
-	// 		.concat(
-	// 			...this.companies.map(c =>
-	// 				this._companyVm.flatMapToContactCompanyBaseVm(c)
-	// 			)
-	// 		)
-	// 		.sort(this._companyVm.sortContacts);
-	// }
-
 	async onSubmit(showContact: boolean): Promise<void> {
-		this.resultMessage = '';
-		// this._usettings.set(SearchSetsKey, this.searchForm.value);
 		const filterSet = {};
 		for (const key in this.searchForm.value) {
 			const criteria = this.searchManager.getKeyName(key);
 			filterSet[criteria] = this.searchForm.value[key];
 		}
-		this.resultMode = showContact ? 'contact' : 'company';
 		this._searchBuilder.reset();
 		for (const k in filterSet) {
 			const value = filterSet[k];
@@ -197,12 +178,12 @@ export class SearchFormComponent {
 		}
 		const filterCompiled = await this._searchBuilder.build();
 		this._store.dispatch(
-			new SetFilter({ set: filterSet, compiled: filterCompiled })
+			new SetFilter({
+				set: filterSet,
+				compiled: filterCompiled,
+				mode: showContact ? 'contact' : 'company',
+			})
 		);
-		// this.companies = await this._companyRepo.findByFilter(filter);
-		// this.resultMessage = `${showContact ? 'contacts' : 'companies'} found: ${
-		// 	showContact ? this.contactList.length : this.companyList.length
-		// }`;
 	}
 
 	removeCriteria(key: string) {

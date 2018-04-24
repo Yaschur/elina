@@ -10,6 +10,7 @@ import { CompanyRepository } from '../../companies/core';
 		filter: {},
 		compiledFilter: [],
 		results: [],
+		resultMode: '',
 		selectedCompany: null,
 		selectedContact: null,
 	},
@@ -18,6 +19,10 @@ export class SearchState {
 	@Selector()
 	static getFilter(state: SearchStateModel) {
 		return state.filter;
+	}
+	@Selector()
+	static getResultMode(state: SearchStateModel) {
+		return state.resultMode;
 	}
 	@Selector()
 	static getResults(state: SearchStateModel) {
@@ -31,6 +36,7 @@ export class SearchState {
 		stateContext.patchState({
 			filter: action.payload.set,
 			compiledFilter: action.payload.compiled,
+			resultMode: action.payload.mode,
 		});
 		stateContext.dispatch(SearchCompanies);
 	}
