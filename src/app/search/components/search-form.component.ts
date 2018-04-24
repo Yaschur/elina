@@ -103,22 +103,9 @@ export class SearchFormComponent {
 		);
 
 		this.noResults = this._results.pipe(map(cs => !cs || cs.length === 0));
-		this.companyList = this._results.pipe(
-			map(cs => cs.map(c => this._companyVm.mapToCompanyListVm(c)))
-		);
-		this.contactList = this._results.pipe(
-			map(cs =>
-				[]
-					.concat(
-						...cs.map(c => this._companyVm.flatMapToContactCompanyBaseVm(c))
-					)
-					.sort(this._companyVm.sortContacts)
-			)
-		);
+		this.companyList = this._results.pipe(map(cs => this.getCompanies(cs)));
+		this.contactList = this._results.pipe(map(cs => this.getContacts(cs)));
 
-		// this.resultMessage = `${showContact ? 'contacts' : 'companies'} found: ${
-		// 	showContact ? this.contactList.length : this.companyList.length
-		// }`;
 		this.resultMessage = this.resultMode.pipe(
 			combineLatest(this.companyList, this.contactList, (mode, cmps, cnts) => {
 				if (mode === '') {
@@ -232,59 +219,68 @@ export class SearchFormComponent {
 	}
 
 	async onXlsx() {
-		// 	if (this.resultMode === 'company') {
-		// 		this.exporting = true;
-		// 		await this._xlsxSrv.exportToXlsx(
-		// 			this.companies.map(c => this._companyVm.mapToCompanyDetailsVm(c)),
-		// 			'search_companies.xlsx',
-		// 			'Companies',
-		// 			[
-		// 				'name',
-		// 				'country',
-		// 				'city',
-		// 				'description',
-		// 				'activities',
-		// 				'phone',
-		// 				'website',
-		// 				'isNew',
-		// 				'created',
-		// 				'updated',
-		// 			]
-		// 		);
-		// 		this.exporting = false;
-		// 		return;
-		// 	}
-		// 	if (this.resultMode === 'contact') {
-		// 		this.exporting = true;
-		// 		await this._xlsxSrv.exportToXlsx(
-		// 			[]
-		// 				.concat(
-		// 					...this.companies.map(c =>
-		// 						this._companyVm.flatMapToContactCompanyDetailsVm(c)
-		// 					)
-		// 				)
-		// 				.sort(this._companyVm.sortContacts),
-		// 			'search_contacts.xlsx',
-		// 			'Contacts',
-		// 			[
-		// 				'firstName',
-		// 				'lastName',
-		// 				'jobTitle',
-		// 				'companyName',
-		// 				'phone',
-		// 				'mobile',
-		// 				'email',
-		// 				'jobResponsibilities',
-		// 				'buyContents',
-		// 				'sellContents',
-		// 				'addInfos',
-		// 				'active',
-		// 				'isNew',
-		// 				'created',
-		// 				'updated',
-		// 			]
-		// 		);
-		// 		this.exporting = false;
-		// 	}
+		const mode = this._store.selectSnapshot(SearchState.getResultMode);
+		const res = this._store.selectSnapshot(SearchState.getResults);
+		if (mode === 'company') {
+			this.exporting = true;
+			await this._xlsxSrv.exportToXlsx(
+				res.map(c => this._companyVm.mapToCompanyDetailsVm(c)),
+				'search_companies.xlsx',
+				'Companies',
+				[
+					'name',
+					'country',
+					'city',
+					'description',
+					'activities',
+					'phone',
+					'website',
+					'isNew',
+					'created',
+					'updated',
+				]
+			);
+			this.exporting = false;
+			return;
+		}
+		if (mode === 'contact') {
+			this.exporting = true;
+			await this._xlsxSrv.exportToXlsx(
+				[]
+					.concat(
+						...res.map(c => this._companyVm.flatMapToContactCompanyDetailsVm(c))
+					)
+					.sort(this._companyVm.sortContacts),
+				'search_contacts.xlsx',
+				'Contacts',
+				[
+					'firstName',
+					'lastName',
+					'jobTitle',
+					'companyName',
+					'phone',
+					'mobile',
+					'email',
+					'jobResponsibilities',
+					'buyContents',
+					'sellContents',
+					'addInfos',
+					'active',
+					'isNew',
+					'created',
+					'updated',
+				]
+			);
+			this.exporting = false;
+		}
+	}
+
+	private getCompanies(cs: Company[]): CompanyListVm[] {
+		return cs.map(c => this._companyVm.mapToCompanyListVm(c));
+	}
+	private getContacts(cs: Company[]): ContactCompanyBaseVm[] {
+		return []
+			.concat(...cs.map(c => this._companyVm.flatMapToContactCompanyBaseVm(c)))
+			.sort(this._companyVm.sortContacts);
 	}
 }
